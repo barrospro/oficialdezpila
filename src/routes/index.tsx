@@ -1,26 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { TopBanner } from "@/components/TopBanner";
+import { HeroSection } from "@/components/HeroSection";
+import { ContentSection } from "@/components/ContentSection";
+import { PriceComparison } from "@/components/PriceComparison";
+import { PricingPlans } from "@/components/PricingPlans";
+import { FAQSection } from "@/components/FAQSection";
+import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "DezPila - Conteúdo Ilimitado Por Um Valor Que Cabe No Seu Bolso" },
+      { name: "description", content: "Tenha acesso a mais de 2 mil canais, Netflix, Disney+, HBO Max e mais por apenas R$10/mês. Qualidade, estabilidade e suporte dedicado." },
+      { property: "og:title", content: "DezPila - Streaming Ilimitado" },
+      { property: "og:description", content: "+2.000 canais e 60.000 conteúdos por apenas R$10/mês" },
+    ],
+  }),
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen">
+      <TopBanner />
+      <HeroSection />
+      <ContentSection />
+      <PriceComparison />
+      <PricingPlans />
+      <FAQSection />
+      <Footer />
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
