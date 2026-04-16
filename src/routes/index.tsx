@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { ContentSection } from "@/components/ContentSection";
 import { PriceComparison } from "@/components/PriceComparison";
 import { PricingPlans } from "@/components/PricingPlans";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 
