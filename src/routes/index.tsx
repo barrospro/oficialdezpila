@@ -28,6 +28,7 @@ function Index() {
       <ContentSection />
       <PriceComparison />
       <PricingPlans />
+      <TestimonialsSection />
       <FAQSection />
       <Footer />
     </div>
