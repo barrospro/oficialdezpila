@@ -1,39 +1,56 @@
 import { useState } from "react";
 
 const faqs = [
-  { q: "Precisa de internet para funcionar?", a: "Sim, é necessário uma conexão de internet estável para utilizar o serviço. Recomendamos no mínimo 10 Mbps para uma boa experiência." },
-  { q: "Precisa de especialista para configurar?", a: "Não! A configuração é super simples. Você receberá um tutorial completo para instalar em poucos minutos." },
-  { q: "O pagamento é mensal?", a: "Depende do plano escolhido. Temos opções mensal, trimestral, semestral e anual." },
-  { q: "Moro em zona rural, funciona pra mim?", a: "Sim! Basta ter uma conexão de internet. Funciona via Wi-Fi ou dados móveis." },
-  { q: "Quantos canais são liberados?", a: "Mais de 2.000 canais ao vivo, além de um catálogo com mais de 60.000 filmes e séries." },
-  { q: "Como vou receber?", a: "Após a confirmação do pagamento, você receberá os dados de acesso no seu e-mail e WhatsApp." },
-  { q: "Em quantos aparelhos posso usar?", a: "Depende do plano: mensal (1 tela), trimestral (2), semestral (3) e anual (4 telas simultâneas)." },
-  { q: "Estou com dúvidas, tem suporte?", a: "Sim! Temos suporte dedicado via WhatsApp para ajudar você a qualquer momento." },
+  { q: "Funciona em todos os dispositivos?", a: "Sim! Compatível com Smart TVs, smartphones, tablets, computadores, TV Box, Fire Stick, Chromecast e muito mais. Qualquer dispositivo com acesso à internet." },
+  { q: "Precisa instalar alguma coisa?", a: "Apenas um aplicativo de IPTV compatível. Indicamos as melhores opções e oferecemos tutorial completo para configuração." },
+  { q: "A qualidade é boa mesmo?", a: "Nossos servidores operam em qualidade SD, HD, Full HD e 4K. Com sistema anti-travamento proprietário e latência inferior a 2ms para conteúdo ao vivo." },
+  { q: "O pagamento é seguro?", a: "Totalmente. Aceitamos PIX (liberação imediata), cartão de crédito e boleto. Todos os pagamentos são processados por plataformas certificadas com criptografia SSL." },
+  { q: "Posso testar antes de comprar?", a: "Oferecemos garantia incondicional de 7 dias. Se não gostar, devolvemos 100% do seu dinheiro sem perguntas." },
+  { q: "Quantas telas posso usar ao mesmo tempo?", a: "Depende do plano escolhido: Mensal (1 tela), Trimestral (2 telas), Semestral (3 telas) e Anual (4 telas simultâneas)." },
 ];
 
 export function FAQSection() {
-  const [open, setOpen] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="px-6 py-20 bg-secondary/30">
+    <section className="px-6 lg:px-12 py-24 relative z-10 border-t border-border">
       <div className="mx-auto max-w-3xl">
-        <h2 className="section-title mb-2">Ainda com dúvidas?</h2>
-        <p className="text-center text-muted-foreground mb-10">Temos a resposta.</p>
+        <div className="text-center mb-16">
+          <p className="font-code text-brand text-xs uppercase tracking-widest mb-4 font-bold">
+            Central de Informações
+          </p>
+          <h2 className="section-title text-center">
+            Perguntas{" "}
+            <span className="text-muted-foreground">Frequentes</span>
+          </h2>
+        </div>
+
         <div className="space-y-3">
           {faqs.map((faq, i) => (
-            <button
+            <div
               key={i}
-              onClick={() => setOpen(open === i ? null : i)}
-              className="card-surface w-full text-left cursor-pointer"
+              className="card-surface cursor-pointer"
+              onClick={() => setOpenIndex(openIndex === i ? null : i)}
             >
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-sm">{faq.q}</span>
-                <span className="text-brand text-xl ml-4">{open === i ? "−" : "+"}</span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <span className="font-code text-xs text-brand/50">
+                    [{String(i + 1).padStart(2, "0")}]
+                  </span>
+                  <span className="font-bold text-sm uppercase tracking-wide">
+                    {faq.q}
+                  </span>
+                </div>
+                <span className="font-code text-brand text-lg shrink-0">
+                  {openIndex === i ? "−" : "+"}
+                </span>
               </div>
-              {open === i && (
-                <p className="text-muted-foreground text-sm mt-3">{faq.a}</p>
+              {openIndex === i && (
+                <p className="text-muted-foreground text-sm mt-4 pl-10 leading-relaxed">
+                  {faq.a}
+                </p>
               )}
-            </button>
+            </div>
           ))}
         </div>
       </div>
