@@ -8,6 +8,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { SocialProofToasts } from "@/components/SocialProofToasts";
+import { Reveal } from "@/components/Reveal";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -26,11 +27,11 @@ function Index() {
     <div className="min-h-screen">
       <TopBanner />
       <HeroSection />
-      <ContentSection />
-      <PriceComparison />
-      <PricingPlans />
-      <TestimonialsSection />
-      <FAQSection />
+      <Reveal><ContentSection /></Reveal>
+      <Reveal><PriceComparison /></Reveal>
+      <Reveal><PricingPlans /></Reveal>
+      <Reveal><TestimonialsSection /></Reveal>
+      <Reveal><FAQSection /></Reveal>
       <Footer />
       <SocialProofToasts />
     </div>
