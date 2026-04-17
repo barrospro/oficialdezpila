@@ -7,6 +7,7 @@ import { PricingPlans } from "@/components/PricingPlans";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
+import { SocialProofToasts } from "@/components/SocialProofToasts";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -31,6 +32,7 @@ function Index() {
       <TestimonialsSection />
       <FAQSection />
       <Footer />
+      <SocialProofToasts />
     </div>
   );
 }
