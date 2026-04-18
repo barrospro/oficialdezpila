@@ -21,7 +21,7 @@ const plans = [
     period: "/mês",
     originalPrice: null,
     discount: null,
-    link: "https://checkout.exemplo.com/mensal",
+    link: "https://go.nitropagamentos.com/ni918",
     extra: [],
   },
   {
@@ -32,7 +32,7 @@ const plans = [
     period: "/trim",
     originalPrice: null,
     discount: null,
-    link: "https://checkout.exemplo.com/trimestral",
+    link: "https://go.nitropagamentos.com/h64gr",
     extra: ["Programação Adultos [Opcional]"],
   },
   {
@@ -43,7 +43,7 @@ const plans = [
     period: "/sem",
     originalPrice: "R$ 119,40",
     discount: "-66%",
-    link: "https://checkout.exemplo.com/semestral",
+    link: "https://go.nitropagamentos.com/oinxr",
     extra: ["Programação Adultos [Opcional]"],
   },
   {
@@ -54,7 +54,7 @@ const plans = [
     period: "/ano",
     originalPrice: "R$ 238,80",
     discount: "-71%",
-    link: "https://checkout.exemplo.com/anual",
+    link: "https://go.nitropagamentos.com/lzcus",
     extra: ["Programação Adultos [Opcional]"],
   },
 ];
