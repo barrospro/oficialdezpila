@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock } from "lucide-react";
+import { Lock, X } from "lucide-react";
 
 const features = [
   "Mais de 60.000 conteúdos disponíveis",
@@ -21,7 +21,7 @@ const plans = [
     period: "/mês",
     originalPrice: null,
     discount: null,
-    link: "#",
+    link: "https://checkout.exemplo.com/mensal",
     extra: [],
   },
   {
@@ -32,7 +32,7 @@ const plans = [
     period: "/trim",
     originalPrice: null,
     discount: null,
-    link: "#",
+    link: "https://checkout.exemplo.com/trimestral",
     extra: ["Programação Adultos [Opcional]"],
   },
   {
@@ -43,7 +43,7 @@ const plans = [
     period: "/sem",
     originalPrice: "R$ 119,40",
     discount: "-66%",
-    link: "#",
+    link: "https://checkout.exemplo.com/semestral",
     extra: ["Programação Adultos [Opcional]"],
   },
   {
@@ -54,13 +54,14 @@ const plans = [
     period: "/ano",
     originalPrice: "R$ 238,80",
     discount: "-71%",
-    link: "#",
+    link: "https://checkout.exemplo.com/anual",
     extra: ["Programação Adultos [Opcional]"],
   },
 ];
 
 export function PricingPlans() {
   const [activeId, setActiveId] = useState("SEMESTRAL");
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const active = plans.find((p) => p.id === activeId)!;
 
   return (
@@ -146,12 +147,13 @@ export function PricingPlans() {
           </ul>
 
           {/* CTA */}
-          <a
-            href={active.link}
+          <button
+            type="button"
+            onClick={() => setCheckoutOpen(true)}
             className="w-full py-5 text-center font-bold uppercase tracking-widest text-base block bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm"
           >
             ESCOLHER PLANO {active.name}
-          </a>
+          </button>
 
           {/* Trust */}
           <div className="mt-6 text-center space-y-1">
@@ -165,6 +167,39 @@ export function PricingPlans() {
           </div>
         </div>
       </div>
+
+      {/* Checkout Modal */}
+      {checkoutOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-2 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setCheckoutOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-4xl h-[90vh] bg-background border border-brand/40 rounded-lg shadow-[0_0_60px_var(--brand-glow)] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background/95">
+              <span className="font-code text-xs uppercase tracking-widest text-brand">
+                [ Checkout Seguro — Plano {active.name} ]
+              </span>
+              <button
+                type="button"
+                onClick={() => setCheckoutOpen(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-sm hover:bg-muted"
+                aria-label="Fechar checkout"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <iframe
+              src={active.link}
+              title={`Checkout ${active.name}`}
+              className="w-full h-[calc(100%-49px)] bg-white"
+              allow="payment *"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
