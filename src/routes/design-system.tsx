@@ -1,7 +1,12 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { Plan, features, plans } from "@/components/pricing/plans-data";
 import { Check } from "lucide-react";
 
-export default function DesignSystem() {
+export const Route = createFileRoute("/design-system")({
+  component: DesignSystem,
+});
+
+function DesignSystem() {
   return (
     <div className="min-h-screen bg-background text-foreground p-8 font-body">
       <div className="max-w-6xl mx-auto space-y-16">
