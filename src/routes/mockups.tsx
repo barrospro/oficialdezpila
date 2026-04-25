@@ -24,7 +24,7 @@ function MockupsPage() {
         <section className="space-y-8">
           <div className="flex items-center gap-2 border-b pb-2">
             <Monitor className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-semibold">Desktop / Laptop View</h2>
+            <h2 className="text-2xl font-semibold text-slate-800">Desktop / Laptop View</h2>
           </div>
           
           <div className="relative mx-auto max-w-[900px]">
@@ -52,7 +52,7 @@ function MockupsPage() {
           <div className="space-y-6">
             <div className="flex items-center gap-2 border-b pb-2">
               <Smartphone className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold">Mobile View (iPhone)</h2>
+              <h2 className="text-xl font-semibold text-slate-800">Mobile View (iPhone)</h2>
             </div>
             
             <div className="relative mx-auto w-[280px] h-[580px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-[6px] border-slate-800">
@@ -83,7 +83,7 @@ function MockupsPage() {
           <div className="space-y-6">
             <div className="flex items-center gap-2 border-b pb-2">
               <Tablet className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold">Tablet Preview</h2>
+              <h2 className="text-xl font-semibold text-slate-800">Tablet Preview</h2>
             </div>
             
             <div className="relative mx-auto w-[400px] h-[540px] bg-slate-900 rounded-3xl p-4 shadow-2xl border-[8px] border-slate-800">
@@ -102,7 +102,7 @@ function MockupsPage() {
         <section className="space-y-8">
           <div className="flex items-center gap-2 border-b pb-2">
             <Check className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-semibold">Product Shots / Screenshots</h2>
+            <h2 className="text-2xl font-semibold text-slate-800">Product Shots / Screenshots</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
