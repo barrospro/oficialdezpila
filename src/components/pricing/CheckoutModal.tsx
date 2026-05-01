@@ -279,12 +279,16 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     // Se já expirou (ex: hidratação tardia), nem inicia o polling.
     if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
     let cancelled = false;
+    // Captura o hash do Pix vigente neste ciclo do effect. Se o usuário
+    // regenerar o Pix, este effect é descartado e um novo é criado com
+    // o novo hash — qualquer resposta tardia deste ciclo é ignorada.
+    const activeHash = pix.hash;
     const tick = async () => {
       // Não dispara nova request se já expirou entre ticks.
       if (cancelled) return;
       if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
       try {
-        const res = await checkStatusFn({ data: { hash: pix.hash } });
+        const res = await checkStatusFn({ data: { hash: activeHash } });
         // Ignora resposta tardia se o effect já foi limpo ou o Pix expirou.
         if (cancelled) return;
         if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
