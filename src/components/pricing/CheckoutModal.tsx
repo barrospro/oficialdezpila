@@ -212,9 +212,18 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   // Polling: enquanto estiver na tela do Pix, consulta status a cada 4s
   useEffect(() => {
     if (step !== "pix" || !pix) return;
+    // Se já expirou (ex: hidratação tardia), nem inicia o polling.
+    if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
+    let cancelled = false;
     const tick = async () => {
+      // Não dispara nova request se já expirou entre ticks.
+      if (cancelled) return;
+      if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
       try {
         const res = await checkStatusFn({ data: { hash: pix.hash } });
+        // Ignora resposta tardia se o effect já foi limpo ou o Pix expirou.
+        if (cancelled) return;
+        if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
         if (res.ok && (res.status === "paid" || res.status === "approved")) {
           setStep("success");
         }
@@ -224,12 +233,13 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     };
     pollRef.current = window.setInterval(tick, 4000);
     return () => {
+      cancelled = true;
       if (pollRef.current) {
         window.clearInterval(pollRef.current);
         pollRef.current = null;
       }
     };
-  }, [step, pix, checkStatusFn]);
+  }, [step, pix, pixExpiresAt, checkStatusFn]);
 
   // Countdown + expiração do Pix
   useEffect(() => {
