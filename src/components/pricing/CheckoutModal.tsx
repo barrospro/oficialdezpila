@@ -69,14 +69,37 @@ const schema = z.object({
 
 function buildCheckoutUrl(base: string, data: FormState) {
   const url = new URL(base);
+  const fullName = data.name.trim().replace(/\s+/g, " ");
+  const parts = fullName.split(" ");
+  const firstName = parts[0] ?? "";
+  const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "";
   const params: Record<string, string> = {
-    name: data.name.trim(),
-    full_name: data.name.trim(),
+    name: fullName,
+    full_name: fullName,
+    fullname: fullName,
+    nome: fullName,
+    nome_completo: fullName,
+    customer_name: fullName,
+    "customer[name]": fullName,
+    first_name: firstName,
+    firstname: firstName,
+    last_name: lastName,
+    lastname: lastName,
+    surname: lastName,
     email: data.email.trim().toLowerCase(),
+    customer_email: data.email.trim().toLowerCase(),
+    "customer[email]": data.email.trim().toLowerCase(),
     phone: onlyDigits(data.whatsapp),
+    telephone: onlyDigits(data.whatsapp),
+    telefone: onlyDigits(data.whatsapp),
+    celular: onlyDigits(data.whatsapp),
     whatsapp: onlyDigits(data.whatsapp),
+    customer_phone: onlyDigits(data.whatsapp),
+    "customer[phone]": onlyDigits(data.whatsapp),
     document: onlyDigits(data.cpf),
     cpf: onlyDigits(data.cpf),
+    customer_document: onlyDigits(data.cpf),
+    "customer[document]": onlyDigits(data.cpf),
   };
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   return url.toString();
