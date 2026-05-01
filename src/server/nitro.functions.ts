@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { createPixTransaction, getTransactionStatus } from "./nitro.server";
+import { checkNitroHealth, createPixTransaction, getTransactionStatus } from "./nitro.server";
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
@@ -231,3 +231,29 @@ export const checkPixStatus = createServerFn({ method: "POST" })
       return { ok: false as const, error: message };
     }
   });
+
+/**
+ * Endpoint de diagnóstico — valida NITRO_API_KEY, ambiente, produto e ofertas.
+ * Sem efeitos colaterais (não cria transação). Usado antes de gerar Pix
+ * para retornar uma mensagem precisa quando a integração estiver mal configurada.
+ */
+export const verifyNitroIntegration = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const health = await checkNitroHealth();
+    return health;
+  } catch (err) {
+    return {
+      ok: false as const,
+      hasKey: false,
+      keyMasked: null,
+      keyLength: 0,
+      environment: "unknown" as const,
+      httpStatus: null,
+      apiReachable: false,
+      authValid: false,
+      productHashValid: false,
+      offerHashesValid: {},
+      message: err instanceof Error ? err.message : "Erro inesperado na verificação",
+    };
+  }
+});
