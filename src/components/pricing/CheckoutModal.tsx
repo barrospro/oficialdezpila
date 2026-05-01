@@ -15,6 +15,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createPix, checkPixStatus } from "@/server/nitro.functions";
+import { PIX_TIMEOUT_MS } from "@/server/nitro-config";
 import {
   clearCheckout,
   loadCheckout,
@@ -45,7 +46,8 @@ type PixData = {
 
 type Step = "form" | "pix" | "success" | "expired";
 
-const PIX_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutos
+// PIX_TIMEOUT_MS é importado de @/server/nitro-config para manter
+// frontend e backend sincronizados.
 
 // Mapeia o payment_status da API Nitro para uma mensagem amigável.
 // Status conhecidos: waiting_payment, processing, paid, approved,
@@ -287,9 +289,20 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         if (res.ok) {
           setPaymentStatus(res.status ?? "waiting_payment");
           setLastCheckedAt(Date.now());
+          // Se o backend retornou um expires_at autoritativo,
+          // alinhamos o countdown com ele (evita drift de relógio).
+          if (res.expires_at) {
+            const serverExpires = Date.parse(res.expires_at);
+            if (!Number.isNaN(serverExpires) && serverExpires !== pixExpiresAt) {
+              setPixExpiresAt(serverExpires);
+            }
+          }
         }
         if (res.ok && (res.status === "paid" || res.status === "approved")) {
           setStep("success");
+        } else if (res.ok && (res.status === "expired" || res.expired)) {
+          // Backend já decretou expirado — encerra o polling imediatamente.
+          setStep("expired");
         }
       } catch {
         // silencioso — tenta de novo no próximo tick
@@ -372,8 +385,14 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         amount: res.amount,
         offer_title: res.offer_title,
       });
-      setPixExpiresAt(Date.now() + PIX_TIMEOUT_MS);
-      setRemainingMs(PIX_TIMEOUT_MS);
+      // Prefere o expires_at autoritativo do servidor; cai pro relógio
+      // local se a Nitro não retornar um created_at válido.
+      const serverExpires = res.expires_at ? Date.parse(res.expires_at) : NaN;
+      const expiresAt = Number.isNaN(serverExpires)
+        ? Date.now() + PIX_TIMEOUT_MS
+        : serverExpires;
+      setPixExpiresAt(expiresAt);
+      setRemainingMs(Math.max(0, expiresAt - Date.now()));
         setPaymentStatus(res.status ?? "waiting_payment");
         setLastCheckedAt(Date.now());
       setStep("pix");

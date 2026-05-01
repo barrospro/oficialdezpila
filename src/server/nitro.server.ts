@@ -3,6 +3,8 @@ const NITRO_BASE = "https://api.nitropagamentos.com/api/public/v1";
 // Hash do produto principal (DezPila / IPTV) na conta Nitro
 const PRODUCT_HASH = "b7jx2s8xqw";
 
+import { PIX_TIMEOUT_MS } from "./nitro-config";
+
 // Mapa: offer_hash → { title, price (centavos) }
 // Espelha src/components/pricing/plans-data.ts
 const OFFERS: Record<string, { title: string; price: number }> = {
@@ -25,6 +27,8 @@ export type CreatePixResult = {
   amount: number;
   status: string;
   offer_title: string;
+  created_at: string; // ISO — referência da expiração
+  expires_at: string; // ISO — created_at + PIX_TIMEOUT_MS
 };
 
 function getApiKey(): string {
@@ -84,18 +88,30 @@ export async function createPixTransaction(input: {
     throw new Error("Resposta inesperada da Nitro: faltou hash ou pix_qr_code");
   }
 
+  const createdAtRaw =
+    (data.created_at as string | undefined) ??
+    (data.date_created as string | undefined) ??
+    new Date().toISOString();
+  const createdAtMs = parseDate(createdAtRaw) ?? Date.now();
+  const expiresAtMs = createdAtMs + PIX_TIMEOUT_MS;
+
   return {
     hash,
     pix_qr_code: pix.pix_qr_code,
     amount: (data.amount as number) ?? offer.price,
     status: (data.payment_status as string) ?? "waiting_payment",
     offer_title: offer.title,
+    created_at: new Date(createdAtMs).toISOString(),
+    expires_at: new Date(expiresAtMs).toISOString(),
   };
 }
 
 export async function getTransactionStatus(hash: string): Promise<{
   status: string;
   paid_at: string | null;
+  created_at: string | null;
+  expires_at: string | null;
+  expired: boolean;
 }> {
   const res = await fetch(
     `${NITRO_BASE}/transactions/${encodeURIComponent(hash)}?api_token=${encodeURIComponent(getApiKey())}`,
@@ -111,8 +127,38 @@ export async function getTransactionStatus(hash: string): Promise<{
     throw new Error(msg);
   }
 
+  const rawStatus = (data.payment_status as string) ?? "waiting_payment";
+  const paidAt = (data.paid_at as string) ?? null;
+  const createdAtRaw =
+    (data.created_at as string | undefined) ??
+    (data.date_created as string | undefined) ??
+    null;
+  const createdAtMs = createdAtRaw ? parseDate(createdAtRaw) : null;
+  const expiresAtMs = createdAtMs !== null ? createdAtMs + PIX_TIMEOUT_MS : null;
+
+  // Se já passou da janela de 20min sem pagamento confirmado, considera expirado
+  // — independente do que a Nitro retornar (eles mantêm "waiting_payment" por horas).
+  const isPaid = rawStatus === "paid" || rawStatus === "approved";
+  const isExpired =
+    !isPaid &&
+    expiresAtMs !== null &&
+    Date.now() >= expiresAtMs;
+
   return {
-    status: (data.payment_status as string) ?? "waiting_payment",
-    paid_at: (data.paid_at as string) ?? null,
+    status: isExpired ? "expired" : rawStatus,
+    paid_at: paidAt,
+    created_at: createdAtMs ? new Date(createdAtMs).toISOString() : null,
+    expires_at: expiresAtMs ? new Date(expiresAtMs).toISOString() : null,
+    expired: isExpired,
   };
+}
+
+// Aceita ISO ("2026-05-01T12:00:00Z") ou "YYYY-MM-DD HH:mm:ss" (formato Nitro).
+function parseDate(raw: string): number | null {
+  const direct = Date.parse(raw);
+  if (!Number.isNaN(direct)) return direct;
+  // Formato "YYYY-MM-DD HH:mm:ss" (sem timezone) — assume UTC.
+  const fixed = raw.replace(" ", "T") + "Z";
+  const fallback = Date.parse(fixed);
+  return Number.isNaN(fallback) ? null : fallback;
 }
