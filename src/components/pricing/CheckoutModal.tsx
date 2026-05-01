@@ -583,10 +583,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 </div>
               </div>
 
-              <div className="mt-8 flex items-center justify-center gap-2 text-muted-foreground font-code text-[11px]">
-                <Loader2 className="w-3 h-3 animate-spin text-brand" />
-                Aguardando confirmação do pagamento...
-              </div>
+              <StatusBanner
+                info={describeStatus(paymentStatus)}
+                lastCheckedAt={lastCheckedAt}
+              />
 
               <div className="mt-4 flex items-center justify-center gap-1.5 text-muted-foreground font-code text-[10px] uppercase tracking-widest">
                 <Clock className="w-3 h-3" />
@@ -594,7 +594,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
               </div>
 
               <p className="mt-2 text-center text-muted-foreground/70 font-code text-[10px] uppercase tracking-widest">
-                Esta tela atualiza sozinha quando o Pix for pago
+                Esta tela atualiza sozinha — você não precisa recarregar
               </p>
             </div>
           </div>
