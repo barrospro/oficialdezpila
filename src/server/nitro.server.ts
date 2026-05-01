@@ -142,13 +142,3 @@ export async function getTransactionStatus(hash: string): Promise<{
     expired: false,
   };
 }
-
-// Aceita ISO ("2026-05-01T12:00:00Z") ou "YYYY-MM-DD HH:mm:ss" (formato Nitro).
-function parseDate(raw: string): number | null {
-  const direct = Date.parse(raw);
-  if (!Number.isNaN(direct)) return direct;
-  // Formato "YYYY-MM-DD HH:mm:ss" (sem timezone) — assume UTC.
-  const fixed = raw.replace(" ", "T") + "Z";
-  const fallback = Date.parse(fixed);
-  return Number.isNaN(fallback) ? null : fallback;
-}
