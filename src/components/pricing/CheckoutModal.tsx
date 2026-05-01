@@ -1,6 +1,17 @@
-import { useEffect, useState } from "react";
-import { ArrowLeft, Lock, Shield, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Copy,
+  Loader2,
+  Lock,
+  Shield,
+  X,
+} from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
+import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { createPix, checkPixStatus } from "@/server/nitro.functions";
 
 type Props = {
   open: boolean;
@@ -15,6 +26,15 @@ type FormState = {
   whatsapp: string;
   cpf: string;
 };
+
+type PixData = {
+  hash: string;
+  pix_qr_code: string;
+  amount: number;
+  offer_title: string;
+};
+
+type Step = "form" | "pix" | "success";
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
@@ -67,46 +87,33 @@ const schema = z.object({
     .refine(isValidCpf, "CPF inválido"),
 });
 
-function buildCheckoutUrl(base: string, data: FormState) {
-  const url = new URL(base);
-  const fullName = data.name.trim().replace(/\s+/g, " ");
-  const parts = fullName.split(" ");
-  const firstName = parts[0] ?? "";
-  const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "";
-  const params: Record<string, string> = {
-    name: fullName,
-    full_name: fullName,
-    fullname: fullName,
-    nome: fullName,
-    nome_completo: fullName,
-    customer_name: fullName,
-    "customer[name]": fullName,
-    first_name: firstName,
-    firstname: firstName,
-    last_name: lastName,
-    lastname: lastName,
-    surname: lastName,
-    email: data.email.trim().toLowerCase(),
-    customer_email: data.email.trim().toLowerCase(),
-    "customer[email]": data.email.trim().toLowerCase(),
-    phone: onlyDigits(data.whatsapp),
-    telephone: onlyDigits(data.whatsapp),
-    telefone: onlyDigits(data.whatsapp),
-    celular: onlyDigits(data.whatsapp),
-    whatsapp: onlyDigits(data.whatsapp),
-    customer_phone: onlyDigits(data.whatsapp),
-    "customer[phone]": onlyDigits(data.whatsapp),
-    document: onlyDigits(data.cpf),
-    cpf: onlyDigits(data.cpf),
-    customer_document: onlyDigits(data.cpf),
-    "customer[document]": onlyDigits(data.cpf),
-  };
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  return url.toString();
+const VALID_OFFERS = ["ni918", "h64gr", "oinxr", "lzcus"] as const;
+type OfferHash = (typeof VALID_OFFERS)[number];
+
+function extractOfferHash(link: string): OfferHash | null {
+  try {
+    const url = new URL(link);
+    const last = url.pathname.split("/").filter(Boolean).pop() ?? "";
+    return (VALID_OFFERS as readonly string[]).includes(last)
+      ? (last as OfferHash)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function formatBrl(cents: number) {
+  return (cents / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
 }
 
 export function CheckoutModal({ open, planName, link, onClose }: Props) {
-  const [step, setStep] = useState<"form" | "checkout">("form");
+  const createPixFn = useServerFn(createPix);
+  const checkStatusFn = useServerFn(checkPixStatus);
+
+  const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -114,15 +121,50 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
     cpf: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [checkoutUrl, setCheckoutUrl] = useState<string>("");
+  const [pix, setPix] = useState<PixData | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const pollRef = useRef<number | null>(null);
+
+  const offerHash = extractOfferHash(link);
 
   useEffect(() => {
     if (!open) {
       setStep("form");
       setErrors({});
-      setCheckoutUrl("");
+      setPix(null);
+      setSubmitting(false);
+      setSubmitError(null);
+      setCopied(false);
+      if (pollRef.current) {
+        window.clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
     }
   }, [open]);
+
+  // Polling: enquanto estiver na tela do Pix, consulta status a cada 4s
+  useEffect(() => {
+    if (step !== "pix" || !pix) return;
+    const tick = async () => {
+      try {
+        const res = await checkStatusFn({ data: { hash: pix.hash } });
+        if (res.ok && (res.status === "paid" || res.status === "approved")) {
+          setStep("success");
+        }
+      } catch {
+        // silencioso — tenta de novo no próximo tick
+      }
+    };
+    pollRef.current = window.setInterval(tick, 4000);
+    return () => {
+      if (pollRef.current) {
+        window.clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    };
+  }, [step, pix, checkStatusFn]);
 
   if (!open) return null;
 
@@ -131,8 +173,13 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
     if (errors[field]) setErrors((e) => ({ ...e, [field]: undefined }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
+    if (!offerHash) {
+      setSubmitError("Plano inválido. Recarregue a página.");
+      return;
+    }
     const result = schema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof FormState, string>> = {};
@@ -143,8 +190,46 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
       setErrors(fieldErrors);
       return;
     }
-    setCheckoutUrl(buildCheckoutUrl(link, form));
-    setStep("checkout");
+    setSubmitting(true);
+    try {
+      const res = await createPixFn({
+        data: {
+          offerHash,
+          name: form.name,
+          email: form.email,
+          whatsapp: form.whatsapp,
+          cpf: form.cpf,
+        },
+      });
+      if (!res.ok) {
+        setSubmitError(res.error);
+        return;
+      }
+      setPix({
+        hash: res.hash,
+        pix_qr_code: res.pix_qr_code,
+        amount: res.amount,
+        offer_title: res.offer_title,
+      });
+      setStep("pix");
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Erro ao gerar o Pix. Tente novamente."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCopyPix = async () => {
+    if (!pix) return;
+    try {
+      await navigator.clipboard.writeText(pix.pix_qr_code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback silencioso
+    }
   };
 
   return (
@@ -158,7 +243,7 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background/95 flex-shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            {step === "checkout" && (
+            {step === "pix" && (
               <button
                 type="button"
                 onClick={() => setStep("form")}
@@ -169,7 +254,11 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
               </button>
             )}
             <span className="font-code text-[10px] sm:text-xs uppercase tracking-widest text-brand truncate">
-              [ {step === "form" ? "Seus Dados" : "Pagamento Pix"} — Plano {planName} ]
+              [ {step === "form"
+                ? "Seus Dados"
+                : step === "pix"
+                ? "Pagamento Pix"
+                : "Pagamento Confirmado"} — Plano {planName} ]
             </span>
           </div>
           <button
@@ -182,7 +271,7 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
           </button>
         </div>
 
-        {step === "form" ? (
+        {step === "form" && (
           <form
             onSubmit={handleSubmit}
             className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10"
@@ -239,11 +328,21 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
                 />
               </div>
 
+              {submitError && (
+                <div className="mt-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm">
+                  <p className="font-code text-[11px] text-destructive">
+                    [!] {submitError}
+                  </p>
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full mt-8 py-5 font-bold uppercase tracking-widest text-base bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm"
+                disabled={submitting}
+                className="w-full mt-8 py-5 font-bold uppercase tracking-widest text-base bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Gerar Pix Agora
+                {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                {submitting ? "Gerando Pix..." : "Gerar Pix Agora"}
               </button>
 
               <div className="mt-6 flex items-center justify-center gap-4 text-muted-foreground font-code text-[10px] uppercase tracking-widest">
@@ -256,13 +355,95 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
               </div>
             </div>
           </form>
-        ) : (
-          <iframe
-            src={checkoutUrl}
-            title={`Checkout ${planName}`}
-            className="w-full flex-1 bg-white"
-            allow="payment *"
-          />
+        )}
+
+        {step === "pix" && pix && (
+          <div className="flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10">
+            <div className="max-w-md mx-auto">
+              <div className="text-center mb-6">
+                <p className="font-code text-[10px] uppercase tracking-widest text-brand mb-2">
+                  [ Etapa 2 de 2 ]
+                </p>
+                <h3 className="text-2xl font-bold tracking-tight">
+                  Escaneie ou copie o código Pix
+                </h3>
+                <p className="text-muted-foreground font-code text-xs mt-2">
+                  {pix.offer_title} — {formatBrl(pix.amount)}
+                </p>
+              </div>
+
+              <div className="flex justify-center mb-6">
+                <div className="bg-white p-4 rounded-sm border border-border">
+                  <QRCodeSVG
+                    value={pix.pix_qr_code}
+                    size={220}
+                    level="M"
+                    includeMargin={false}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <span className="font-code text-[10px] uppercase tracking-widest text-muted-foreground block">
+                  Código copia-e-cola
+                </span>
+                <div className="flex items-stretch gap-2">
+                  <input
+                    readOnly
+                    value={pix.pix_qr_code}
+                    onFocus={(e) => e.currentTarget.select()}
+                    className="flex-1 px-3 py-2 bg-background/60 border border-border rounded-sm font-code text-[11px] text-foreground/80 truncate focus:outline-none focus:border-brand"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCopyPix}
+                    className="px-3 py-2 border border-brand bg-brand/10 text-brand hover:bg-brand hover:text-brand-foreground transition-colors rounded-sm font-code text-[10px] uppercase tracking-widest flex items-center gap-1.5"
+                  >
+                    <Copy className="w-3 h-3" />
+                    {copied ? "Copiado!" : "Copiar"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-8 flex items-center justify-center gap-2 text-muted-foreground font-code text-[11px]">
+                <Loader2 className="w-3 h-3 animate-spin text-brand" />
+                Aguardando confirmação do pagamento...
+              </div>
+
+              <p className="mt-4 text-center text-muted-foreground font-code text-[10px] uppercase tracking-widest">
+                Esta tela atualiza sozinha quando o Pix for pago
+              </p>
+            </div>
+          </div>
+        )}
+
+        {step === "success" && pix && (
+          <div className="flex-1 overflow-y-auto px-6 py-12 sm:px-10 sm:py-16">
+            <div className="max-w-md mx-auto text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-full bg-brand/15 border border-brand flex items-center justify-center shadow-[0_0_40px_var(--brand-glow)]">
+                  <CheckCircle2 className="w-10 h-10 text-brand" />
+                </div>
+              </div>
+              <p className="font-code text-[10px] uppercase tracking-widest text-brand mb-2">
+                [ Pagamento confirmado ]
+              </p>
+              <h3 className="text-2xl font-bold tracking-tight mb-3">
+                Tudo pronto, {form.name.split(" ")[0]}!
+              </h3>
+              <p className="text-muted-foreground font-code text-xs mb-8">
+                Recebemos seu pagamento de <span className="text-foreground">{formatBrl(pix.amount)}</span>.
+                Em instantes você receberá o acesso por e-mail e WhatsApp.
+              </p>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full py-4 font-bold uppercase tracking-widest text-sm bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>
