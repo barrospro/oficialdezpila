@@ -142,3 +142,138 @@ export async function getTransactionStatus(hash: string): Promise<{
     expired: false,
   };
 }
+
+export type NitroHealth = {
+  ok: boolean;
+  hasKey: boolean;
+  keyMasked: string | null;
+  keyLength: number;
+  environment: "production" | "sandbox" | "unknown";
+  httpStatus: number | null;
+  apiReachable: boolean;
+  authValid: boolean;
+  productHashValid: boolean;
+  offerHashesValid: Record<string, boolean>;
+  message: string;
+  rawError?: string;
+};
+
+/**
+ * Verifica saúde da integração Nitro:
+ * 1. NITRO_API_KEY existe?
+ * 2. API responde?
+ * 3. Chave autentica? (401/403 = inválida)
+ * 4. PRODUCT_HASH existe na conta?
+ * 5. Cada offer_hash existe e está ativo?
+ *
+ * Detecta ambiente pelo prefixo da chave (sandbox keys da Nitro costumam
+ * conter "test" ou "sandbox"; produção é opaca).
+ */
+export async function checkNitroHealth(): Promise<NitroHealth> {
+  const key = process.env.NITRO_API_KEY ?? "";
+  const hasKey = key.length > 0;
+  const keyMasked = hasKey ? `${key.slice(0, 4)}…${key.slice(-4)}` : null;
+
+  const lower = key.toLowerCase();
+  let environment: NitroHealth["environment"] = "unknown";
+  if (hasKey) {
+    if (lower.includes("test") || lower.includes("sandbox") || lower.startsWith("sk_test")) {
+      environment = "sandbox";
+    } else {
+      environment = "production";
+    }
+  }
+
+  const base: NitroHealth = {
+    ok: false,
+    hasKey,
+    keyMasked,
+    keyLength: key.length,
+    environment,
+    httpStatus: null,
+    apiReachable: false,
+    authValid: false,
+    productHashValid: false,
+    offerHashesValid: {},
+    message: "",
+  };
+
+  if (!hasKey) {
+    return { ...base, message: "NITRO_API_KEY não configurada no servidor" };
+  }
+
+  // 1. Lista produtos para validar chave + verificar PRODUCT_HASH
+  let productsRes: Response;
+  try {
+    productsRes = await fetch(
+      `${NITRO_BASE}/products?api_token=${encodeURIComponent(key)}`,
+      { headers: { Accept: "application/json" } },
+    );
+  } catch (err) {
+    return {
+      ...base,
+      message: "Falha de rede ao contatar API Nitro",
+      rawError: err instanceof Error ? err.message : String(err),
+    };
+  }
+
+  base.apiReachable = true;
+  base.httpStatus = productsRes.status;
+
+  const productsBody = (await productsRes.json().catch(() => ({}))) as Record<string, unknown>;
+
+  if (productsRes.status === 401 || productsRes.status === 403) {
+    return {
+      ...base,
+      message: `NITRO_API_KEY inválida ou sem permissão (HTTP ${productsRes.status})`,
+      rawError: typeof productsBody.message === "string" ? productsBody.message : undefined,
+    };
+  }
+
+  if (!productsRes.ok) {
+    return {
+      ...base,
+      message: `API Nitro retornou HTTP ${productsRes.status} ao listar produtos`,
+      rawError: typeof productsBody.message === "string" ? productsBody.message : undefined,
+    };
+  }
+
+  base.authValid = true;
+
+  // Estrutura típica: { data: [{ hash, offers: [{ hash, ... }] }, ...] }
+  const products = (productsBody.data as Array<Record<string, unknown>> | undefined) ?? [];
+  const product = products.find((p) => p.hash === PRODUCT_HASH);
+  base.productHashValid = !!product;
+
+  if (!product) {
+    return {
+      ...base,
+      message: `PRODUCT_HASH "${PRODUCT_HASH}" não encontrado na conta Nitro autenticada (encontrados ${products.length} produto(s))`,
+    };
+  }
+
+  const productOffers = ((product.offers as Array<Record<string, unknown>> | undefined) ?? []).map(
+    (o) => o.hash as string,
+  );
+
+  for (const offerHash of Object.keys(OFFERS)) {
+    base.offerHashesValid[offerHash] = productOffers.includes(offerHash);
+  }
+
+  const missingOffers = Object.entries(base.offerHashesValid)
+    .filter(([, valid]) => !valid)
+    .map(([h]) => h);
+
+  if (missingOffers.length > 0) {
+    return {
+      ...base,
+      message: `Ofertas ausentes/inativas no produto: ${missingOffers.join(", ")}`,
+    };
+  }
+
+  return {
+    ...base,
+    ok: true,
+    message: `Integração Nitro saudável (ambiente: ${environment})`,
+  };
+}
