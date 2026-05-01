@@ -780,16 +780,16 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 />
               </div>
 
-              {(submitError || errorEntries.length > 0) && (
+              {(submitError || summaryErrors.length > 0) && (
                 <div className="mt-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm">
                   {submitError && (
                     <p className="font-code text-[11px] text-destructive">
                       [!] {submitError}
                     </p>
                   )}
-                  {errorEntries.length > 0 && (
+                  {summaryErrors.length > 0 && (
                     <ul className="mt-2 space-y-1">
-                      {errorEntries.map(([field, msg]) => (
+                      {summaryErrors.map(([field, msg]) => (
                         <li
                           key={field}
                           className="font-code text-[11px] text-destructive flex gap-2"
