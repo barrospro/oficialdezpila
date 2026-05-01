@@ -762,6 +762,8 @@ type FieldProps = {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  valid?: boolean;
   placeholder?: string;
   error?: string;
   type?: string;
@@ -773,6 +775,8 @@ function Field({
   label,
   value,
   onChange,
+  onBlur,
+  valid,
   placeholder,
   error,
   type = "text",
@@ -784,19 +788,30 @@ function Field({
       <span className="font-code text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">
         {label}
       </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        inputMode={inputMode}
-        className={`w-full px-4 py-3 bg-background/60 border rounded-sm font-code text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 transition-colors ${
-          error
-            ? "border-destructive focus:border-destructive focus:ring-destructive"
-            : "border-border focus:border-brand focus:ring-brand"
-        }`}
-      />
+      <div className="relative">
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          inputMode={inputMode}
+          aria-invalid={!!error}
+          className={`w-full px-4 py-3 pr-10 bg-background/60 border rounded-sm font-code text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 transition-colors ${
+            error
+              ? "border-destructive focus:border-destructive focus:ring-destructive"
+              : valid
+                ? "border-brand/60 focus:border-brand focus:ring-brand"
+                : "border-border focus:border-brand focus:ring-brand"
+          }`}
+        />
+        {error ? (
+          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive pointer-events-none" />
+        ) : valid ? (
+          <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand pointer-events-none" />
+        ) : null}
+      </div>
       {error && (
         <span className="font-code text-[10px] text-destructive mt-1 block">
           [!] {error}
