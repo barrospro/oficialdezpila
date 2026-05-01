@@ -152,7 +152,75 @@ const schema = z.object({
     .min(3, "Informe seu nome completo")
     .max(100, "Nome muito longo")
     .regex(/\s/, "Informe nome e sobrenome"),
-  email: z.string().trim().email("E-mail inválido").max(255),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .max(255, "E-mail muito longo")
+    .superRefine((v, ctx) => {
+      if (v.length === 0) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Informe seu e-mail" });
+        return;
+      }
+      if (/\s/.test(v)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "E-mail não pode conter espaços",
+        });
+        return;
+      }
+      const atCount = (v.match(/@/g) ?? []).length;
+      if (atCount === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'E-mail deve conter "@"',
+        });
+        return;
+      }
+      if (atCount > 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'E-mail deve conter apenas um "@"',
+        });
+        return;
+      }
+      const [local, domain] = v.split("@");
+      if (!local) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Informe o nome antes do "@"',
+        });
+        return;
+      }
+      if (!domain) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Informe o domínio após o "@" (ex: gmail.com)',
+        });
+        return;
+      }
+      if (!domain.includes(".")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Domínio incompleto — faltou o final (ex: .com)",
+        });
+        return;
+      }
+      const tld = domain.split(".").pop() ?? "";
+      if (tld.length < 2) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Domínio inválido — verifique o final (ex: .com, .com.br)",
+        });
+        return;
+      }
+      if (!/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(v)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Formato de e-mail inválido",
+        });
+      }
+    }),
   whatsapp: z
     .string()
     .transform(onlyDigits)
