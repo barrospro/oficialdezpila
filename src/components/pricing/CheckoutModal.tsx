@@ -657,6 +657,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitAttempted(true);
     await generatePix();
   };
 
