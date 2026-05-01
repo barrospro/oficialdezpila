@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
+  Clock,
   Copy,
   Loader2,
   Lock,
+  RefreshCw,
   Shield,
   X,
 } from "lucide-react";
@@ -34,7 +36,16 @@ type PixData = {
   offer_title: string;
 };
 
-type Step = "form" | "pix" | "success";
+type Step = "form" | "pix" | "success" | "expired";
+
+const PIX_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutos
+
+function formatCountdown(ms: number) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const m = Math.floor(total / 60).toString().padStart(2, "0");
+  const s = (total % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
@@ -125,6 +136,8 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [pixExpiresAt, setPixExpiresAt] = useState<number | null>(null);
+  const [remainingMs, setRemainingMs] = useState<number>(PIX_TIMEOUT_MS);
   const pollRef = useRef<number | null>(null);
 
   const offerHash = extractOfferHash(link);
@@ -137,6 +150,8 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
       setSubmitting(false);
       setSubmitError(null);
       setCopied(false);
+      setPixExpiresAt(null);
+      setRemainingMs(PIX_TIMEOUT_MS);
       if (pollRef.current) {
         window.clearInterval(pollRef.current);
         pollRef.current = null;
@@ -166,6 +181,27 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
     };
   }, [step, pix, checkStatusFn]);
 
+  // Countdown + expiração do Pix
+  useEffect(() => {
+    if (step !== "pix" || !pixExpiresAt) return;
+    const update = () => {
+      const remaining = pixExpiresAt - Date.now();
+      if (remaining <= 0) {
+        setRemainingMs(0);
+        setStep("expired");
+        if (pollRef.current) {
+          window.clearInterval(pollRef.current);
+          pollRef.current = null;
+        }
+      } else {
+        setRemainingMs(remaining);
+      }
+    };
+    update();
+    const id = window.setInterval(update, 1000);
+    return () => window.clearInterval(id);
+  }, [step, pixExpiresAt]);
+
   if (!open) return null;
 
   const update = (field: keyof FormState, value: string) => {
@@ -173,12 +209,11 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
     if (errors[field]) setErrors((e) => ({ ...e, [field]: undefined }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const generatePix = async (): Promise<boolean> => {
     setSubmitError(null);
     if (!offerHash) {
       setSubmitError("Plano inválido. Recarregue a página.");
-      return;
+      return false;
     }
     const result = schema.safeParse(form);
     if (!result.success) {
@@ -188,7 +223,7 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
       }
       setErrors(fieldErrors);
-      return;
+      return false;
     }
     setSubmitting(true);
     try {
@@ -203,7 +238,7 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
       });
       if (!res.ok) {
         setSubmitError(res.error);
-        return;
+        return false;
       }
       setPix({
         hash: res.hash,
@@ -211,14 +246,27 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
         amount: res.amount,
         offer_title: res.offer_title,
       });
+      setPixExpiresAt(Date.now() + PIX_TIMEOUT_MS);
+      setRemainingMs(PIX_TIMEOUT_MS);
       setStep("pix");
+      return true;
     } catch (err) {
       setSubmitError(
         err instanceof Error ? err.message : "Erro ao gerar o Pix. Tente novamente."
       );
+      return false;
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await generatePix();
+  };
+
+  const handleRegenerate = async () => {
+    await generatePix();
   };
 
   const handleCopyPix = async () => {
@@ -243,7 +291,7 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background/95 flex-shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            {step === "pix" && (
+            {(step === "pix" || step === "expired") && (
               <button
                 type="button"
                 onClick={() => setStep("form")}
@@ -258,6 +306,8 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
                 ? "Seus Dados"
                 : step === "pix"
                 ? "Pagamento Pix"
+                : step === "expired"
+                ? "Pix Expirado"
                 : "Pagamento Confirmado"} — Plano {planName} ]
             </span>
           </div>
@@ -410,9 +460,63 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
                 Aguardando confirmação do pagamento...
               </div>
 
-              <p className="mt-4 text-center text-muted-foreground font-code text-[10px] uppercase tracking-widest">
+              <div className="mt-4 flex items-center justify-center gap-1.5 text-muted-foreground font-code text-[10px] uppercase tracking-widest">
+                <Clock className="w-3 h-3" />
+                Expira em <span className="text-brand">{formatCountdown(remainingMs)}</span>
+              </div>
+
+              <p className="mt-2 text-center text-muted-foreground/70 font-code text-[10px] uppercase tracking-widest">
                 Esta tela atualiza sozinha quando o Pix for pago
               </p>
+            </div>
+          </div>
+        )}
+
+        {step === "expired" && (
+          <div className="flex-1 overflow-y-auto px-6 py-12 sm:px-10 sm:py-16">
+            <div className="max-w-md mx-auto text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-full bg-destructive/15 border border-destructive/60 flex items-center justify-center">
+                  <Clock className="w-10 h-10 text-destructive" />
+                </div>
+              </div>
+              <p className="font-code text-[10px] uppercase tracking-widest text-destructive mb-2">
+                [ Pix expirado ]
+              </p>
+              <h3 className="text-2xl font-bold tracking-tight mb-3">
+                O tempo do seu Pix acabou
+              </h3>
+              <p className="text-muted-foreground font-code text-xs mb-8">
+                Por segurança, códigos Pix expiram após 20 minutos sem pagamento.
+                Gere um novo código com os mesmos dados em um clique.
+              </p>
+              {submitError && (
+                <div className="mb-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm text-left">
+                  <p className="font-code text-[11px] text-destructive">
+                    [!] {submitError}
+                  </p>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handleRegenerate}
+                disabled={submitting}
+                className="w-full py-4 font-bold uppercase tracking-widest text-sm bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-4 h-4" />
+                )}
+                {submitting ? "Gerando novo Pix..." : "Gerar novo Pix"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("form")}
+                className="w-full mt-3 py-3 font-code text-[11px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Editar meus dados
+              </button>
             </div>
           </div>
         )}
