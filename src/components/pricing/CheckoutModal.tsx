@@ -729,3 +729,55 @@ function Field({
     </label>
   );
 }
+
+function StatusBanner({
+  info,
+  lastCheckedAt,
+}: {
+  info: StatusInfo;
+  lastCheckedAt: number | null;
+}) {
+  const styles: Record<StatusTone, { wrap: string; icon: React.ReactNode; label: string }> = {
+    pending: {
+      wrap: "border-brand/40 bg-brand/5",
+      icon: <Loader2 className="w-4 h-4 animate-spin text-brand" />,
+      label: "text-brand",
+    },
+    progress: {
+      wrap: "border-yellow-500/50 bg-yellow-500/10",
+      icon: <Loader2 className="w-4 h-4 animate-spin text-yellow-400" />,
+      label: "text-yellow-300",
+    },
+    success: {
+      wrap: "border-brand bg-brand/15",
+      icon: <CheckCircle2 className="w-4 h-4 text-brand" />,
+      label: "text-brand",
+    },
+    error: {
+      wrap: "border-destructive/60 bg-destructive/10",
+      icon: <AlertCircle className="w-4 h-4 text-destructive" />,
+      label: "text-destructive",
+    },
+  };
+  const s = styles[info.tone];
+  return (
+    <div className={`mt-8 px-4 py-3 border rounded-sm ${s.wrap}`}>
+      <div className="flex items-center gap-2">
+        {s.icon}
+        <span
+          className={`font-code text-[11px] uppercase tracking-widest font-bold ${s.label}`}
+        >
+          {info.label}
+        </span>
+      </div>
+      <p className="mt-1.5 ml-6 font-code text-[11px] text-muted-foreground leading-relaxed">
+        {info.hint}
+      </p>
+      {lastCheckedAt && (
+        <p className="mt-1 ml-6 font-code text-[9px] uppercase tracking-widest text-muted-foreground/60">
+          Última verificação: {new Date(lastCheckedAt).toLocaleTimeString("pt-BR")}
+        </p>
+      )}
+    </div>
+  );
+}
