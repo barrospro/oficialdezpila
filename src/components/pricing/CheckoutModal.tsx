@@ -164,6 +164,20 @@ const schema = z.object({
     .refine(isValidCpf, "CPF inválido"),
 });
 
+// Schemas por campo — usados para validação em tempo real (onChange/onBlur).
+const fieldSchemas = {
+  name: schema.shape.name,
+  email: schema.shape.email,
+  whatsapp: schema.shape.whatsapp,
+  cpf: schema.shape.cpf,
+} as const;
+
+function validateField(field: keyof FormState, value: string): string | undefined {
+  const result = fieldSchemas[field].safeParse(value);
+  if (result.success) return undefined;
+  return result.error.issues[0]?.message ?? "Valor inválido";
+}
+
 const VALID_OFFERS = ["ni918", "h64gr", "oinxr", "lzcus"] as const;
 type OfferHash = (typeof VALID_OFFERS)[number];
 
@@ -198,6 +212,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     cpf: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
   const [pix, setPix] = useState<PixData | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -231,6 +246,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     if (!open && hydrated) {
       setStep("form");
       setErrors({});
+      setTouched({});
       setPix(null);
       setSubmitting(false);
       setSubmitError(null);
@@ -351,7 +367,22 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const update = (field: keyof FormState, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
-    if (errors[field]) setErrors((e) => ({ ...e, [field]: undefined }));
+    // Validação em tempo real:
+    // - Se o campo já foi tocado (onBlur anterior), revalida a cada digitação
+    //   para que o erro suma assim que o usuário corrigir.
+    // - Se ainda não foi tocado, só limpa erro pendente (sem mostrar novo).
+    if (touched[field]) {
+      const msg = validateField(field, value);
+      setErrors((e) => ({ ...e, [field]: msg }));
+    } else if (errors[field]) {
+      setErrors((e) => ({ ...e, [field]: undefined }));
+    }
+  };
+
+  const handleBlur = (field: keyof FormState) => {
+    setTouched((t) => ({ ...t, [field]: true }));
+    const msg = validateField(field, form[field]);
+    setErrors((e) => ({ ...e, [field]: msg }));
   };
 
   const generatePix = async (): Promise<boolean> => {
@@ -498,6 +529,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   label="Nome completo"
                   value={form.name}
                   onChange={(v) => update("name", v)}
+                  onBlur={() => handleBlur("name")}
+                  valid={touched.name && !errors.name && !!form.name}
                   placeholder="João da Silva"
                   error={errors.name}
                   autoComplete="name"
@@ -507,6 +540,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   type="email"
                   value={form.email}
                   onChange={(v) => update("email", v)}
+                  onBlur={() => handleBlur("email")}
+                  valid={touched.email && !errors.email && !!form.email}
                   placeholder="voce@email.com"
                   error={errors.email}
                   autoComplete="email"
@@ -516,6 +551,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   label="WhatsApp"
                   value={form.whatsapp}
                   onChange={(v) => update("whatsapp", maskWhatsapp(v))}
+                  onBlur={() => handleBlur("whatsapp")}
+                  valid={touched.whatsapp && !errors.whatsapp && !!form.whatsapp}
                   placeholder="(11) 99999-9999"
                   error={errors.whatsapp}
                   autoComplete="tel"
@@ -525,6 +562,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   label="CPF"
                   value={form.cpf}
                   onChange={(v) => update("cpf", maskCpf(v))}
+                  onBlur={() => handleBlur("cpf")}
+                  valid={touched.cpf && !errors.cpf && !!form.cpf}
                   placeholder="000.000.000-00"
                   error={errors.cpf}
                   inputMode="numeric"
@@ -731,6 +770,8 @@ type FieldProps = {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  valid?: boolean;
   placeholder?: string;
   error?: string;
   type?: string;
@@ -742,6 +783,8 @@ function Field({
   label,
   value,
   onChange,
+  onBlur,
+  valid,
   placeholder,
   error,
   type = "text",
@@ -753,19 +796,30 @@ function Field({
       <span className="font-code text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">
         {label}
       </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        inputMode={inputMode}
-        className={`w-full px-4 py-3 bg-background/60 border rounded-sm font-code text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 transition-colors ${
-          error
-            ? "border-destructive focus:border-destructive focus:ring-destructive"
-            : "border-border focus:border-brand focus:ring-brand"
-        }`}
-      />
+      <div className="relative">
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          inputMode={inputMode}
+          aria-invalid={!!error}
+          className={`w-full px-4 py-3 pr-10 bg-background/60 border rounded-sm font-code text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 transition-colors ${
+            error
+              ? "border-destructive focus:border-destructive focus:ring-destructive"
+              : valid
+                ? "border-brand/60 focus:border-brand focus:ring-brand"
+                : "border-border focus:border-brand focus:ring-brand"
+          }`}
+        />
+        {error ? (
+          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive pointer-events-none" />
+        ) : valid ? (
+          <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand pointer-events-none" />
+        ) : null}
+      </div>
       {error && (
         <span className="font-code text-[10px] text-destructive mt-1 block">
           [!] {error}
