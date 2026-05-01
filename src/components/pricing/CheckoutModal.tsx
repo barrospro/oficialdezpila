@@ -15,6 +15,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createPix, checkPixStatus } from "@/server/nitro.functions";
+import { PIX_TIMEOUT_MS } from "@/server/nitro-config";
 import {
   clearCheckout,
   loadCheckout,
@@ -45,7 +46,8 @@ type PixData = {
 
 type Step = "form" | "pix" | "success" | "expired";
 
-const PIX_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutos
+// PIX_TIMEOUT_MS é importado de @/server/nitro-config para manter
+// frontend e backend sincronizados.
 
 // Mapeia o payment_status da API Nitro para uma mensagem amigável.
 // Status conhecidos: waiting_payment, processing, paid, approved,
