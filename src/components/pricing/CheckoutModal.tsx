@@ -553,6 +553,20 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
       }
       setErrors(fieldErrors);
+      // Marca todos os campos com erro como touched para exibir feedback visual.
+      setTouched((t) => ({
+        ...t,
+        ...Object.keys(fieldErrors).reduce(
+          (acc, k) => ({ ...acc, [k]: true }),
+          {} as Partial<Record<keyof FormState, boolean>>,
+        ),
+      }));
+      const count = Object.keys(fieldErrors).length;
+      setSubmitError(
+        count === 1
+          ? "Corrija o campo destacado para continuar."
+          : `Corrija os ${count} campos destacados para continuar.`,
+      );
       return false;
     }
     setSubmitting(true);
