@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
+  AlertCircle,
   CheckCircle2,
   Clock,
   Copy,
@@ -45,6 +46,61 @@ type PixData = {
 type Step = "form" | "pix" | "success" | "expired";
 
 const PIX_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutos
+
+// Mapeia o payment_status da API Nitro para uma mensagem amigável.
+// Status conhecidos: waiting_payment, processing, paid, approved,
+// refused, refunded, chargedback, expired, canceled.
+type StatusTone = "pending" | "progress" | "success" | "error";
+type StatusInfo = { tone: StatusTone; label: string; hint: string };
+
+function describeStatus(raw: string | null): StatusInfo {
+  switch (raw) {
+    case "paid":
+    case "approved":
+      return {
+        tone: "success",
+        label: "Pagamento confirmado",
+        hint: "Liberando seu acesso...",
+      };
+    case "processing":
+    case "pending":
+    case "in_process":
+    case "in_analysis":
+      return {
+        tone: "progress",
+        label: "Pagamento em processamento",
+        hint: "Recebemos seu Pix e estamos validando com o banco.",
+      };
+    case "refused":
+    case "failed":
+      return {
+        tone: "error",
+        label: "Pagamento recusado",
+        hint: "O banco recusou a transação. Tente gerar um novo Pix.",
+      };
+    case "refunded":
+    case "chargedback":
+      return {
+        tone: "error",
+        label: "Pagamento estornado",
+        hint: "Esta cobrança foi estornada. Gere um novo Pix para continuar.",
+      };
+    case "expired":
+    case "canceled":
+      return {
+        tone: "error",
+        label: "Cobrança encerrada",
+        hint: "Este Pix não está mais ativo. Gere um novo código.",
+      };
+    case "waiting_payment":
+    default:
+      return {
+        tone: "pending",
+        label: "Aguardando pagamento",
+        hint: "Escaneie o QR Code ou cole o código no seu app do banco.",
+      };
+  }
+}
 
 function formatCountdown(ms: number) {
   const total = Math.max(0, Math.floor(ms / 1000));
@@ -144,6 +200,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   const [copied, setCopied] = useState(false);
   const [pixExpiresAt, setPixExpiresAt] = useState<number | null>(null);
   const [remainingMs, setRemainingMs] = useState<number>(PIX_TIMEOUT_MS);
+  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const [lastCheckedAt, setLastCheckedAt] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const pollRef = useRef<number | null>(null);
 
@@ -175,6 +233,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       setCopied(false);
       setPixExpiresAt(null);
       setRemainingMs(PIX_TIMEOUT_MS);
+      setPaymentStatus(null);
+      setLastCheckedAt(null);
       if (pollRef.current) {
         window.clearInterval(pollRef.current);
         pollRef.current = null;
@@ -224,6 +284,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         // Ignora resposta tardia se o effect já foi limpo ou o Pix expirou.
         if (cancelled) return;
         if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
+        if (res.ok) {
+          setPaymentStatus(res.status ?? "waiting_payment");
+          setLastCheckedAt(Date.now());
+        }
         if (res.ok && (res.status === "paid" || res.status === "approved")) {
           setStep("success");
         }
@@ -231,6 +295,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         // silencioso — tenta de novo no próximo tick
       }
     };
+    // Primeiro tick imediato pra não esperar 4s para mostrar status.
+    tick();
     pollRef.current = window.setInterval(tick, 4000);
     return () => {
       cancelled = true;
@@ -308,6 +374,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       });
       setPixExpiresAt(Date.now() + PIX_TIMEOUT_MS);
       setRemainingMs(PIX_TIMEOUT_MS);
+        setPaymentStatus(res.status ?? "waiting_payment");
+        setLastCheckedAt(Date.now());
       setStep("pix");
       return true;
     } catch (err) {
