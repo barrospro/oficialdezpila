@@ -201,8 +201,39 @@ const schema = z.object({
   cpf: z
     .string()
     .transform(onlyDigits)
-    .refine((v) => v.length === 11, "CPF deve ter 11 dígitos")
-    .refine(isValidCpf, "CPF inválido"),
+    .superRefine((v, ctx) => {
+      if (v.length === 0) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Informe seu CPF" });
+        return;
+      }
+      if (v.length < 11) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `CPF incompleto — faltam ${11 - v.length} dígito${11 - v.length > 1 ? "s" : ""}`,
+        });
+        return;
+      }
+      if (v.length > 11) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "CPF deve ter 11 dígitos",
+        });
+        return;
+      }
+      if (/^(\d)\1{10}$/.test(v)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "CPF inválido (todos os dígitos iguais)",
+        });
+        return;
+      }
+      if (!isValidCpf(v)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "CPF inválido — verifique o dígito verificador",
+        });
+      }
+    }),
 });
 
 // Schemas por campo — usados para validação em tempo real (onChange/onBlur).
