@@ -291,7 +291,7 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background/95 flex-shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            {step === "pix" && (
+            {(step === "pix" || step === "expired") && (
               <button
                 type="button"
                 onClick={() => setStep("form")}
@@ -306,6 +306,8 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
                 ? "Seus Dados"
                 : step === "pix"
                 ? "Pagamento Pix"
+                : step === "expired"
+                ? "Pix Expirado"
                 : "Pagamento Confirmado"} — Plano {planName} ]
             </span>
           </div>
