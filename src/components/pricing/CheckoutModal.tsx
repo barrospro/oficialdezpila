@@ -164,6 +164,20 @@ const schema = z.object({
     .refine(isValidCpf, "CPF inválido"),
 });
 
+// Schemas por campo — usados para validação em tempo real (onChange/onBlur).
+const fieldSchemas = {
+  name: schema.shape.name,
+  email: schema.shape.email,
+  whatsapp: schema.shape.whatsapp,
+  cpf: schema.shape.cpf,
+} as const;
+
+function validateField(field: keyof FormState, value: string): string | undefined {
+  const result = fieldSchemas[field].safeParse(value);
+  if (result.success) return undefined;
+  return result.error.issues[0]?.message ?? "Valor inválido";
+}
+
 const VALID_OFFERS = ["ni918", "h64gr", "oinxr", "lzcus"] as const;
 type OfferHash = (typeof VALID_OFFERS)[number];
 
