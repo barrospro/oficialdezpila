@@ -14,9 +14,15 @@ import { QRCodeSVG } from "qrcode.react";
 import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createPix, checkPixStatus } from "@/server/nitro.functions";
+import {
+  clearCheckout,
+  loadCheckout,
+  saveCheckout,
+} from "./checkout-storage";
 
 type Props = {
   open: boolean;
+  planId: string;
   planName: string;
   link: string;
   onClose: () => void;
@@ -120,7 +126,7 @@ function formatBrl(cents: number) {
   });
 }
 
-export function CheckoutModal({ open, planName, link, onClose }: Props) {
+export function CheckoutModal({ open, planId, planName, link, onClose }: Props) {
   const createPixFn = useServerFn(createPix);
   const checkStatusFn = useServerFn(checkPixStatus);
 
@@ -138,12 +144,29 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
   const [copied, setCopied] = useState(false);
   const [pixExpiresAt, setPixExpiresAt] = useState<number | null>(null);
   const [remainingMs, setRemainingMs] = useState<number>(PIX_TIMEOUT_MS);
+  const [hydrated, setHydrated] = useState(false);
   const pollRef = useRef<number | null>(null);
 
   const offerHash = extractOfferHash(link);
 
+  // Hidratar do sessionStorage no primeiro mount (antes do effect de close).
   useEffect(() => {
-    if (!open) {
+    const persisted = loadCheckout();
+    if (persisted) {
+      // Se o Pix em andamento já passou do prazo, marca como expirado direto.
+      const isExpired =
+        persisted.step === "pix" && persisted.expiresAt <= Date.now();
+      setForm(persisted.form);
+      setPix(persisted.pix);
+      setPixExpiresAt(persisted.expiresAt);
+      setRemainingMs(Math.max(0, persisted.expiresAt - Date.now()));
+      setStep(isExpired ? "expired" : persisted.step);
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open && hydrated) {
       setStep("form");
       setErrors({});
       setPix(null);
@@ -156,8 +179,35 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
         window.clearInterval(pollRef.current);
         pollRef.current = null;
       }
+      // Só limpa o storage se NÃO houver Pix em andamento que valha
+      // a pena reabrir depois. O usuário pode ter fechado o modal
+      // sem terminar — preservamos pra ele voltar.
+      const persisted = loadCheckout();
+      if (
+        !persisted ||
+        persisted.step === "success" ||
+        persisted.step === "expired"
+      ) {
+        clearCheckout();
+      }
     }
-  }, [open]);
+  }, [open, hydrated]);
+
+  // Persistir mudanças relevantes no sessionStorage.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!pix || !pixExpiresAt) return;
+    if (step !== "pix" && step !== "success" && step !== "expired") return;
+    saveCheckout({
+      step,
+      planId,
+      planName,
+      offerHash: offerHash ?? "",
+      pix,
+      form,
+      expiresAt: pixExpiresAt,
+    });
+  }, [hydrated, step, pix, pixExpiresAt, planId, planName, offerHash, form]);
 
   // Polling: enquanto estiver na tela do Pix, consulta status a cada 4s
   useEffect(() => {
