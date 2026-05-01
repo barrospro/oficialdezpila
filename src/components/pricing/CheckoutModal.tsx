@@ -460,9 +460,63 @@ export function CheckoutModal({ open, planName, link, onClose }: Props) {
                 Aguardando confirmação do pagamento...
               </div>
 
-              <p className="mt-4 text-center text-muted-foreground font-code text-[10px] uppercase tracking-widest">
+              <div className="mt-4 flex items-center justify-center gap-1.5 text-muted-foreground font-code text-[10px] uppercase tracking-widest">
+                <Clock className="w-3 h-3" />
+                Expira em <span className="text-brand">{formatCountdown(remainingMs)}</span>
+              </div>
+
+              <p className="mt-2 text-center text-muted-foreground/70 font-code text-[10px] uppercase tracking-widest">
                 Esta tela atualiza sozinha quando o Pix for pago
               </p>
+            </div>
+          </div>
+        )}
+
+        {step === "expired" && (
+          <div className="flex-1 overflow-y-auto px-6 py-12 sm:px-10 sm:py-16">
+            <div className="max-w-md mx-auto text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-full bg-destructive/15 border border-destructive/60 flex items-center justify-center">
+                  <Clock className="w-10 h-10 text-destructive" />
+                </div>
+              </div>
+              <p className="font-code text-[10px] uppercase tracking-widest text-destructive mb-2">
+                [ Pix expirado ]
+              </p>
+              <h3 className="text-2xl font-bold tracking-tight mb-3">
+                O tempo do seu Pix acabou
+              </h3>
+              <p className="text-muted-foreground font-code text-xs mb-8">
+                Por segurança, códigos Pix expiram após 20 minutos sem pagamento.
+                Gere um novo código com os mesmos dados em um clique.
+              </p>
+              {submitError && (
+                <div className="mb-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm text-left">
+                  <p className="font-code text-[11px] text-destructive">
+                    [!] {submitError}
+                  </p>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handleRegenerate}
+                disabled={submitting}
+                className="w-full py-4 font-bold uppercase tracking-widest text-sm bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-4 h-4" />
+                )}
+                {submitting ? "Gerando novo Pix..." : "Gerar novo Pix"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("form")}
+                className="w-full mt-3 py-3 font-code text-[11px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Editar meus dados
+              </button>
             </div>
           </div>
         )}
