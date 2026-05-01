@@ -363,6 +363,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   const [lastCheckedAt, setLastCheckedAt] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const pollRef = useRef<number | null>(null);
+  // Trava síncrona contra cliques rápidos repetidos. setSubmitting é assíncrono
+  // (só vale após re-render), então um segundo clique no mesmo tick poderia
+  // disparar a API antes do estado atualizar. Esta ref bloqueia em tempo real.
+  const inFlightRef = useRef(false);
 
   const offerHash = extractOfferHash(link);
 
@@ -552,11 +556,16 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   };
 
   const generatePix = async (): Promise<boolean> => {
+    // Guard 1: bloqueia reentrância síncrona (clique duplo, Enter+clique, etc.).
+    if (inFlightRef.current) return false;
     setSubmitError(null);
     if (!offerHash) {
       setSubmitError("Plano inválido. Recarregue a página.");
       return false;
     }
+    // Guard 2: revalida o schema completo ANTES de qualquer chamada à API.
+    // Esta validação é a única fonte de verdade para "form OK?" — não
+    // dependemos do estado `errors` (que pode estar stale entre renders).
     const result = schema.safeParse(form);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof FormState, string>> = {};
@@ -581,6 +590,9 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       );
       return false;
     }
+    // Tudo válido: marca in-flight ANTES de qualquer await para que cliques
+    // subsequentes no mesmo tick caiam no Guard 1 acima.
+    inFlightRef.current = true;
     setSubmitting(true);
     try {
       const res = await createPixFn({
@@ -621,6 +633,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       return false;
     } finally {
       setSubmitting(false);
+      inFlightRef.current = false;
     }
   };
 
