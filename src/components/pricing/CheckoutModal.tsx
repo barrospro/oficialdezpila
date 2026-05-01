@@ -7,6 +7,8 @@ import {
   Copy,
   Loader2,
   Lock,
+  Mail,
+  MessageCircle,
   RefreshCw,
   Shield,
   X,
@@ -615,6 +617,26 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
               <p className="mt-2 text-center text-muted-foreground/70 font-code text-[10px] uppercase tracking-widest">
                 Esta tela atualiza sozinha — você não precisa recarregar
               </p>
+
+              <div className="mt-6 px-4 py-4 border border-brand/40 bg-brand/5 rounded-sm">
+                <p className="font-code text-[10px] uppercase tracking-widest text-brand mb-3 text-center">
+                  [ Após o pagamento ]
+                </p>
+                <p className="text-foreground/90 font-code text-xs text-center mb-3 leading-relaxed">
+                  Os dados de acesso ao aplicativo serão enviados automaticamente para você por:
+                </p>
+                <div className="flex items-center justify-center gap-4 text-foreground">
+                  <span className="flex items-center gap-1.5 font-code text-[11px]">
+                    <Mail className="w-3.5 h-3.5 text-brand" />
+                    E-mail
+                  </span>
+                  <span className="text-muted-foreground/40">|</span>
+                  <span className="flex items-center gap-1.5 font-code text-[11px]">
+                    <MessageCircle className="w-3.5 h-3.5 text-brand" />
+                    WhatsApp
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         )}
