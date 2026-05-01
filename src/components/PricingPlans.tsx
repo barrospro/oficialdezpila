@@ -50,6 +50,7 @@ export function PricingPlans() {
 
       <CheckoutModal
         open={checkoutOpen}
+        planId={active.id}
         planName={active.name}
         link={active.link}
         onClose={() => setCheckoutOpen(false)}
