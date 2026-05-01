@@ -439,6 +439,20 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const update = (field: keyof FormState, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
+    // Auto-touch quando o campo atinge o comprimento completo esperado
+    // (CPF com 11 dígitos, WhatsApp com 11 dígitos). Isso permite mostrar
+    // erros como "dígito verificador inválido" assim que o usuário termina
+    // de digitar, sem precisar esperar o blur.
+    const digits = value.replace(/\D/g, "");
+    const isComplete =
+      (field === "cpf" && digits.length === 11) ||
+      (field === "whatsapp" && digits.length === 11);
+    if (isComplete && !touched[field]) {
+      setTouched((t) => ({ ...t, [field]: true }));
+      const msg = validateField(field, value);
+      setErrors((e) => ({ ...e, [field]: msg }));
+      return;
+    }
     // Validação em tempo real:
     // - Se o campo já foi tocado (onBlur anterior), revalida a cada digitação
     //   para que o erro suma assim que o usuário corrigir.
