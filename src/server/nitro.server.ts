@@ -95,6 +95,10 @@ export async function createPixTransaction(input: {
   const createdAtMs = parseDate(createdAtRaw) ?? Date.now();
   const expiresAtMs = createdAtMs + PIX_TIMEOUT_MS;
 
+  console.log("[nitro.create] hash=%s created_at_raw=%s created_at_ms=%s now=%s diff_min=%s",
+    hash, createdAtRaw, createdAtMs, Date.now(),
+    Math.round((Date.now() - createdAtMs) / 60000));
+
   return {
     hash,
     pix_qr_code: pix.pix_qr_code,
