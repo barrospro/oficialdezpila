@@ -201,8 +201,39 @@ const schema = z.object({
   cpf: z
     .string()
     .transform(onlyDigits)
-    .refine((v) => v.length === 11, "CPF deve ter 11 dígitos")
-    .refine(isValidCpf, "CPF inválido"),
+    .superRefine((v, ctx) => {
+      if (v.length === 0) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Informe seu CPF" });
+        return;
+      }
+      if (v.length < 11) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `CPF incompleto — faltam ${11 - v.length} dígito${11 - v.length > 1 ? "s" : ""}`,
+        });
+        return;
+      }
+      if (v.length > 11) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "CPF deve ter 11 dígitos",
+        });
+        return;
+      }
+      if (/^(\d)\1{10}$/.test(v)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "CPF inválido (todos os dígitos iguais)",
+        });
+        return;
+      }
+      if (!isValidCpf(v)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "CPF inválido — verifique o dígito verificador",
+        });
+      }
+    }),
 });
 
 // Schemas por campo — usados para validação em tempo real (onChange/onBlur).
@@ -408,6 +439,20 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const update = (field: keyof FormState, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
+    // Auto-touch quando o campo atinge o comprimento completo esperado
+    // (CPF com 11 dígitos, WhatsApp com 11 dígitos). Isso permite mostrar
+    // erros como "dígito verificador inválido" assim que o usuário termina
+    // de digitar, sem precisar esperar o blur.
+    const digits = value.replace(/\D/g, "");
+    const isComplete =
+      (field === "cpf" && digits.length === 11) ||
+      (field === "whatsapp" && digits.length === 11);
+    if (isComplete && !touched[field]) {
+      setTouched((t) => ({ ...t, [field]: true }));
+      const msg = validateField(field, value);
+      setErrors((e) => ({ ...e, [field]: msg }));
+      return;
+    }
     // Validação em tempo real:
     // - Se o campo já foi tocado (onBlur anterior), revalida a cada digitação
     //   para que o erro suma assim que o usuário corrigir.
