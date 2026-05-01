@@ -156,7 +156,48 @@ const schema = z.object({
   whatsapp: z
     .string()
     .transform(onlyDigits)
-    .refine((v) => v.length >= 10 && v.length <= 11, "WhatsApp inválido"),
+    .superRefine((v, ctx) => {
+      if (v.length === 0) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Informe seu WhatsApp" });
+        return;
+      }
+      if (v.length < 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "WhatsApp incompleto — informe DDD + número (11 dígitos)",
+        });
+        return;
+      }
+      if (v.length > 11) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "WhatsApp deve ter no máximo 11 dígitos (DDD + número)",
+        });
+        return;
+      }
+      const ddd = parseInt(v.slice(0, 2), 10);
+      // DDDs válidos no Brasil vão de 11 a 99 (não existem 10, 20, 23, 25, 26, 29, etc.,
+      // mas validamos a faixa principal — qualquer DDD começando com 0 ou 1 inválido).
+      if (ddd < 11) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "DDD inválido" });
+        return;
+      }
+      // Celular brasileiro: 11 dígitos e o terceiro dígito deve ser 9.
+      if (v.length === 11 && v[2] !== "9") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Número de celular deve começar com 9 após o DDD",
+        });
+        return;
+      }
+      // Se vier com 10 dígitos, é fixo — não aceitamos para WhatsApp.
+      if (v.length === 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Informe um celular com 9 dígitos após o DDD",
+        });
+      }
+    }),
   cpf: z
     .string()
     .transform(onlyDigits)
