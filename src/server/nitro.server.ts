@@ -88,11 +88,11 @@ export async function createPixTransaction(input: {
     throw new Error("Resposta inesperada da Nitro: faltou hash ou pix_qr_code");
   }
 
-  const createdAtRaw =
-    (data.created_at as string | undefined) ??
-    (data.date_created as string | undefined) ??
-    new Date().toISOString();
-  const createdAtMs = parseDate(createdAtRaw) ?? Date.now();
+  // IMPORTANTE: usamos o relógio do servidor como referência da expiração.
+  // O `created_at` da Nitro vem sem timezone explícita, o que dá divergência
+  // de várias horas se interpretado como UTC. Como a transação acabou de ser
+  // criada agora, Date.now() é a fonte da verdade mais segura.
+  const createdAtMs = Date.now();
   const expiresAtMs = createdAtMs + PIX_TIMEOUT_MS;
 
   return {
@@ -129,36 +129,16 @@ export async function getTransactionStatus(hash: string): Promise<{
 
   const rawStatus = (data.payment_status as string) ?? "waiting_payment";
   const paidAt = (data.paid_at as string) ?? null;
-  const createdAtRaw =
-    (data.created_at as string | undefined) ??
-    (data.date_created as string | undefined) ??
-    null;
-  const createdAtMs = createdAtRaw ? parseDate(createdAtRaw) : null;
-  const expiresAtMs = createdAtMs !== null ? createdAtMs + PIX_TIMEOUT_MS : null;
 
-  // Se já passou da janela de 20min sem pagamento confirmado, considera expirado
-  // — independente do que a Nitro retornar (eles mantêm "waiting_payment" por horas).
-  const isPaid = rawStatus === "paid" || rawStatus === "approved";
-  const isExpired =
-    !isPaid &&
-    expiresAtMs !== null &&
-    Date.now() >= expiresAtMs;
-
+  // Não temos como saber no servidor quando este Pix foi criado (não persistimos).
+  // O frontend é quem detém o expires_at autoritativo (recebido na criação),
+  // então aqui só repassamos o status cru da Nitro + o paid_at.
+  // O cliente já cuida da expiração via countdown local sincronizado com expires_at.
   return {
-    status: isExpired ? "expired" : rawStatus,
+    status: rawStatus,
     paid_at: paidAt,
-    created_at: createdAtMs ? new Date(createdAtMs).toISOString() : null,
-    expires_at: expiresAtMs ? new Date(expiresAtMs).toISOString() : null,
-    expired: isExpired,
+    created_at: null,
+    expires_at: null,
+    expired: false,
   };
-}
-
-// Aceita ISO ("2026-05-01T12:00:00Z") ou "YYYY-MM-DD HH:mm:ss" (formato Nitro).
-function parseDate(raw: string): number | null {
-  const direct = Date.parse(raw);
-  if (!Number.isNaN(direct)) return direct;
-  // Formato "YYYY-MM-DD HH:mm:ss" (sem timezone) — assume UTC.
-  const fixed = raw.replace(" ", "T") + "Z";
-  const fallback = Date.parse(fixed);
-  return Number.isNaN(fallback) ? null : fallback;
 }
