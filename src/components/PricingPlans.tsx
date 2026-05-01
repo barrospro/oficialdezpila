@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlanTabs } from "./pricing/PlanTabs";
 import { PlanDetails } from "./pricing/PlanDetails";
 import { CheckoutModal } from "./pricing/CheckoutModal";
 import { features, plans } from "./pricing/plans-data";
+import { loadCheckout } from "./pricing/checkout-storage";
 
 export function PricingPlans() {
   const [activeId, setActiveId] = useState("SEMESTRAL");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const active = plans.find((p) => p.id === activeId)!;
+
+  // Restaurar checkout em andamento ao recarregar a página.
+  useEffect(() => {
+    const persisted = loadCheckout();
+    if (!persisted) return;
+    if (plans.some((p) => p.id === persisted.planId)) {
+      setActiveId(persisted.planId);
+    }
+    setCheckoutOpen(true);
+  }, []);
 
   return (
     <section id="planos" className="px-6 lg:px-12 py-24 relative z-10 border-t border-border">
