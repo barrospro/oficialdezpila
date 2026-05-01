@@ -366,7 +366,22 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const update = (field: keyof FormState, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
-    if (errors[field]) setErrors((e) => ({ ...e, [field]: undefined }));
+    // Validação em tempo real:
+    // - Se o campo já foi tocado (onBlur anterior), revalida a cada digitação
+    //   para que o erro suma assim que o usuário corrigir.
+    // - Se ainda não foi tocado, só limpa erro pendente (sem mostrar novo).
+    if (touched[field]) {
+      const msg = validateField(field, value);
+      setErrors((e) => ({ ...e, [field]: msg }));
+    } else if (errors[field]) {
+      setErrors((e) => ({ ...e, [field]: undefined }));
+    }
+  };
+
+  const handleBlur = (field: keyof FormState) => {
+    setTouched((t) => ({ ...t, [field]: true }));
+    const msg = validateField(field, form[field]);
+    setErrors((e) => ({ ...e, [field]: msg }));
   };
 
   const generatePix = async (): Promise<boolean> => {
