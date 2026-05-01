@@ -289,9 +289,20 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         if (res.ok) {
           setPaymentStatus(res.status ?? "waiting_payment");
           setLastCheckedAt(Date.now());
+          // Se o backend retornou um expires_at autoritativo,
+          // alinhamos o countdown com ele (evita drift de relógio).
+          if (res.expires_at) {
+            const serverExpires = Date.parse(res.expires_at);
+            if (!Number.isNaN(serverExpires) && serverExpires !== pixExpiresAt) {
+              setPixExpiresAt(serverExpires);
+            }
+          }
         }
         if (res.ok && (res.status === "paid" || res.status === "approved")) {
           setStep("success");
+        } else if (res.ok && (res.status === "expired" || res.expired)) {
+          // Backend já decretou expirado — encerra o polling imediatamente.
+          setStep("expired");
         }
       } catch {
         // silencioso — tenta de novo no próximo tick
