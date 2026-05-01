@@ -420,6 +420,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       setStep("form");
       setErrors({});
       setTouched({});
+      setSubmitAttempted(false);
       setPix(null);
       setSubmitting(false);
       setSubmitError(null);
