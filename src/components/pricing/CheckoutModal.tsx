@@ -246,6 +246,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     if (!open && hydrated) {
       setStep("form");
       setErrors({});
+      setTouched({});
       setPix(null);
       setSubmitting(false);
       setSubmitError(null);
