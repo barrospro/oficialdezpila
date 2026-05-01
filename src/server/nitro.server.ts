@@ -148,6 +148,11 @@ export async function getTransactionStatus(hash: string): Promise<{
     expiresAtMs !== null &&
     Date.now() >= expiresAtMs;
 
+  console.log("[nitro.status] hash=%s raw_status=%s created_at_raw=%s diff_min=%s isExpired=%s",
+    hash, rawStatus, createdAtRaw,
+    createdAtMs ? Math.round((Date.now() - createdAtMs) / 60000) : "n/a",
+    isExpired);
+
   return {
     status: isExpired ? "expired" : rawStatus,
     paid_at: paidAt,
