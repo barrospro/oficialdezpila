@@ -37,9 +37,7 @@ export function Footer() {
             </div>
 
             <div>
-              <p className="font-bold text-xs mb-3 uppercase tracking-widest">
-                Site Seguro
-              </p>
+              <p className="font-bold text-xs mb-3 uppercase tracking-widest">Site Seguro</p>
               <div className="flex gap-3 text-xs text-muted-foreground">
                 <span className="bg-secondary px-3 py-1.5 font-code">🔒 SSL</span>
                 <span className="bg-secondary px-3 py-1.5 font-code">🛡️ BLINDADO</span>

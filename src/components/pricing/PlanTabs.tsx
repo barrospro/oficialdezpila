@@ -25,9 +25,7 @@ export function PlanTabs({ plans, activeId, onSelect }: Props) {
             {plan.discount && (
               <span
                 className={`absolute -top-2 -right-1 text-[8px] px-1.5 py-0.5 font-bold rounded-sm ${
-                  isActive
-                    ? "bg-foreground text-background"
-                    : "bg-brand text-brand-foreground"
+                  isActive ? "bg-foreground text-background" : "bg-brand text-brand-foreground"
                 }`}
               >
                 {plan.discount}

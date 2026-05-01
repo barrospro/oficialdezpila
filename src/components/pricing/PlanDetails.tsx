@@ -18,9 +18,7 @@ export function PlanDetails({ plan, features, onCheckout }: Props) {
           <span className="text-5xl md:text-7xl font-bold tabular-nums tracking-tighter font-code glow-text">
             R${plan.price}
           </span>
-          <span className="font-code text-sm text-muted-foreground mb-3">
-            {plan.period}
-          </span>
+          <span className="font-code text-sm text-muted-foreground mb-3">{plan.period}</span>
         </div>
         {plan.originalPrice && (
           <p className="text-muted-foreground/50 text-sm line-through font-code mt-2">
@@ -53,9 +51,7 @@ export function PlanDetails({ plan, features, onCheckout }: Props) {
           <Lock className="w-3 h-3" />
           <span>Ambiente Seguro</span>
         </div>
-        <p className="text-muted-foreground/60 font-code text-xs">
-          Acesso imediato após pagamento
-        </p>
+        <p className="text-muted-foreground/60 font-code text-xs">Acesso imediato após pagamento</p>
       </div>
     </>
   );

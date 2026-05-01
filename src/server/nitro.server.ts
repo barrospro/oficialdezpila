@@ -70,15 +70,13 @@ export async function createPixTransaction(input: {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(body),
-    }
+    },
   );
 
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok) {
     const msg =
-      typeof data?.message === "string"
-        ? data.message
-        : `Erro na Nitro (HTTP ${res.status})`;
+      typeof data?.message === "string" ? data.message : `Erro na Nitro (HTTP ${res.status})`;
     throw new Error(msg);
   }
 
@@ -115,7 +113,7 @@ export async function getTransactionStatus(hash: string): Promise<{
 }> {
   const res = await fetch(
     `${NITRO_BASE}/transactions/${encodeURIComponent(hash)}?api_token=${encodeURIComponent(getApiKey())}`,
-    { headers: { Accept: "application/json" } }
+    { headers: { Accept: "application/json" } },
   );
 
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
