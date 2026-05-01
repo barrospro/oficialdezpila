@@ -529,6 +529,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   label="Nome completo"
                   value={form.name}
                   onChange={(v) => update("name", v)}
+                  onBlur={() => handleBlur("name")}
+                  valid={touched.name && !errors.name && !!form.name}
                   placeholder="João da Silva"
                   error={errors.name}
                   autoComplete="name"
@@ -538,6 +540,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   type="email"
                   value={form.email}
                   onChange={(v) => update("email", v)}
+                  onBlur={() => handleBlur("email")}
+                  valid={touched.email && !errors.email && !!form.email}
                   placeholder="voce@email.com"
                   error={errors.email}
                   autoComplete="email"
@@ -547,6 +551,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   label="WhatsApp"
                   value={form.whatsapp}
                   onChange={(v) => update("whatsapp", maskWhatsapp(v))}
+                  onBlur={() => handleBlur("whatsapp")}
+                  valid={touched.whatsapp && !errors.whatsapp && !!form.whatsapp}
                   placeholder="(11) 99999-9999"
                   error={errors.whatsapp}
                   autoComplete="tel"
@@ -556,6 +562,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                   label="CPF"
                   value={form.cpf}
                   onChange={(v) => update("cpf", maskCpf(v))}
+                  onBlur={() => handleBlur("cpf")}
+                  valid={touched.cpf && !errors.cpf && !!form.cpf}
                   placeholder="000.000.000-00"
                   error={errors.cpf}
                   inputMode="numeric"
