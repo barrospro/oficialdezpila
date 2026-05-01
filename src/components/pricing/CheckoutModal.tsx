@@ -212,6 +212,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     cpf: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
   const [pix, setPix] = useState<PixData | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
