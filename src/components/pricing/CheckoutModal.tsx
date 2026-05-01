@@ -363,6 +363,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   const [lastCheckedAt, setLastCheckedAt] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const pollRef = useRef<number | null>(null);
+  // Trava síncrona contra cliques rápidos repetidos. setSubmitting é assíncrono
+  // (só vale após re-render), então um segundo clique no mesmo tick poderia
+  // disparar a API antes do estado atualizar. Esta ref bloqueia em tempo real.
+  const inFlightRef = useRef(false);
 
   const offerHash = extractOfferHash(link);
 
