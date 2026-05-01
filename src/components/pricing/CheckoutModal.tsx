@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
+  AlertCircle,
   CheckCircle2,
   Clock,
   Copy,
@@ -45,6 +46,61 @@ type PixData = {
 type Step = "form" | "pix" | "success" | "expired";
 
 const PIX_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutos
+
+// Mapeia o payment_status da API Nitro para uma mensagem amigável.
+// Status conhecidos: waiting_payment, processing, paid, approved,
+// refused, refunded, chargedback, expired, canceled.
+type StatusTone = "pending" | "progress" | "success" | "error";
+type StatusInfo = { tone: StatusTone; label: string; hint: string };
+
+function describeStatus(raw: string | null): StatusInfo {
+  switch (raw) {
+    case "paid":
+    case "approved":
+      return {
+        tone: "success",
+        label: "Pagamento confirmado",
+        hint: "Liberando seu acesso...",
+      };
+    case "processing":
+    case "pending":
+    case "in_process":
+    case "in_analysis":
+      return {
+        tone: "progress",
+        label: "Pagamento em processamento",
+        hint: "Recebemos seu Pix e estamos validando com o banco.",
+      };
+    case "refused":
+    case "failed":
+      return {
+        tone: "error",
+        label: "Pagamento recusado",
+        hint: "O banco recusou a transação. Tente gerar um novo Pix.",
+      };
+    case "refunded":
+    case "chargedback":
+      return {
+        tone: "error",
+        label: "Pagamento estornado",
+        hint: "Esta cobrança foi estornada. Gere um novo Pix para continuar.",
+      };
+    case "expired":
+    case "canceled":
+      return {
+        tone: "error",
+        label: "Cobrança encerrada",
+        hint: "Este Pix não está mais ativo. Gere um novo código.",
+      };
+    case "waiting_payment":
+    default:
+      return {
+        tone: "pending",
+        label: "Aguardando pagamento",
+        hint: "Escaneie o QR Code ou cole o código no seu app do banco.",
+      };
+  }
+}
 
 function formatCountdown(ms: number) {
   const total = Math.max(0, Math.floor(ms / 1000));
@@ -144,6 +200,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   const [copied, setCopied] = useState(false);
   const [pixExpiresAt, setPixExpiresAt] = useState<number | null>(null);
   const [remainingMs, setRemainingMs] = useState<number>(PIX_TIMEOUT_MS);
+  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const [lastCheckedAt, setLastCheckedAt] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const pollRef = useRef<number | null>(null);
 
@@ -175,6 +233,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       setCopied(false);
       setPixExpiresAt(null);
       setRemainingMs(PIX_TIMEOUT_MS);
+      setPaymentStatus(null);
+      setLastCheckedAt(null);
       if (pollRef.current) {
         window.clearInterval(pollRef.current);
         pollRef.current = null;
@@ -224,6 +284,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         // Ignora resposta tardia se o effect já foi limpo ou o Pix expirou.
         if (cancelled) return;
         if (pixExpiresAt && pixExpiresAt <= Date.now()) return;
+        if (res.ok) {
+          setPaymentStatus(res.status ?? "waiting_payment");
+          setLastCheckedAt(Date.now());
+        }
         if (res.ok && (res.status === "paid" || res.status === "approved")) {
           setStep("success");
         }
@@ -231,6 +295,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         // silencioso — tenta de novo no próximo tick
       }
     };
+    // Primeiro tick imediato pra não esperar 4s para mostrar status.
+    tick();
     pollRef.current = window.setInterval(tick, 4000);
     return () => {
       cancelled = true;
@@ -308,6 +374,8 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       });
       setPixExpiresAt(Date.now() + PIX_TIMEOUT_MS);
       setRemainingMs(PIX_TIMEOUT_MS);
+        setPaymentStatus(res.status ?? "waiting_payment");
+        setLastCheckedAt(Date.now());
       setStep("pix");
       return true;
     } catch (err) {
@@ -515,10 +583,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 </div>
               </div>
 
-              <div className="mt-8 flex items-center justify-center gap-2 text-muted-foreground font-code text-[11px]">
-                <Loader2 className="w-3 h-3 animate-spin text-brand" />
-                Aguardando confirmação do pagamento...
-              </div>
+              <StatusBanner
+                info={describeStatus(paymentStatus)}
+                lastCheckedAt={lastCheckedAt}
+              />
 
               <div className="mt-4 flex items-center justify-center gap-1.5 text-muted-foreground font-code text-[10px] uppercase tracking-widest">
                 <Clock className="w-3 h-3" />
@@ -526,7 +594,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
               </div>
 
               <p className="mt-2 text-center text-muted-foreground/70 font-code text-[10px] uppercase tracking-widest">
-                Esta tela atualiza sozinha quando o Pix for pago
+                Esta tela atualiza sozinha — você não precisa recarregar
               </p>
             </div>
           </div>
@@ -659,5 +727,57 @@ function Field({
         </span>
       )}
     </label>
+  );
+}
+
+function StatusBanner({
+  info,
+  lastCheckedAt,
+}: {
+  info: StatusInfo;
+  lastCheckedAt: number | null;
+}) {
+  const styles: Record<StatusTone, { wrap: string; icon: React.ReactNode; label: string }> = {
+    pending: {
+      wrap: "border-brand/40 bg-brand/5",
+      icon: <Loader2 className="w-4 h-4 animate-spin text-brand" />,
+      label: "text-brand",
+    },
+    progress: {
+      wrap: "border-yellow-500/50 bg-yellow-500/10",
+      icon: <Loader2 className="w-4 h-4 animate-spin text-yellow-400" />,
+      label: "text-yellow-300",
+    },
+    success: {
+      wrap: "border-brand bg-brand/15",
+      icon: <CheckCircle2 className="w-4 h-4 text-brand" />,
+      label: "text-brand",
+    },
+    error: {
+      wrap: "border-destructive/60 bg-destructive/10",
+      icon: <AlertCircle className="w-4 h-4 text-destructive" />,
+      label: "text-destructive",
+    },
+  };
+  const s = styles[info.tone];
+  return (
+    <div className={`mt-8 px-4 py-3 border rounded-sm ${s.wrap}`}>
+      <div className="flex items-center gap-2">
+        {s.icon}
+        <span
+          className={`font-code text-[11px] uppercase tracking-widest font-bold ${s.label}`}
+        >
+          {info.label}
+        </span>
+      </div>
+      <p className="mt-1.5 ml-6 font-code text-[11px] text-muted-foreground leading-relaxed">
+        {info.hint}
+      </p>
+      {lastCheckedAt && (
+        <p className="mt-1 ml-6 font-code text-[9px] uppercase tracking-widest text-muted-foreground/60">
+          Última verificação: {new Date(lastCheckedAt).toLocaleTimeString("pt-BR")}
+        </p>
+      )}
+    </div>
   );
 }
