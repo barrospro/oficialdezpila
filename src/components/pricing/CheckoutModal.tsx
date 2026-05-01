@@ -366,6 +366,18 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const offerHash = extractOfferHash(link);
 
+  // Validação derivada: o form é válido quando o schema completo passa.
+  // Usado para desabilitar o botão "Gerar Pix" enquanto houver qualquer erro.
+  const formIsValid = schema.safeParse(form).success;
+  const errorEntries = (Object.entries(errors) as [keyof FormState, string | undefined][])
+    .filter(([, msg]) => !!msg) as [keyof FormState, string][];
+  const fieldLabels: Record<keyof FormState, string> = {
+    name: "Nome completo",
+    email: "E-mail",
+    whatsapp: "WhatsApp",
+    cpf: "CPF",
+  };
+
   // Hidratar do sessionStorage no primeiro mount (antes do effect de close).
   useEffect(() => {
     const persisted = loadCheckout();
@@ -553,6 +565,20 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
       }
       setErrors(fieldErrors);
+      // Marca todos os campos com erro como touched para exibir feedback visual.
+      setTouched((t) => ({
+        ...t,
+        ...Object.keys(fieldErrors).reduce(
+          (acc, k) => ({ ...acc, [k]: true }),
+          {} as Partial<Record<keyof FormState, boolean>>,
+        ),
+      }));
+      const count = Object.keys(fieldErrors).length;
+      setSubmitError(
+        count === 1
+          ? "Corrija o campo destacado para continuar."
+          : `Corrija os ${count} campos destacados para continuar.`,
+      );
       return false;
     }
     setSubmitting(true);
@@ -724,17 +750,36 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 />
               </div>
 
-              {submitError && (
+              {(submitError || errorEntries.length > 0) && (
                 <div className="mt-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm">
-                  <p className="font-code text-[11px] text-destructive">
-                    [!] {submitError}
-                  </p>
+                  {submitError && (
+                    <p className="font-code text-[11px] text-destructive">
+                      [!] {submitError}
+                    </p>
+                  )}
+                  {errorEntries.length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                      {errorEntries.map(([field, msg]) => (
+                        <li
+                          key={field}
+                          className="font-code text-[11px] text-destructive flex gap-2"
+                        >
+                          <span className="opacity-70">›</span>
+                          <span>
+                            <strong className="font-semibold">{fieldLabels[field]}:</strong>{" "}
+                            {msg}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || !formIsValid}
+                aria-disabled={submitting || !formIsValid}
                 className="w-full mt-8 py-5 font-bold uppercase tracking-widest text-base bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
