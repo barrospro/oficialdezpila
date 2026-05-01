@@ -385,8 +385,14 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
         amount: res.amount,
         offer_title: res.offer_title,
       });
-      setPixExpiresAt(Date.now() + PIX_TIMEOUT_MS);
-      setRemainingMs(PIX_TIMEOUT_MS);
+      // Prefere o expires_at autoritativo do servidor; cai pro relógio
+      // local se a Nitro não retornar um created_at válido.
+      const serverExpires = res.expires_at ? Date.parse(res.expires_at) : NaN;
+      const expiresAt = Number.isNaN(serverExpires)
+        ? Date.now() + PIX_TIMEOUT_MS
+        : serverExpires;
+      setPixExpiresAt(expiresAt);
+      setRemainingMs(Math.max(0, expiresAt - Date.now()));
         setPaymentStatus(res.status ?? "waiting_payment");
         setLastCheckedAt(Date.now());
       setStep("pix");
