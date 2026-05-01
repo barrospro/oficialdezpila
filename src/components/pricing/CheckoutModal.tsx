@@ -353,6 +353,10 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
   });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
+  // Marca que o usuário já tentou submeter pelo menos uma vez. Após isso o
+  // resumo de erros mostra TODOS os erros do form em tempo real, mesmo de
+  // campos não tocados.
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const [pix, setPix] = useState<PixData | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -370,11 +374,24 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const offerHash = extractOfferHash(link);
 
-  // Validação derivada: o form é válido quando o schema completo passa.
-  // Usado para desabilitar o botão "Gerar Pix" enquanto houver qualquer erro.
-  const formIsValid = schema.safeParse(form).success;
-  const errorEntries = (Object.entries(errors) as [keyof FormState, string | undefined][])
-    .filter(([, msg]) => !!msg) as [keyof FormState, string][];
+  // Validação derivada — fonte única de verdade rodada a cada render.
+  const liveValidation = schema.safeParse(form);
+  const formIsValid = liveValidation.success;
+  // Mapa completo de erros do form (independente de `touched`).
+  const liveErrors: Partial<Record<keyof FormState, string>> = {};
+  if (!liveValidation.success) {
+    for (const issue of liveValidation.error.issues) {
+      const key = issue.path[0] as keyof FormState;
+      if (!liveErrors[key]) liveErrors[key] = issue.message;
+    }
+  }
+  // Para o resumo: mostra todos os erros após primeira tentativa de submit;
+  // antes disso, mostra apenas erros de campos que o usuário já interagiu.
+  const summaryErrors: [keyof FormState, string][] = (
+    Object.entries(liveErrors) as [keyof FormState, string | undefined][]
+  )
+    .filter(([field, msg]) => !!msg && (submitAttempted || touched[field]))
+    .map(([field, msg]) => [field, msg!]);
   const fieldLabels: Record<keyof FormState, string> = {
     name: "Nome completo",
     email: "E-mail",
@@ -403,6 +420,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       setStep("form");
       setErrors({});
       setTouched({});
+      setSubmitAttempted(false);
       setPix(null);
       setSubmitting(false);
       setSubmitError(null);
@@ -639,6 +657,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitAttempted(true);
     await generatePix();
   };
 
@@ -763,16 +782,16 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 />
               </div>
 
-              {(submitError || errorEntries.length > 0) && (
+              {(submitError || summaryErrors.length > 0) && (
                 <div className="mt-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm">
                   {submitError && (
                     <p className="font-code text-[11px] text-destructive">
                       [!] {submitError}
                     </p>
                   )}
-                  {errorEntries.length > 0 && (
+                  {summaryErrors.length > 0 && (
                     <ul className="mt-2 space-y-1">
-                      {errorEntries.map(([field, msg]) => (
+                      {summaryErrors.map(([field, msg]) => (
                         <li
                           key={field}
                           className="font-code text-[11px] text-destructive flex gap-2"
