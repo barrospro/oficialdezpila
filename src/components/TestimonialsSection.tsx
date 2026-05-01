@@ -100,9 +100,7 @@ export function TestimonialsSection() {
                 </span>
               </div>
 
-              <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                "{t.text}"
-              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed flex-1">"{t.text}"</p>
 
               <div className="flex items-center justify-between pt-4 border-t border-border">
                 <div>

@@ -11,8 +11,12 @@ function DesignSystem() {
     <div className="min-h-screen bg-background text-foreground p-8 font-body">
       <div className="max-w-6xl mx-auto space-y-16">
         <header className="border-b border-white/10 pb-8">
-          <h1 className="text-4xl font-heading font-bold uppercase tracking-tighter">Design System & Mockup Showcase</h1>
-          <p className="text-muted-foreground mt-2">Visão geral dos componentes e identidade visual do projeto DezPila.</p>
+          <h1 className="text-4xl font-heading font-bold uppercase tracking-tighter">
+            Design System & Mockup Showcase
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Visão geral dos componentes e identidade visual do projeto DezPila.
+          </p>
         </header>
 
         {/* Cores */}
@@ -45,8 +49,13 @@ function DesignSystem() {
             <div className="space-y-4">
               <p className="text-5xl font-heading font-bold uppercase leading-none">Headline H1</p>
               <p className="text-3xl font-heading font-bold uppercase leading-none">Headline H2</p>
-              <p className="text-xl font-body">Corpo de texto: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-              <p className="text-sm font-mono text-muted-foreground">Mono: System Diagnostics Active...</p>
+              <p className="text-xl font-body">
+                Corpo de texto: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+              <p className="text-sm font-mono text-muted-foreground">
+                Mono: System Diagnostics Active...
+              </p>
             </div>
           </div>
           <div>
@@ -60,10 +69,17 @@ function DesignSystem() {
 
         {/* Mockup de Card de Plano */}
         <section>
-          <h2 className="text-2xl font-heading font-bold mb-6 uppercase">Mockup: Plan Components</h2>
+          <h2 className="text-2xl font-heading font-bold mb-6 uppercase">
+            Mockup: Plan Components
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {plans.slice(0, 3).map((plan) => (
-              <div key={plan.id} className={plan.id === 'TRIMESTRAL' ? 'card-surface-brand scale-105 z-10' : 'card-surface'}>
+              <div
+                key={plan.id}
+                className={
+                  plan.id === "TRIMESTRAL" ? "card-surface-brand scale-105 z-10" : "card-surface"
+                }
+              >
                 {plan.discount && (
                   <div className="absolute top-4 right-4 bg-foreground text-background px-2 py-1 text-xs font-bold">
                     {plan.discount}
@@ -73,8 +89,10 @@ function DesignSystem() {
                 <p className="text-muted-foreground text-sm mb-4 font-mono">{plan.screens}</p>
                 <div className="flex items-baseline gap-1 mb-6">
                   <span className="text-sm">R$</span>
-                  <span className="text-5xl font-heading font-black">{plan.price.split(',')[0]}</span>
-                  <span className="text-xl font-heading">,{plan.price.split(',')[1]}</span>
+                  <span className="text-5xl font-heading font-black">
+                    {plan.price.split(",")[0]}
+                  </span>
+                  <span className="text-xl font-heading">,{plan.price.split(",")[1]}</span>
                   <span className="text-muted-foreground ml-1">{plan.period}</span>
                 </div>
                 <ul className="space-y-3 mb-8">
@@ -85,7 +103,11 @@ function DesignSystem() {
                     </li>
                   ))}
                 </ul>
-                <button className={plan.id === 'TRIMESTRAL' ? 'btn-brand w-full' : 'btn-brand-outline w-full'}>
+                <button
+                  className={
+                    plan.id === "TRIMESTRAL" ? "btn-brand w-full" : "btn-brand-outline w-full"
+                  }
+                >
                   Assinar Agora
                 </button>
               </div>

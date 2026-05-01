@@ -68,7 +68,8 @@ export function HeroSection() {
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-[45ch] font-medium text-pretty leading-relaxed">
-            Netflix, Disney+, HBO Max, esportes ao vivo e +60.000 conteúdos. Qualidade 4K, sistema anti-travamento e suporte dedicado 24/7. Tudo por R$10/mês.
+            Netflix, Disney+, HBO Max, esportes ao vivo e +60.000 conteúdos. Qualidade 4K, sistema
+            anti-travamento e suporte dedicado 24/7. Tudo por R$10/mês.
           </p>
 
           <div className="w-full max-w-md mt-4 flex flex-col gap-3">
@@ -78,10 +79,7 @@ export function HeroSection() {
               </span>
               <CountdownTimer />
             </div>
-            <a
-              href="#planos"
-              className="btn-brand w-full text-center text-lg"
-            >
+            <a href="#planos" className="btn-brand w-full text-center text-lg">
               LIBERAR ACESSO IMEDIATO
             </a>
             <div className="flex items-center gap-2 justify-center mt-1 opacity-50">

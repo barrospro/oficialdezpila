@@ -40,11 +40,7 @@ export function PricingPlans() {
 
         <div className="card-surface !p-6 md:!p-10 relative overflow-hidden">
           <PlanTabs plans={plans} activeId={activeId} onSelect={setActiveId} />
-          <PlanDetails
-            plan={active}
-            features={features}
-            onCheckout={() => setCheckoutOpen(true)}
-          />
+          <PlanDetails plan={active} features={features} onCheckout={() => setCheckoutOpen(true)} />
         </div>
       </div>
 

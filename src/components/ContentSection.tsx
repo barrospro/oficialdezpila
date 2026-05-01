@@ -80,9 +80,7 @@ export function ContentSection() {
                 className={`font-code text-xs flex justify-between border-t pt-4 ${cat.highlighted ? "border-brand/20 text-brand" : "border-border text-muted-foreground"}`}
               >
                 <span>{cat.stat.label}:</span>
-                <span className={cat.highlighted ? "" : "text-foreground"}>
-                  {cat.stat.value}
-                </span>
+                <span className={cat.highlighted ? "" : "text-foreground"}>{cat.stat.value}</span>
               </div>
             </div>
           ))}

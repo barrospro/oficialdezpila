@@ -1,9 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import {
-  createPixTransaction,
-  getTransactionStatus,
-} from "./nitro.server";
+import { createPixTransaction, getTransactionStatus } from "./nitro.server";
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
@@ -189,8 +186,7 @@ export const createPix = createServerFn({ method: "POST" })
           fieldErrors[field] = issue.message;
         }
       }
-      const firstMessage =
-        parsed.error.issues[0]?.message ?? "Dados inválidos";
+      const firstMessage = parsed.error.issues[0]?.message ?? "Dados inválidos";
       return {
         ok: false as const,
         error: firstMessage,
@@ -211,14 +207,17 @@ export const createPix = createServerFn({ method: "POST" })
       });
       return { ok: true as const, ...result };
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Erro inesperado ao gerar Pix";
+      const message = err instanceof Error ? err.message : "Erro inesperado ao gerar Pix";
       return { ok: false as const, error: message };
     }
   });
 
 const statusSchema = z.object({
-  hash: z.string().min(1).max(64).regex(/^[a-zA-Z0-9_-]+$/),
+  hash: z
+    .string()
+    .min(1)
+    .max(64)
+    .regex(/^[a-zA-Z0-9_-]+$/),
 });
 
 export const checkPixStatus = createServerFn({ method: "POST" })
@@ -228,8 +227,7 @@ export const checkPixStatus = createServerFn({ method: "POST" })
       const result = await getTransactionStatus(data.hash);
       return { ok: true as const, ...result };
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Erro ao consultar status";
+      const message = err instanceof Error ? err.message : "Erro ao consultar status";
       return { ok: false as const, error: message };
     }
   });

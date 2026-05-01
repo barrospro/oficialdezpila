@@ -15,9 +15,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "DezPila - Conteúdo Ilimitado Por Um Valor Que Cabe No Seu Bolso" },
-      { name: "description", content: "Tenha acesso a mais de 2 mil canais, Netflix, Disney+, HBO Max e mais por apenas R$10/mês. Qualidade, estabilidade e suporte dedicado." },
+      {
+        name: "description",
+        content:
+          "Tenha acesso a mais de 2 mil canais, Netflix, Disney+, HBO Max e mais por apenas R$10/mês. Qualidade, estabilidade e suporte dedicado.",
+      },
       { property: "og:title", content: "DezPila - Streaming Ilimitado" },
-      { property: "og:description", content: "+2.000 canais e 60.000 conteúdos por apenas R$10/mês" },
+      {
+        property: "og:description",
+        content: "+2.000 canais e 60.000 conteúdos por apenas R$10/mês",
+      },
     ],
   }),
 });
@@ -27,11 +34,21 @@ function Index() {
     <div className="min-h-screen">
       <TopBanner />
       <HeroSection />
-      <Reveal><ContentSection /></Reveal>
-      <Reveal><PriceComparison /></Reveal>
-      <Reveal><PricingPlans /></Reveal>
-      <Reveal><TestimonialsSection /></Reveal>
-      <Reveal><FAQSection /></Reveal>
+      <Reveal>
+        <ContentSection />
+      </Reveal>
+      <Reveal>
+        <PriceComparison />
+      </Reveal>
+      <Reveal>
+        <PricingPlans />
+      </Reveal>
+      <Reveal>
+        <TestimonialsSection />
+      </Reveal>
+      <Reveal>
+        <FAQSection />
+      </Reveal>
       <Footer />
       <SocialProofToasts />
     </div>

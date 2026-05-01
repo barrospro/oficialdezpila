@@ -18,11 +18,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createPix, checkPixStatus } from "@/server/nitro.functions";
 import { PIX_TIMEOUT_MS } from "@/server/nitro-config";
-import {
-  clearCheckout,
-  loadCheckout,
-  saveCheckout,
-} from "./checkout-storage";
+import { clearCheckout, loadCheckout, saveCheckout } from "./checkout-storage";
 
 type Props = {
   open: boolean;
@@ -108,7 +104,9 @@ function describeStatus(raw: string | null): StatusInfo {
 
 function formatCountdown(ms: number) {
   const total = Math.max(0, Math.floor(ms / 1000));
-  const m = Math.floor(total / 60).toString().padStart(2, "0");
+  const m = Math.floor(total / 60)
+    .toString()
+    .padStart(2, "0");
   const s = (total % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
 }
@@ -325,9 +323,7 @@ function extractOfferHash(link: string): OfferHash | null {
   try {
     const url = new URL(link);
     const last = url.pathname.split("/").filter(Boolean).pop() ?? "";
-    return (VALID_OFFERS as readonly string[]).includes(last)
-      ? (last as OfferHash)
-      : null;
+    return (VALID_OFFERS as readonly string[]).includes(last) ? (last as OfferHash) : null;
   } catch {
     return null;
   }
@@ -404,8 +400,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     const persisted = loadCheckout();
     if (persisted) {
       // Se o Pix em andamento já passou do prazo, marca como expirado direto.
-      const isExpired =
-        persisted.step === "pix" && persisted.expiresAt <= Date.now();
+      const isExpired = persisted.step === "pix" && persisted.expiresAt <= Date.now();
       setForm(persisted.form);
       setPix(persisted.pix);
       setPixExpiresAt(persisted.expiresAt);
@@ -437,11 +432,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       // a pena reabrir depois. O usuário pode ter fechado o modal
       // sem terminar — preservamos pra ele voltar.
       const persisted = loadCheckout();
-      if (
-        !persisted ||
-        persisted.step === "success" ||
-        persisted.step === "expired"
-      ) {
+      if (!persisted || persisted.step === "success" || persisted.step === "expired") {
         clearCheckout();
       }
     }
@@ -547,8 +538,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
     // de digitar, sem precisar esperar o blur.
     const digits = value.replace(/\D/g, "");
     const isComplete =
-      (field === "cpf" && digits.length === 11) ||
-      (field === "whatsapp" && digits.length === 11);
+      (field === "cpf" && digits.length === 11) || (field === "whatsapp" && digits.length === 11);
     if (isComplete && !touched[field]) {
       setTouched((t) => ({ ...t, [field]: true }));
       const msg = validateField(field, value);
@@ -635,19 +625,15 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
       // Prefere o expires_at autoritativo do servidor; cai pro relógio
       // local se a Nitro não retornar um created_at válido.
       const serverExpires = res.expires_at ? Date.parse(res.expires_at) : NaN;
-      const expiresAt = Number.isNaN(serverExpires)
-        ? Date.now() + PIX_TIMEOUT_MS
-        : serverExpires;
+      const expiresAt = Number.isNaN(serverExpires) ? Date.now() + PIX_TIMEOUT_MS : serverExpires;
       setPixExpiresAt(expiresAt);
       setRemainingMs(Math.max(0, expiresAt - Date.now()));
-        setPaymentStatus(res.status ?? "waiting_payment");
-        setLastCheckedAt(Date.now());
+      setPaymentStatus(res.status ?? "waiting_payment");
+      setLastCheckedAt(Date.now());
       setStep("pix");
       return true;
     } catch (err) {
-      setSubmitError(
-        err instanceof Error ? err.message : "Erro ao gerar o Pix. Tente novamente."
-      );
+      setSubmitError(err instanceof Error ? err.message : "Erro ao gerar o Pix. Tente novamente.");
       return false;
     } finally {
       setSubmitting(false);
@@ -698,13 +684,15 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
               </button>
             )}
             <span className="font-code text-[10px] sm:text-xs uppercase tracking-widest text-brand truncate">
-              [ {step === "form"
+              [{" "}
+              {step === "form"
                 ? "Seus Dados"
                 : step === "pix"
-                ? "Pagamento Pix"
-                : step === "expired"
-                ? "Pix Expirado"
-                : "Pagamento Confirmado"} — Plano {planName} ]
+                  ? "Pagamento Pix"
+                  : step === "expired"
+                    ? "Pix Expirado"
+                    : "Pagamento Confirmado"}{" "}
+              — Plano {planName} ]
             </span>
           </div>
           <button
@@ -728,9 +716,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 <p className="font-code text-[10px] uppercase tracking-widest text-brand mb-2">
                   [ Etapa 1 de 2 ]
                 </p>
-                <h3 className="text-2xl font-bold tracking-tight">
-                  Quase lá! Confirme seus dados
-                </h3>
+                <h3 className="text-2xl font-bold tracking-tight">Quase lá! Confirme seus dados</h3>
                 <p className="text-muted-foreground font-code text-xs mt-2">
                   Para gerar seu Pix em segundos
                 </p>
@@ -785,9 +771,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
               {(submitError || summaryErrors.length > 0) && (
                 <div className="mt-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm">
                   {submitError && (
-                    <p className="font-code text-[11px] text-destructive">
-                      [!] {submitError}
-                    </p>
+                    <p className="font-code text-[11px] text-destructive">[!] {submitError}</p>
                   )}
                   {summaryErrors.length > 0 && (
                     <ul className="mt-2 space-y-1">
@@ -798,8 +782,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                         >
                           <span className="opacity-70">›</span>
                           <span>
-                            <strong className="font-semibold">{fieldLabels[field]}:</strong>{" "}
-                            {msg}
+                            <strong className="font-semibold">{fieldLabels[field]}:</strong> {msg}
                           </span>
                         </li>
                       ))}
@@ -847,12 +830,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
               <div className="flex justify-center mb-6">
                 <div className="bg-white p-4 rounded-sm border border-border">
-                  <QRCodeSVG
-                    value={pix.pix_qr_code}
-                    size={220}
-                    level="M"
-                    includeMargin={false}
-                  />
+                  <QRCodeSVG value={pix.pix_qr_code} size={220} level="M" includeMargin={false} />
                 </div>
               </div>
 
@@ -878,10 +856,7 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 </div>
               </div>
 
-              <StatusBanner
-                info={describeStatus(paymentStatus)}
-                lastCheckedAt={lastCheckedAt}
-              />
+              <StatusBanner info={describeStatus(paymentStatus)} lastCheckedAt={lastCheckedAt} />
 
               <div className="mt-4 flex items-center justify-center gap-1.5 text-muted-foreground font-code text-[10px] uppercase tracking-widest">
                 <Clock className="w-3 h-3" />
@@ -926,18 +901,14 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
               <p className="font-code text-[10px] uppercase tracking-widest text-destructive mb-2">
                 [ Pix expirado ]
               </p>
-              <h3 className="text-2xl font-bold tracking-tight mb-3">
-                O tempo do seu Pix acabou
-              </h3>
+              <h3 className="text-2xl font-bold tracking-tight mb-3">O tempo do seu Pix acabou</h3>
               <p className="text-muted-foreground font-code text-xs mb-8">
-                Por segurança, códigos Pix expiram após 20 minutos sem pagamento.
-                Gere um novo código com os mesmos dados em um clique.
+                Por segurança, códigos Pix expiram após 20 minutos sem pagamento. Gere um novo
+                código com os mesmos dados em um clique.
               </p>
               {submitError && (
                 <div className="mb-6 px-4 py-3 border border-destructive/50 bg-destructive/10 rounded-sm text-left">
-                  <p className="font-code text-[11px] text-destructive">
-                    [!] {submitError}
-                  </p>
+                  <p className="font-code text-[11px] text-destructive">[!] {submitError}</p>
                 </div>
               )}
               <button
@@ -979,8 +950,9 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
                 Tudo pronto, {form.name.split(" ")[0]}!
               </h3>
               <p className="text-muted-foreground font-code text-xs mb-8">
-                Recebemos seu pagamento de <span className="text-foreground">{formatBrl(pix.amount)}</span>.
-                Em instantes você receberá o acesso por e-mail e WhatsApp.
+                Recebemos seu pagamento de{" "}
+                <span className="text-foreground">{formatBrl(pix.amount)}</span>. Em instantes você
+                receberá o acesso por e-mail e WhatsApp.
               </p>
               <button
                 type="button"
@@ -1052,21 +1024,13 @@ function Field({
         ) : null}
       </div>
       {error && (
-        <span className="font-code text-[10px] text-destructive mt-1 block">
-          [!] {error}
-        </span>
+        <span className="font-code text-[10px] text-destructive mt-1 block">[!] {error}</span>
       )}
     </label>
   );
 }
 
-function StatusBanner({
-  info,
-  lastCheckedAt,
-}: {
-  info: StatusInfo;
-  lastCheckedAt: number | null;
-}) {
+function StatusBanner({ info, lastCheckedAt }: { info: StatusInfo; lastCheckedAt: number | null }) {
   const styles: Record<StatusTone, { wrap: string; icon: React.ReactNode; label: string }> = {
     pending: {
       wrap: "border-brand/40 bg-brand/5",
@@ -1094,9 +1058,7 @@ function StatusBanner({
     <div className={`mt-8 px-4 py-3 border rounded-sm ${s.wrap}`}>
       <div className="flex items-center gap-2">
         {s.icon}
-        <span
-          className={`font-code text-[11px] uppercase tracking-widest font-bold ${s.label}`}
-        >
+        <span className={`font-code text-[11px] uppercase tracking-widest font-bold ${s.label}`}>
           {info.label}
         </span>
       </div>
