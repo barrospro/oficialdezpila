@@ -75,6 +75,7 @@ export async function createPixTransaction(input: {
 
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok) {
+    console.error("[nitro.createPix] HTTP", res.status, "body:", JSON.stringify(data));
     const msg =
       typeof data?.message === "string" ? data.message : `Erro na Nitro (HTTP ${res.status})`;
     throw new Error(msg);
@@ -83,6 +84,7 @@ export async function createPixTransaction(input: {
   const hash = data.hash as string | undefined;
   const pix = data.pix as { pix_qr_code?: string } | undefined;
   if (!hash || !pix?.pix_qr_code) {
+    console.error("[nitro.createPix] resposta sem hash/pix:", JSON.stringify(data));
     throw new Error("Resposta inesperada da Nitro: faltou hash ou pix_qr_code");
   }
 
