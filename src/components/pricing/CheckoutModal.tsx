@@ -366,6 +366,18 @@ export function CheckoutModal({ open, planId, planName, link, onClose }: Props) 
 
   const offerHash = extractOfferHash(link);
 
+  // Validação derivada: o form é válido quando o schema completo passa.
+  // Usado para desabilitar o botão "Gerar Pix" enquanto houver qualquer erro.
+  const formIsValid = schema.safeParse(form).success;
+  const errorEntries = (Object.entries(errors) as [keyof FormState, string | undefined][])
+    .filter(([, msg]) => !!msg) as [keyof FormState, string][];
+  const fieldLabels: Record<keyof FormState, string> = {
+    name: "Nome completo",
+    email: "E-mail",
+    whatsapp: "WhatsApp",
+    cpf: "CPF",
+  };
+
   // Hidratar do sessionStorage no primeiro mount (antes do effect de close).
   useEffect(() => {
     const persisted = loadCheckout();
