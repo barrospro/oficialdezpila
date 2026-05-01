@@ -176,16 +176,37 @@ const customerSchema = z.object({
 });
 
 export const createPix = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => customerSchema.parse(input))
+  .inputValidator((input: unknown) => input)
   .handler(async ({ data }) => {
+    // Validação síncrona ANTES de qualquer chamada externa.
+    // Em caso de falha, retorna erro padronizado e NÃO chama a API Nitro.
+    const parsed = customerSchema.safeParse(data);
+    if (!parsed.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const field = issue.path[0];
+        if (typeof field === "string" && !fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
+      }
+      const firstMessage =
+        parsed.error.issues[0]?.message ?? "Dados inválidos";
+      return {
+        ok: false as const,
+        error: firstMessage,
+        validation: true as const,
+        fieldErrors,
+      };
+    }
+    const valid = parsed.data;
     try {
       const result = await createPixTransaction({
-        offerHash: data.offerHash,
+        offerHash: valid.offerHash,
         customer: {
-          name: data.name,
-          email: data.email,
-          document: data.cpf,
-          phone_number: data.whatsapp,
+          name: valid.name,
+          email: valid.email,
+          document: valid.cpf,
+          phone_number: valid.whatsapp,
         },
       });
       return { ok: true as const, ...result };
