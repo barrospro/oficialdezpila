@@ -16,8 +16,8 @@ import {
 import { QRCodeSVG } from "qrcode.react";
 import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { createPix, checkPixStatus } from "@/server/nitro.functions";
-import { PIX_TIMEOUT_MS } from "@/server/nitro-config";
+import { createPix, checkPixStatus } from "@/lib/nitro.functions";
+import { PIX_TIMEOUT_MS } from "@/lib/nitro-config";
 import { clearCheckout, loadCheckout, saveCheckout } from "./checkout-storage";
 
 type Props = {
