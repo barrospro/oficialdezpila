@@ -44,7 +44,7 @@ type PixData = {
 
 type Step = "form" | "pix" | "success" | "expired";
 
-// PIX_TIMEOUT_MS é importado de @/server/nitro-config para manter
+// PIX_TIMEOUT_MS é importado de @/lib/nitro-config para manter
 // frontend e backend sincronizados.
 
 // Mapeia o payment_status da API Nitro para uma mensagem amigável.

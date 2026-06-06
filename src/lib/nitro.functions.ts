@@ -194,6 +194,11 @@ export const createPix = createServerFn({ method: "POST" })
     }
     const valid = parsed.data;
     try {
+      const health = await checkNitroHealth(valid.offerHash);
+      if (!health.ok) {
+        return { ok: false as const, error: health.message };
+      }
+
       const result = await createPixTransaction({
         offerHash: valid.offerHash,
         customer: {
