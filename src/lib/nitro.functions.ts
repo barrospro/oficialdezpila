@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { checkNitroHealth, createPixTransaction, getTransactionStatus } from "./nitro.server";
+import { checkNitroHealth, createPixTransaction, getTransactionStatus } from "@/server/nitro.server";
 
 const onlyDigits = (v: string) => v.replace(/\D/g, "");
 
@@ -175,8 +175,6 @@ const customerSchema = z.object({
 export const createPix = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => input)
   .handler(async ({ data }) => {
-    // Validação síncrona ANTES de qualquer chamada externa.
-    // Em caso de falha, retorna erro padronizado e NÃO chama a API Nitro.
     const parsed = customerSchema.safeParse(data);
     if (!parsed.success) {
       const fieldErrors: Record<string, string> = {};
@@ -196,6 +194,11 @@ export const createPix = createServerFn({ method: "POST" })
     }
     const valid = parsed.data;
     try {
+      const health = await checkNitroHealth(valid.offerHash);
+      if (!health.ok) {
+        return { ok: false as const, error: health.message };
+      }
+
       const result = await createPixTransaction({
         offerHash: valid.offerHash,
         customer: {
@@ -232,11 +235,6 @@ export const checkPixStatus = createServerFn({ method: "POST" })
     }
   });
 
-/**
- * Endpoint de diagnóstico — valida NITRO_API_KEY, ambiente, produto e ofertas.
- * Sem efeitos colaterais (não cria transação). Usado antes de gerar Pix
- * para retornar uma mensagem precisa quando a integração estiver mal configurada.
- */
 export const verifyNitroIntegration = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const health = await checkNitroHealth();

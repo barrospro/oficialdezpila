@@ -3,7 +3,7 @@ const NITRO_BASE = "https://api.nitropagamentos.com/api/public/v1";
 // Hash do produto principal (DezPila / IPTV) na conta Nitro
 const PRODUCT_HASH = "b7jx2s8xqw";
 
-import { PIX_TIMEOUT_MS } from "./nitro-config";
+import { PIX_TIMEOUT_MS } from "@/lib/nitro-config";
 
 // Mapa: offer_hash → { title, price (centavos) }
 // Espelha src/components/pricing/plans-data.ts
@@ -169,7 +169,7 @@ export type NitroHealth = {
  * Detecta ambiente pelo prefixo da chave (sandbox keys da Nitro costumam
  * conter "test" ou "sandbox"; produção é opaca).
  */
-export async function checkNitroHealth(): Promise<NitroHealth> {
+export async function checkNitroHealth(requiredOfferHash?: string): Promise<NitroHealth> {
   const key = process.env.NITRO_API_KEY ?? "";
   const hasKey = key.length > 0;
   const keyMasked = hasKey ? `${key.slice(0, 4)}…${key.slice(-4)}` : null;
@@ -260,9 +260,8 @@ export async function checkNitroHealth(): Promise<NitroHealth> {
     base.offerHashesValid[offerHash] = productOffers.includes(offerHash);
   }
 
-  const missingOffers = Object.entries(base.offerHashesValid)
-    .filter(([, valid]) => !valid)
-    .map(([h]) => h);
+  const requiredOffers = requiredOfferHash ? [requiredOfferHash] : Object.keys(OFFERS);
+  const missingOffers = requiredOffers.filter((offerHash) => !base.offerHashesValid[offerHash]);
 
   if (missingOffers.length > 0) {
     return {
