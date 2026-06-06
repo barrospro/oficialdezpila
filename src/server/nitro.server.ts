@@ -3,7 +3,7 @@ const NITRO_BASE = "https://api.nitropagamentos.com/api/public/v1";
 // Hash do produto principal (DezPila / IPTV) na conta Nitro
 const PRODUCT_HASH = "b7jx2s8xqw";
 
-import { PIX_TIMEOUT_MS } from "./nitro-config";
+import { PIX_TIMEOUT_MS } from "@/lib/nitro-config";
 
 // Mapa: offer_hash → { title, price (centavos) }
 // Espelha src/components/pricing/plans-data.ts
