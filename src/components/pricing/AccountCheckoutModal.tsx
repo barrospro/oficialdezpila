@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle } from "lucide-react";
+import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export interface PlanoData {
@@ -17,7 +17,7 @@ interface AccountCheckoutModalProps {
   onClose: () => void;
 }
 
-type Step = "CADASTRO" | "PAGAMENTO" | "SUCESSO";
+type Step = "CADASTRO" | "PAGAMENTO" | "EXPIRADO" | "SUCESSO";
 
 export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutModalProps) {
   const [step, setStep] = useState<Step>("CADASTRO");
@@ -57,7 +57,13 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   useEffect(() => {
     if (!open || step !== "PAGAMENTO") return;
     const interval = setInterval(() => {
-      setTimerSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimerSeconds((prev) => {
+        if (prev <= 1) {
+          setStep("EXPIRADO");
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
     return () => clearInterval(interval);
   }, [open, step]);
@@ -127,7 +133,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         {/* Header do Modal */}
         <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            {step === "PAGAMENTO" && (
+            {(step === "PAGAMENTO" || step === "EXPIRADO") && (
               <button
                 type="button"
                 onClick={() => setStep("CADASTRO")}
@@ -148,7 +154,13 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
 
             <div className="border-l border-white/15 pl-3">
               <h2 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
-                {step === "CADASTRO" ? "Criar Conta" : step === "PAGAMENTO" ? "Checkout PIX" : "Pagamento Confirmado"}
+                {step === "CADASTRO"
+                  ? "Criar Conta"
+                  : step === "PAGAMENTO"
+                    ? "Checkout PIX"
+                    : step === "EXPIRADO"
+                      ? "PIX Expirado"
+                      : "Pagamento Confirmado"}
               </h2>
               <span className="text-[11px] font-code text-[#970202] font-semibold">
                 Plano {plano.nome} — R$ {plano.preco}
@@ -364,15 +376,26 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* Botão de Simulação de Pagamento para Teste de Webhook */}
-            <button
-              type="button"
-              onClick={() => setStep("SUCESSO")}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00C853] to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(0,200,83,0.4)] flex items-center justify-center gap-2 cursor-pointer mb-3"
-            >
-              <CheckCircle className="h-4 w-4" />
-              <span>Simular Pagamento Confirmado (Testar Tela Verde)</span>
-            </button>
+            {/* Botões de Simulação para Testes de Integração */}
+            <div className="w-full space-y-2 mb-3">
+              <button
+                type="button"
+                onClick={() => setStep("SUCESSO")}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00C853] to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(0,200,83,0.4)] flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <CheckCircle className="h-4 w-4" />
+                <span>Simular Pagamento Confirmado (Testar Tela Verde)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStep("EXPIRADO")}
+                className="w-full py-2.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-bold font-heading text-amber-400 uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <AlertCircle className="h-4 w-4" />
+                <span>Simular PIX Expirado (Testar Tela Amarela/Alerta)</span>
+              </button>
+            </div>
 
             <span className="text-[11px] font-code text-slate-500 flex items-center gap-1">
               <Lock className="h-3.5 w-3.5 text-slate-400" /> Pagamento 100% criptografado e seguro
@@ -380,7 +403,80 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
           </div>
         )}
 
-        {/* PASSO 3: TELA VERDE — Pagamento Confirmado */}
+        {/* PASSO 3: TELA DE PIX EXPIRADO (COM OPÇÃO DE RENOVAR CHAVE) */}
+        {step === "EXPIRADO" && (
+          <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
+            {/* Ícone de Alerta em Amarelo/Âmbar */}
+            <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-amber-500/15 border-2 border-amber-500 text-amber-400 shadow-[0_0_40px_rgba(245,158,11,0.4)]">
+              <AlertCircle className="h-10 w-10" strokeWidth={2.5} />
+            </div>
+
+            <span className="mb-2 inline-block rounded-full bg-amber-500/20 px-3.5 py-1 text-[11px] font-bold font-code uppercase tracking-widest text-amber-400 border border-amber-500/40">
+              ⚠️ CÓDIGO PIX EXPIROU
+            </span>
+
+            <h3 className="text-xl sm:text-2xl font-extrabold uppercase text-white font-heading tracking-tight mb-2">
+              CHAVE PIX EXPIRADA!
+            </h3>
+
+            <p className="text-xs sm:text-sm text-slate-300 font-body max-w-sm mb-5 leading-relaxed">
+              O tempo limite de 15 minutos para este pagamento encerrou. Não se preocupe! Suas informações continuam salvas para gerar uma nova chave.
+            </p>
+
+            {/* Resumo dos Dados já preenchidos */}
+            <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-4 mb-6 text-left">
+              <div className="flex justify-between items-center mb-2 pb-2 border-b border-white/10">
+                <span className="text-xs font-bold text-slate-300 uppercase font-heading">Dados Preservados</span>
+                <span className="text-xs font-code font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
+                  Pronto para renovação
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                <span>Cliente:</span>
+                <span className="text-slate-200 font-semibold">{nome}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                <span>CPF:</span>
+                <span className="text-slate-200 font-mono">{cpf}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                <span>E-mail:</span>
+                <span className="text-slate-200">{email}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                <span>WhatsApp:</span>
+                <span className="text-slate-200">{whatsapp}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5">
+                <span>Plano:</span>
+                <span className="text-sm font-bold text-white font-heading">R$ {plano.preco} {plano.periodo}</span>
+              </div>
+            </div>
+
+            {/* Botão de Renovação da Chave PIX */}
+            <button
+              type="button"
+              onClick={() => {
+                setTimerSeconds(900); // Reseta para 15 minutos
+                setStep("PAGAMENTO");
+              }}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#970202] to-red-700 hover:from-red-600 hover:to-red-800 text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(151,2,2,0.5)] flex items-center justify-center gap-2 cursor-pointer mb-2.5"
+            >
+              <RefreshCw className="h-4 w-4" />
+              <span>Gerar Nova Chave PIX (Renovar)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setStep("CADASTRO")}
+              className="w-full py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-300 transition-colors cursor-pointer"
+            >
+              Editar meus dados de cadastro
+            </button>
+          </div>
+        )}
+
+        {/* PASSO 4: TELA VERDE — Pagamento Confirmado */}
         {step === "SUCESSO" && (
           <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
             {/* Ícone de Sucesso em Círculo Verde com Glow */}
