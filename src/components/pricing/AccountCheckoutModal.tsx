@@ -469,40 +469,38 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                     Acesso exclusivo ao acervo privado de conteúdos vazados do Privacy, OnlyFans e influencers em alta.
                   </p>
 
-                  {/* Linha de Avatares das Influencers (Estilo do anexo) */}
-                  <div className="mt-2.5 flex items-center gap-2">
-                    <div className="flex -space-x-2 overflow-hidden py-0.5 shrink-0">
+                  {/* Linha de Avatares das Influencers (Estilo do anexo - Apenas fotos reais de mulheres e +18k) */}
+                  <div className="mt-3 flex items-center">
+                    <div className="flex -space-x-2.5 overflow-hidden py-0.5">
                       <img
-                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
-                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                        alt="Mirella"
-                        title="Mirella"
+                        className="inline-block h-8 w-8 rounded-full ring-2 ring-[#14161f] object-cover shadow-md"
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                        alt="Influencer 1"
                       />
                       <img
-                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
-                        src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80"
-                        alt="Mel Maia"
-                        title="Mel Maia"
+                        className="inline-block h-8 w-8 rounded-full ring-2 ring-[#14161f] object-cover shadow-md"
+                        src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80"
+                        alt="Influencer 2"
                       />
                       <img
-                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
-                        src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&q=80"
-                        alt="Bruna Marquezine"
-                        title="Bruna Marquezine"
+                        className="inline-block h-8 w-8 rounded-full ring-2 ring-[#14161f] object-cover shadow-md"
+                        src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=150&q=80"
+                        alt="Influencer 3"
                       />
                       <img
-                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
-                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80"
-                        alt="Virginia"
-                        title="Virginia"
+                        className="inline-block h-8 w-8 rounded-full ring-2 ring-[#14161f] object-cover shadow-md"
+                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80"
+                        alt="Influencer 4"
                       />
-                      <div className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#181a26] border border-amber-500/40 ring-2 ring-[#14161f] text-[10px] font-extrabold text-amber-400 font-code shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                      <img
+                        className="inline-block h-8 w-8 rounded-full ring-2 ring-[#14161f] object-cover shadow-md"
+                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80"
+                        alt="Influencer 5"
+                      />
+                      <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#181a26] border border-amber-500/40 ring-2 ring-[#14161f] text-[10.5px] font-extrabold text-amber-400 font-code shadow-[0_0_12px_rgba(245,158,11,0.25)]">
                         +18k
                       </div>
                     </div>
-                    <span className="text-[11px] font-semibold text-amber-400/90 font-code truncate">
-                      Mirella, Mel Maia, Bruna & +18k
-                    </span>
                   </div>
                 </div>
               </div>
