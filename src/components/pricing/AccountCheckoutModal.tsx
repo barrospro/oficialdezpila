@@ -376,28 +376,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* Botões de Simulação para Testes de Integração */}
-            <div className="w-full space-y-2 mb-3">
-              <button
-                type="button"
-                onClick={() => setStep("SUCESSO")}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00C853] to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(0,200,83,0.4)] flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <CheckCircle className="h-4 w-4" />
-                <span>Simular Pagamento Confirmado (Testar Tela Verde)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStep("EXPIRADO")}
-                className="w-full py-2.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-xs font-bold font-heading text-amber-400 uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <AlertCircle className="h-4 w-4" />
-                <span>Simular PIX Expirado (Testar Tela Amarela/Alerta)</span>
-              </button>
-            </div>
-
-            <span className="text-[11px] font-code text-slate-500 flex items-center gap-1">
+            <span className="text-[11px] font-code text-slate-500 flex items-center gap-1 mt-2">
               <Lock className="h-3.5 w-3.5 text-slate-400" /> Pagamento 100% criptografado e seguro
             </span>
           </div>
