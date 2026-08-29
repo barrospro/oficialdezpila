@@ -139,7 +139,7 @@ export function PriceComparison() {
           {services.map((s) => (
             <div
               key={s.name}
-              className="card-surface text-center py-5 px-3 flex flex-col items-center justify-between min-h-[100px] border border-border/80 hover:border-brand/40 transition-all hover:shadow-[0_0_20px_rgba(255,59,48,0.1)]"
+              className="card-surface text-center py-5 px-3 flex flex-col items-center justify-between min-h-[100px] border border-border/80 hover:border-brand/40 transition-all hover:shadow-[0_0_20px_rgba(151,2,2,0.2)]"
             >
               <div className="flex-1 flex items-center justify-center w-full py-1">
                 <ServiceLogo name={s.name} />

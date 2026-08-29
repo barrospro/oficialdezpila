@@ -93,7 +93,7 @@ export function PrecoTrioDark() {
         className="pointer-events-none absolute left-1/2 top-[-260px] h-[520px] w-[640px] -translate-x-1/2"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255, 59, 48, 0.15), transparent 70%)",
+            "radial-gradient(closest-side, rgba(151, 2, 2, 0.25), transparent 70%)",
         }}
       />
       <div className="relative mb-12 text-center">
@@ -119,18 +119,18 @@ export function PrecoTrioDark() {
                 key={p.id}
                 className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col max-lg:order-first lg:-translate-y-[14px] lg:hover:-translate-y-[18px] transition-transform duration-[250ms]"
               >
-                {/* Badge MAIS POPULAR em vermelho vibrante com glow */}
-                <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[#ff3b30] px-3.5 py-0.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-[0_0_16px_rgba(255,59,48,0.8)] z-30">
+                {/* Badge MAIS POPULAR em vermelho crimson #970202 com glow */}
+                <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[#970202] px-3.5 py-0.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-[0_0_16px_rgba(151,2,2,0.9)] z-30">
                   MAIS POPULAR
                 </span>
 
-                {/* Wrapper com Borda de Energia giratória */}
-                <div className="relative overflow-hidden rounded-[20px] bg-[#140003] p-[1.5px] shadow-[0_0_50px_rgba(255,59,48,0.45),0_20px_50px_rgba(0,0,0,0.95)] h-full flex flex-col">
+                {/* Wrapper com Borda de Energia giratória em #970202 */}
+                <div className="relative overflow-hidden rounded-[20px] bg-[#140003] p-[1.5px] shadow-[0_0_50px_rgba(151,2,2,0.5),0_20px_50px_rgba(0,0,0,0.95)] h-full flex flex-col">
                   <div
                     className="absolute -inset-[120%]"
                     style={{
                       background:
-                        "conic-gradient(from 0deg,rgba(255,59,48,0) 0deg,rgba(255,59,48,0) 200deg,#ff3b30 255deg,#ff8037 300deg,rgba(255,128,55,0) 335deg,rgba(255,59,48,0) 360deg)",
+                        "conic-gradient(from 0deg,rgba(151,2,2,0) 0deg,rgba(151,2,2,0) 200deg,#970202 255deg,#d32f2f 300deg,rgba(211,47,47,0) 335deg,rgba(151,2,2,0) 360deg)",
                       animation: "energiaGirar 4s linear infinite",
                     }}
                   />
@@ -161,7 +161,7 @@ export function PrecoTrioDark() {
                           className="flex items-center gap-2.5 text-xs text-[#d4d4d8]"
                         >
                           <Check
-                            className="h-4 w-4 flex-none text-[#ff3b30]"
+                            className="h-4 w-4 flex-none text-[#970202]"
                             strokeWidth={2.5}
                           />
                           {r}
@@ -172,7 +172,7 @@ export function PrecoTrioDark() {
                     <button
                       type="button"
                       onClick={() => setSelectedPlan(p)}
-                      className="w-full cursor-pointer rounded-[12px] border-none bg-[#ff3b30] hover:bg-[#ef4444] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(255,59,48,0.8)] transition-all"
+                      className="w-full cursor-pointer rounded-[12px] border-none bg-[#970202] hover:bg-[#b80303] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(151,2,2,0.9)] transition-all"
                     >
                       {p.cta}
                     </button>
@@ -185,7 +185,7 @@ export function PrecoTrioDark() {
           return (
             <div
               key={p.id}
-              className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col rounded-[20px] border border-[#3b0d10] bg-[#000000] p-[22px] backdrop-blur-md transition-all duration-[250ms] hover:-translate-y-1 hover:border-[#ff3b30]/50 hover:shadow-[0_0_25px_rgba(255,59,48,0.15)]"
+              className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col rounded-[20px] border border-[#3b0d10] bg-[#000000] p-[22px] backdrop-blur-md transition-all duration-[250ms] hover:-translate-y-1 hover:border-[#970202]/60 hover:shadow-[0_0_25px_rgba(151,2,2,0.25)]"
             >
               <div className="text-[15px] font-bold font-heading uppercase text-white tracking-wide">
                 {p.nome}
@@ -213,7 +213,7 @@ export function PrecoTrioDark() {
                     className="flex items-center gap-2.5 text-xs text-[#d4d4d8]"
                   >
                     <Check
-                      className="h-4 w-4 flex-none text-[#ff3b30]"
+                      className="h-4 w-4 flex-none text-[#970202]"
                       strokeWidth={2.5}
                     />
                     {r}
@@ -224,7 +224,7 @@ export function PrecoTrioDark() {
               <button
                 type="button"
                 onClick={() => setSelectedPlan(p)}
-                className="w-full cursor-pointer rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#ff3b30]/50 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
+                className="w-full cursor-pointer rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#970202]/60 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
               >
                 {p.cta}
               </button>
