@@ -86,14 +86,14 @@ export function PrecoTrioDark() {
   return (
     <section
       id="planos"
-      className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden bg-[#07070a] px-6 py-24 font-body text-foreground border-t border-border z-10"
+      className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden bg-[#050508] px-6 py-24 font-body text-foreground border-t border-border z-10"
     >
       <style>{`@keyframes energiaGirar{to{transform:rotate(360deg)}}`}</style>
       <div
         className="pointer-events-none absolute left-1/2 top-[-260px] h-[520px] w-[640px] -translate-x-1/2"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255, 59, 48, 0.2), transparent 70%)",
+            "radial-gradient(closest-side, rgba(255, 59, 48, 0.18), transparent 70%)",
         }}
       />
       <div className="relative mb-12 text-center">
@@ -117,14 +117,15 @@ export function PrecoTrioDark() {
             return (
               <div
                 key={p.id}
-                className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[250px] flex-col max-lg:order-first lg:-translate-y-[14px] lg:hover:-translate-y-[18px] transition-transform duration-[250ms]"
+                className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col max-lg:order-first lg:-translate-y-[14px] lg:hover:-translate-y-[18px] transition-transform duration-[250ms]"
               >
-                {/* Badge MAIS POPULAR com fundo vermelho néon idêntico ao sistema */}
+                {/* Badge MAIS POPULAR em vermelho vibrante com glow */}
                 <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[#ff3b30] px-3.5 py-0.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-[0_0_16px_rgba(255,59,48,0.8)] z-30">
                   MAIS POPULAR
                 </span>
 
-                <div className="relative overflow-hidden rounded-[20px] bg-[#14141a] p-[1.5px] shadow-[0_0_50px_rgba(255,59,48,0.4),0_20px_50px_rgba(0,0,0,0.8)] h-full flex flex-col">
+                {/* Wrapper com Borda de Energia giratória */}
+                <div className="relative overflow-hidden rounded-[20px] bg-[#220709] p-[1.5px] shadow-[0_0_50px_rgba(255,59,48,0.45),0_20px_50px_rgba(0,0,0,0.9)] h-full flex flex-col">
                   <div
                     className="absolute -inset-[120%]"
                     style={{
@@ -133,42 +134,45 @@ export function PrecoTrioDark() {
                       animation: "energiaGirar 4s linear infinite",
                     }}
                   />
-                  <div className="relative flex flex-col flex-1 rounded-[18.5px] bg-[#08080b] p-[20px] pt-[22px]">
-                    <div className="text-sm font-bold font-heading uppercase text-white">
+                  <div className="relative flex flex-col flex-1 rounded-[18.5px] bg-[#070709] p-[22px] pt-[24px]">
+                    <div className="text-[15px] font-bold font-heading uppercase text-white tracking-wide">
                       {p.nome}
                     </div>
-                    <div className="mt-[3px] text-[11px] font-code text-muted-foreground min-h-[32px]">
+                    <div className="mt-1 text-[12px] font-code text-[#a1a1aa] min-h-[32px]">
                       {p.desc}
                     </div>
-                    <div className="mb-[2px] mt-[10px] flex items-baseline gap-1">
-                      <span className="text-xs font-bold font-code text-muted-foreground">
+
+                    <div className="mb-1 mt-4 flex items-baseline gap-1.5">
+                      <span className="text-sm font-bold font-code text-[#71717a]">
                         R$
                       </span>
-                      <span className="text-[34px] font-extrabold font-code tracking-[-1.5px] text-white glow-text">
+                      <span className="text-[38px] font-extrabold font-code tracking-tight text-white glow-text">
                         {p.preco}
                       </span>
-                      <span className="text-xs font-code text-muted-foreground">
+                      <span className="text-xs font-code text-[#71717a]">
                         {p.periodo}
                       </span>
                     </div>
-                    <ul className="my-[13px] flex-1 list-none border-t border-border/40 pt-[13px]">
+
+                    <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
                       {p.recursos.map((r) => (
                         <li
                           key={r}
-                          className="mb-2 flex items-center gap-2 text-xs text-muted-foreground"
+                          className="flex items-center gap-2.5 text-xs text-[#d4d4d8]"
                         >
                           <Check
-                            className="h-[14px] w-[14px] flex-none text-[#ff3b30]"
+                            className="h-4 w-4 flex-none text-[#ff3b30]"
                             strokeWidth={2.5}
                           />
                           {r}
                         </li>
                       ))}
                     </ul>
+
                     <button
                       type="button"
                       onClick={() => setSelectedPlan(p)}
-                      className="w-full rounded-[10px] bg-[#ff3b30] py-[10px] text-center text-[12.5px] font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(255,59,48,0.8)] transition-[filter] duration-200 hover:brightness-110 cursor-pointer border-none font-heading"
+                      className="w-full cursor-pointer rounded-[12px] border-none bg-[#ff3b30] hover:bg-[#ef4444] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(255,59,48,0.8)] transition-all"
                     >
                       {p.cta}
                     </button>
@@ -181,43 +185,46 @@ export function PrecoTrioDark() {
           return (
             <div
               key={p.id}
-              className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[250px] flex-col rounded-[18px] border border-border/60 bg-[#08080b] p-[20px] backdrop-blur-md transition-[transform,border-color] duration-[250ms] hover:-translate-y-1 hover:border-brand/40"
+              className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col rounded-[20px] border border-[#3b0d10] bg-[#070709] p-[22px] backdrop-blur-md transition-all duration-[250ms] hover:-translate-y-1 hover:border-[#ff3b30]/50 hover:shadow-[0_0_25px_rgba(255,59,48,0.15)]"
             >
-              <div className="text-sm font-bold font-heading uppercase text-white">
+              <div className="text-[15px] font-bold font-heading uppercase text-white tracking-wide">
                 {p.nome}
               </div>
-              <div className="mt-[3px] text-[11px] font-code text-muted-foreground min-h-[32px]">
+              <div className="mt-1 text-[12px] font-code text-[#a1a1aa] min-h-[32px]">
                 {p.desc}
               </div>
-              <div className="mb-[2px] mt-[10px] flex items-baseline gap-1">
-                <span className="text-xs font-bold font-code text-muted-foreground">
+
+              <div className="mb-1 mt-4 flex items-baseline gap-1.5">
+                <span className="text-sm font-bold font-code text-[#71717a]">
                   R$
                 </span>
-                <span className="text-[34px] font-extrabold font-code tracking-[-1.5px] text-white glow-text">
+                <span className="text-[38px] font-extrabold font-code tracking-tight text-white">
                   {p.preco}
                 </span>
-                <span className="text-xs font-code text-muted-foreground">
+                <span className="text-xs font-code text-[#71717a]">
                   {p.periodo}
                 </span>
               </div>
-              <ul className="my-[13px] flex-1 list-none border-t border-border/40 pt-[13px]">
+
+              <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
                 {p.recursos.map((r) => (
                   <li
                     key={r}
-                    className="mb-2 flex items-center gap-2 text-xs text-muted-foreground"
+                    className="flex items-center gap-2.5 text-xs text-[#d4d4d8]"
                   >
                     <Check
-                      className="h-[14px] w-[14px] flex-none text-[#ff3b30]"
+                      className="h-4 w-4 flex-none text-[#ff3b30]"
                       strokeWidth={2.5}
                     />
                     {r}
                   </li>
                 ))}
               </ul>
+
               <button
                 type="button"
                 onClick={() => setSelectedPlan(p)}
-                className="w-full rounded-[10px] border border-border/80 py-[10px] text-center text-[12.5px] font-bold uppercase tracking-wider text-foreground transition-colors duration-200 hover:bg-brand/10 hover:border-brand/40 cursor-pointer font-heading"
+                className="w-full cursor-pointer rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#ff3b30]/50 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
               >
                 {p.cta}
               </button>
