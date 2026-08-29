@@ -86,14 +86,14 @@ export function PrecoTrioDark() {
   return (
     <section
       id="planos"
-      className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden bg-[#050508] px-6 py-24 font-body text-foreground border-t border-border z-10"
+      className="relative flex min-h-[500px] flex-col items-center justify-center overflow-hidden bg-[#030305] px-6 py-24 font-body text-foreground border-t border-border z-10"
     >
       <style>{`@keyframes energiaGirar{to{transform:rotate(360deg)}}`}</style>
       <div
         className="pointer-events-none absolute left-1/2 top-[-260px] h-[520px] w-[640px] -translate-x-1/2"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255, 59, 48, 0.18), transparent 70%)",
+            "radial-gradient(closest-side, rgba(255, 59, 48, 0.15), transparent 70%)",
         }}
       />
       <div className="relative mb-12 text-center">
@@ -125,7 +125,7 @@ export function PrecoTrioDark() {
                 </span>
 
                 {/* Wrapper com Borda de Energia giratória */}
-                <div className="relative overflow-hidden rounded-[20px] bg-[#220709] p-[1.5px] shadow-[0_0_50px_rgba(255,59,48,0.45),0_20px_50px_rgba(0,0,0,0.9)] h-full flex flex-col">
+                <div className="relative overflow-hidden rounded-[20px] bg-[#180406] p-[1.5px] shadow-[0_0_50px_rgba(255,59,48,0.45),0_20px_50px_rgba(0,0,0,0.95)] h-full flex flex-col">
                   <div
                     className="absolute -inset-[120%]"
                     style={{
@@ -134,7 +134,7 @@ export function PrecoTrioDark() {
                       animation: "energiaGirar 4s linear infinite",
                     }}
                   />
-                  <div className="relative flex flex-col flex-1 rounded-[18.5px] bg-[#070709] p-[22px] pt-[24px]">
+                  <div className="relative flex flex-col flex-1 rounded-[18.5px] bg-[#040406] p-[22px] pt-[24px]">
                     <div className="text-[15px] font-bold font-heading uppercase text-white tracking-wide">
                       {p.nome}
                     </div>
@@ -185,7 +185,7 @@ export function PrecoTrioDark() {
           return (
             <div
               key={p.id}
-              className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col rounded-[20px] border border-[#3b0d10] bg-[#070709] p-[22px] backdrop-blur-md transition-all duration-[250ms] hover:-translate-y-1 hover:border-[#ff3b30]/50 hover:shadow-[0_0_25px_rgba(255,59,48,0.15)]"
+              className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[260px] flex-col rounded-[20px] border border-[#3b0d10] bg-[#040406] p-[22px] backdrop-blur-md transition-all duration-[250ms] hover:-translate-y-1 hover:border-[#ff3b30]/50 hover:shadow-[0_0_25px_rgba(255,59,48,0.15)]"
             >
               <div className="text-[15px] font-bold font-heading uppercase text-white tracking-wide">
                 {p.nome}

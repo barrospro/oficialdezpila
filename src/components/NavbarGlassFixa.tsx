@@ -20,8 +20,8 @@ export function NavbarGlassFixa() {
       className={
         "fixed left-1/2 top-5 z-50 flex w-[calc(100%-48px)] max-w-3xl -translate-x-1/2 items-center justify-between rounded-2xl border border-white/10 py-3 pl-5 pr-3.5 backdrop-blur-xl transition-all duration-300 " +
         (scrolled
-          ? "bg-[#0b0b14]/85 shadow-[0_14px_40px_rgba(0,0,0,0.7)] border-brand/20"
-          : "bg-[#0b0b14]/60 shadow-[0_14px_40px_rgba(0,0,0,0.5)]")
+          ? "bg-[#050507]/90 shadow-[0_14px_40px_rgba(0,0,0,0.85)] border-brand/20"
+          : "bg-[#050507]/70 shadow-[0_14px_40px_rgba(0,0,0,0.6)]")
       }
     >
       <a href="#" className="flex items-center gap-2 text-base font-bold tracking-tighter uppercase text-white font-heading">
