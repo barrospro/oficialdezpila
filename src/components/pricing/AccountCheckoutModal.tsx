@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
+import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, Zap } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export interface PlanoData {
@@ -17,7 +17,7 @@ interface AccountCheckoutModalProps {
   onClose: () => void;
 }
 
-type Step = "CADASTRO" | "PAGAMENTO" | "EXPIRADO" | "SUCESSO";
+type Step = "CADASTRO" | "CONFIRMACAO" | "PAGAMENTO" | "EXPIRADO" | "SUCESSO";
 
 export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutModalProps) {
   const [step, setStep] = useState<Step>("CADASTRO");
@@ -30,6 +30,14 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   const [verSenha, setVerSenha] = useState(false);
   const [whatsapp, setWhatsapp] = useState("");
   const [lembrar, setLembrar] = useState(true);
+
+  // OrderBump State
+  const [includeOrderBump, setIncludeOrderBump] = useState(false);
+  const orderBumpPrice = 9.90;
+  const orderBumpTitle = "⚡ Rota VIP 10Gbps + Canais Premiere Sem Delay";
+  const orderBumpDesc = "Garante prioridade máxima de transmissão em dias de grandes jogos e libera a biblioteca 4K em servidores dedicados anti-buffer.";
+
+  // Payment State
   const [copied, setCopied] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(900); // 15 minutos
 
@@ -49,6 +57,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         }
       }
       setStep("CADASTRO");
+      setIncludeOrderBump(false);
       setTimerSeconds(900);
     }
   }, [open]);
@@ -85,6 +94,18 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
   };
 
+  const parsePrice = (valStr: string) => {
+    return parseFloat(valStr.replace(",", ".")) || 0;
+  };
+
+  const formatPrice = (valNum: number) => {
+    return valNum.toFixed(2).replace(".", ",");
+  };
+
+  const basePrice = parsePrice(plano.preco);
+  const totalPriceNum = includeOrderBump ? basePrice + orderBumpPrice : basePrice;
+  const totalPriceStr = formatPrice(totalPriceNum);
+
   const handleCadastroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome || !cpf || !email || !senha || !whatsapp) return;
@@ -103,12 +124,32 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     };
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
 
-    // Avança para tela de pagamento
+    // Avança para a etapa de confirmação e OrderBump
+    setStep("CONFIRMACAO");
+  };
+
+  const handleGerarPix = () => {
+    // Atualiza storage com o pedido completo (incluindo OrderBump se selecionado)
+    const userData = {
+      nome,
+      cpf,
+      email,
+      senha,
+      whatsapp,
+      planoId: plano.id,
+      planoNome: plano.nome,
+      planoPreco: plano.preco,
+      orderBump: includeOrderBump ? { title: orderBumpTitle, price: formatPrice(orderBumpPrice) } : null,
+      valorTotal: totalPriceStr,
+      updatedAt: new Date().toISOString(),
+    };
+    localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
+
     setStep("PAGAMENTO");
   };
 
-  // Payload PIX para teste (pronto para receber API real do Pix)
-  const mockPixPayload = `00020126580014br.gov.bcb.pix0136dezpila-checkout-${plano.id.toLowerCase()}-pix-key5204000053039865405${plano.preco.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304E8A2`;
+  // Payload PIX para teste (pronto para receber API real do Pix com valor total calculado)
+  const mockPixPayload = `00020126580014br.gov.bcb.pix0136dezpila-checkout-${plano.id.toLowerCase()}-pix-key5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304E8A2`;
 
   const handleCopyPix = async () => {
     try {
@@ -133,10 +174,14 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         {/* Header do Modal */}
         <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            {(step === "PAGAMENTO" || step === "EXPIRADO") && (
+            {(step === "CONFIRMACAO" || step === "PAGAMENTO" || step === "EXPIRADO") && (
               <button
                 type="button"
-                onClick={() => setStep("CADASTRO")}
+                onClick={() => {
+                  if (step === "CONFIRMACAO") setStep("CADASTRO");
+                  if (step === "PAGAMENTO") setStep("CONFIRMACAO");
+                  if (step === "EXPIRADO") setStep("CADASTRO");
+                }}
                 className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 aria-label="Voltar"
               >
@@ -156,11 +201,13 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               <h2 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
                 {step === "CADASTRO"
                   ? "Criar Conta"
-                  : step === "PAGAMENTO"
-                    ? "Checkout PIX"
-                    : step === "EXPIRADO"
-                      ? "PIX Expirado"
-                      : "Pagamento Confirmado"}
+                  : step === "CONFIRMACAO"
+                    ? "Confirmar Pedido"
+                    : step === "PAGAMENTO"
+                      ? "Checkout PIX"
+                      : step === "EXPIRADO"
+                        ? "PIX Expirado"
+                        : "Pagamento Confirmado"}
               </h2>
               <span className="text-[11px] font-code text-[#970202] font-semibold">
                 Plano {plano.nome} — R$ {plano.preco}
@@ -298,12 +345,98 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               type="submit"
               className="w-full rounded-xl bg-gradient-to-r from-[#970202] to-red-700 py-3.5 text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_20px_rgba(151,2,2,0.5)] transition-all hover:brightness-110 cursor-pointer font-heading"
             >
-              Ir para o Pagamento →
+              Continuar →
             </button>
           </form>
         )}
 
-        {/* PASSO 2: Tela de Pagamento PIX */}
+        {/* PASSO 2: Confirmação do Plano + OrderBump */}
+        {step === "CONFIRMACAO" && (
+          <div className="flex flex-col">
+            <p className="mb-4 text-xs text-slate-400 font-body">
+              Confirme seu plano e escolha ofertas adicionais exclusivas antes de gerar o PIX.
+            </p>
+
+            {/* Card do Plano Selecionado */}
+            <div className="w-full rounded-2xl bg-white/[0.04] border border-white/10 p-4 mb-4">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs font-bold text-slate-300 uppercase font-heading">Plano Selecionado</span>
+                <span className="text-xs font-code font-bold text-[#970202] bg-[#970202]/15 px-2 py-0.5 rounded border border-[#970202]/30">
+                  {plano.nome}
+                </span>
+              </div>
+              <div className="flex justify-between items-baseline pt-1">
+                <span className="text-xs text-slate-400 font-code">{plano.desc}</span>
+                <span className="text-base font-extrabold text-white font-heading">
+                  R$ {plano.preco} <span className="text-xs font-normal text-slate-400 font-code">{plano.periodo}</span>
+                </span>
+              </div>
+            </div>
+
+            {/* CARD DE ORDER BUMP / OFERTA ADICIONAL */}
+            <div className={`relative overflow-hidden rounded-2xl border transition-all p-4 mb-5 cursor-pointer ${includeOrderBump ? "bg-[#970202]/10 border-[#970202] shadow-[0_0_20px_rgba(151,2,2,0.25)]" : "bg-white/[0.02] border-white/10 hover:border-white/20"}`}
+              onClick={() => setIncludeOrderBump(!includeOrderBump)}
+            >
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5">
+                  <span
+                    className={
+                      "flex h-5 w-5 items-center justify-center rounded-md border-[1.5px] transition-colors " +
+                      (includeOrderBump
+                        ? "border-[#970202] bg-[#970202] text-white"
+                        : "border-white/30 bg-white/5 text-transparent")
+                    }
+                  >
+                    <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1.5">
+                      <Zap className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                      {orderBumpTitle}
+                    </span>
+                    <span className="text-xs font-bold font-code text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded shrink-0">
+                      + R$ 9,90
+                    </span>
+                  </div>
+                  <p className="text-[11.5px] text-slate-300 font-body leading-relaxed">
+                    {orderBumpDesc}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* VALOR TOTAL DO PEDIDO */}
+            <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-4 mb-5">
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                <span>Plano {plano.nome}:</span>
+                <span className="text-slate-200">R$ {plano.preco}</span>
+              </div>
+              {includeOrderBump && (
+                <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
+                  <span>Adicional Rota VIP 10Gbps:</span>
+                  <span>+ R$ 9,90</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center text-sm font-bold text-white font-heading pt-2 border-t border-white/10 mt-2">
+                <span className="uppercase tracking-wider">Valor Total a Pagar:</span>
+                <span className="text-lg text-white font-heading">R$ {totalPriceStr}</span>
+              </div>
+            </div>
+
+            {/* Botão de Gerar PIX */}
+            <button
+              type="button"
+              onClick={handleGerarPix}
+              className="w-full rounded-xl bg-gradient-to-r from-[#970202] to-red-700 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(151,2,2,0.6)] transition-all hover:brightness-110 cursor-pointer font-heading"
+            >
+              Gerar PIX de R$ {totalPriceStr} →
+            </button>
+          </div>
+        )}
+
+        {/* PASSO 3: Tela de Pagamento PIX */}
         {step === "PAGAMENTO" && (
           <div className="flex flex-col items-center text-center">
             {/* Resumo do Pedido */}
@@ -326,9 +459,15 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 <span>Acesso:</span>
                 <span className="text-slate-200">{email}</span>
               </div>
-              <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5">
-                <span>Valor Total:</span>
-                <span className="text-sm font-bold text-white font-heading">R$ {plano.preco} {plano.periodo}</span>
+              {includeOrderBump && (
+                <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1">
+                  <span>Adicional:</span>
+                  <span>Rota VIP 10Gbps (+ R$ 9,90)</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5 mt-1">
+                <span>Valor Total a Pagar:</span>
+                <span className="text-sm font-bold text-white font-heading">R$ {totalPriceStr}</span>
               </div>
             </div>
 
@@ -376,18 +515,17 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            <span className="text-[11px] font-code text-slate-500 flex items-center gap-1 mt-2">
+            <span className="text-[11px] font-code text-slate-500 flex items-center gap-1 mt-1">
               <Lock className="h-3.5 w-3.5 text-slate-400" /> Pagamento 100% criptografado e seguro
             </span>
           </div>
         )}
 
-        {/* PASSO 3: TELA DE PIX EXPIRADO (COM OPÇÃO DE RENOVAR CHAVE) */}
+        {/* PASSO 4: TELA DE PIX EXPIRADO */}
         {step === "EXPIRADO" && (
           <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
-            {/* Ícone de Alerta em Amarelo/Âmbar */}
             <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-amber-500/15 border-2 border-amber-500 text-amber-400 shadow-[0_0_40px_rgba(245,158,11,0.4)]">
-              <AlertCircle className="h-10 w-10" strokeWidth={2.5} />
+              <Clock className="h-10 w-10" strokeWidth={2.5} />
             </div>
 
             <span className="mb-2 inline-block rounded-full bg-amber-500/20 px-3.5 py-1 text-[11px] font-bold font-code uppercase tracking-widest text-amber-400 border border-amber-500/40">
@@ -415,20 +553,12 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 <span className="text-slate-200 font-semibold">{nome}</span>
               </div>
               <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
-                <span>CPF:</span>
-                <span className="text-slate-200 font-mono">{cpf}</span>
-              </div>
-              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
-                <span>E-mail:</span>
-                <span className="text-slate-200">{email}</span>
-              </div>
-              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
-                <span>WhatsApp:</span>
-                <span className="text-slate-200">{whatsapp}</span>
+                <span>Plano:</span>
+                <span className="text-slate-200 font-semibold">{plano.nome}</span>
               </div>
               <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5">
-                <span>Plano:</span>
-                <span className="text-sm font-bold text-white font-heading">R$ {plano.preco} {plano.periodo}</span>
+                <span>Valor Total:</span>
+                <span className="text-sm font-bold text-white font-heading">R$ {totalPriceStr}</span>
               </div>
             </div>
 
@@ -436,12 +566,11 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
             <button
               type="button"
               onClick={() => {
-                setTimerSeconds(900); // Reseta para 15 minutos
+                setTimerSeconds(900);
                 setStep("PAGAMENTO");
               }}
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#970202] to-red-700 hover:from-red-600 hover:to-red-800 text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(151,2,2,0.5)] flex items-center justify-center gap-2 cursor-pointer mb-2.5"
             >
-              <RefreshCw className="h-4 w-4" />
               <span>Gerar Nova Chave PIX (Renovar)</span>
             </button>
 
@@ -455,10 +584,9 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
           </div>
         )}
 
-        {/* PASSO 4: TELA VERDE — Pagamento Confirmado */}
+        {/* PASSO 5: TELA VERDE — Pagamento Confirmado */}
         {step === "SUCESSO" && (
           <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
-            {/* Ícone de Sucesso em Círculo Verde com Glow */}
             <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#00C853]/15 border-2 border-[#00C853] text-[#00C853] shadow-[0_0_40px_rgba(0,200,83,0.5)]">
               <CheckCircle className="h-10 w-10" strokeWidth={2.5} />
             </div>
@@ -472,10 +600,9 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
             </h3>
 
             <p className="text-xs sm:text-sm text-slate-300 font-body max-w-sm mb-6 leading-relaxed">
-              Olá, <strong className="text-white font-semibold">{nome}</strong>! O pagamento do seu plano <strong className="text-[#00C853]">{plano.nome}</strong> foi aprovado instantaneamente.
+              Olá, <strong className="text-white font-semibold">{nome}</strong>! O pagamento do seu pedido do plano <strong className="text-[#00C853]">{plano.nome}</strong> no valor de <strong className="text-white">R$ {totalPriceStr}</strong> foi aprovado.
             </p>
 
-            {/* Caixas de confirmação de envio automático */}
             <div className="w-full space-y-3 mb-6 text-left">
               <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30">
                 <Mail className="h-5 w-5 text-[#00C853] shrink-0 mt-0.5" />
