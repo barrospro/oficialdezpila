@@ -31,6 +31,22 @@ const planos: PlanoTrio[] = [
     link: "https://go.nitropagamentos.com/ni918",
   },
   {
+    id: "TRIMESTRAL",
+    nome: "Plus Trimestral",
+    desc: "Assista em até 2 telas",
+    preco: "19,90",
+    periodo: "/trim",
+    recursos: [
+      "2 conexões simultâneas",
+      "+60.000 conteúdos em 4K",
+      "Filmes, Séries & EPG completo",
+      "Canais Adultos (Opcional)",
+      "Suporte via WhatsApp",
+    ],
+    cta: "Assinar Trimestral",
+    link: "https://go.nitropagamentos.com/h64gr",
+  },
+  {
     id: "SEMESTRAL",
     nome: "Pro Semestral",
     desc: "Economia de 66% de desconto",
@@ -94,32 +110,32 @@ export function PrecoTrioDark() {
         </p>
       </div>
 
-      <div className="relative flex items-stretch gap-[18px] max-md:flex-col w-full max-w-4xl justify-center">
+      <div className="relative flex flex-wrap lg:flex-nowrap items-stretch gap-[16px] w-full max-w-6xl justify-center">
         {planos.map((p) => (
           <div
             key={p.id}
             className={
               p.popular
-                ? "relative flex w-full md:w-[270px] flex-col rounded-[18px] border border-brand/60 bg-[linear-gradient(180deg,oklch(0.55_0.25_29_/_0.18),oklch(0.55_0.25_29_/_0.05))] p-[22px] shadow-[0_20px_50px_-14px_rgba(255,59,48,0.45),0_4px_14px_rgba(0,0,0,0.4)] transition-transform duration-[250ms] max-md:order-first md:-translate-y-[14px] md:hover:-translate-y-[18px]"
-                : "relative flex w-full md:w-[270px] flex-col rounded-[18px] border border-border/80 bg-card/60 p-[22px] backdrop-blur-md transition-[transform,border-color] duration-[250ms] hover:-translate-y-1 hover:border-brand/40"
+                ? "relative flex w-full sm:w-[calc(50%-12px)] lg:w-[250px] flex-col rounded-[18px] border border-brand/60 bg-[linear-gradient(180deg,oklch(0.55_0.25_29_/_0.18),oklch(0.55_0.25_29_/_0.05))] p-[20px] shadow-[0_20px_50px_-14px_rgba(255,59,48,0.45),0_4px_14px_rgba(0,0,0,0.4)] transition-transform duration-[250ms] max-lg:order-first lg:-translate-y-[14px] lg:hover:-translate-y-[18px]"
+                : "relative flex w-full sm:w-[calc(50%-12px)] lg:w-[250px] flex-col rounded-[18px] border border-border/80 bg-card/60 p-[20px] backdrop-blur-md transition-[transform,border-color] duration-[250ms] hover:-translate-y-1 hover:border-brand/40"
             }
           >
             {p.popular && (
-              <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[linear-gradient(90deg,#ff3b30,#ef4444)] px-3 py.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-md">
+              <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[linear-gradient(90deg,#ff3b30,#ef4444)] px-3 py-0.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-md">
                 MAIS POPULAR
               </span>
             )}
             <div className="text-sm font-bold font-heading uppercase text-foreground">
               {p.nome}
             </div>
-            <div className="mt-[3px] text-[11.5px] font-code text-muted-foreground">
+            <div className="mt-[3px] text-[11px] font-code text-muted-foreground min-h-[32px]">
               {p.desc}
             </div>
-            <div className="mb-[2px] mt-[13px] flex items-baseline gap-1">
-              <span className="text-sm font-bold font-code text-muted-foreground">
+            <div className="mb-[2px] mt-[10px] flex items-baseline gap-1">
+              <span className="text-xs font-bold font-code text-muted-foreground">
                 R$
               </span>
-              <span className="text-[37px] font-extrabold font-code tracking-[-1.5px] text-white glow-text">
+              <span className="text-[34px] font-extrabold font-code tracking-[-1.5px] text-white glow-text">
                 {p.preco}
               </span>
               <span className="text-xs font-code text-muted-foreground">
