@@ -49,9 +49,9 @@ export async function getBspayAccessToken(): Promise<string> {
     method: "POST",
     headers: {
       Authorization: `Basic ${basicAuth}`,
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     },
-    body: "grant_type=client_credentials",
+    body: JSON.stringify({ grant_type: "client_credentials" }),
   });
 
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
