@@ -111,14 +111,19 @@ export function PrecoTrioDark() {
         </p>
       </div>
 
-      <div className="relative flex flex-wrap lg:flex-nowrap items-stretch gap-[16px] w-full max-w-6xl justify-center">
+      <div className="relative flex flex-wrap lg:flex-nowrap items-stretch gap-[16px] w-full max-w-6xl justify-center pt-3">
         {planos.map((p) => {
           if (p.popular) {
             return (
               <div
                 key={p.id}
-                className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[250px] flex-col rounded-[20px] max-lg:order-first lg:-translate-y-[14px] lg:hover:-translate-y-[18px] transition-transform duration-[250ms]"
+                className="relative flex w-full sm:w-[calc(50%-12px)] lg:w-[250px] flex-col max-lg:order-first lg:-translate-y-[14px] lg:hover:-translate-y-[18px] transition-transform duration-[250ms]"
               >
+                {/* Badge Posicionada fora do container overflow-hidden para não cortar */}
+                <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[linear-gradient(90deg,#ff3b30,#ef4444)] px-3.5 py-0.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-[0_0_15px_rgba(255,59,48,0.7)] z-30">
+                  MAIS POPULAR
+                </span>
+
                 <div className="relative overflow-hidden rounded-[20px] bg-[#232330] p-[1.5px] shadow-[0_0_50px_rgba(255,59,48,0.35),0_20px_50px_rgba(0,0,0,0.6)] h-full flex flex-col">
                   <div
                     className="absolute -inset-[120%]"
@@ -128,10 +133,7 @@ export function PrecoTrioDark() {
                       animation: "energiaGirar 4s linear infinite",
                     }}
                   />
-                  <div className="relative flex flex-col flex-1 rounded-[18.5px] bg-[#0b0b14] p-[20px]">
-                    <span className="absolute left-1/2 top-[-11px] -translate-x-1/2 whitespace-nowrap rounded-full bg-[linear-gradient(90deg,#ff3b30,#ef4444)] px-3 py-0.5 text-[9.5px] font-bold font-code tracking-[1.2px] text-white shadow-md z-20">
-                      MAIS POPULAR
-                    </span>
+                  <div className="relative flex flex-col flex-1 rounded-[18.5px] bg-[#0b0b14] p-[20px] pt-[22px]">
                     <div className="text-sm font-bold font-heading uppercase text-foreground">
                       {p.nome}
                     </div>
@@ -166,7 +168,7 @@ export function PrecoTrioDark() {
                     <button
                       type="button"
                       onClick={() => setSelectedPlan(p)}
-                      className="w-full rounded-[10px] bg-[linear-gradient(90deg,#ff3b30,#ef4444)] py-[10px] text-center text-[12.5px] font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(255,59,48,0.7)] transition-[filter] duration-200 hover:brightness-110 cursor-pointer border-none"
+                      className="w-full rounded-[10px] bg-[linear-gradient(90deg,#ff3b30,#ef4444)] py-[10px] text-center text-[12.5px] font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(255,59,48,0.7)] transition-[filter] duration-200 hover:brightness-110 cursor-pointer border-none font-heading"
                     >
                       {p.cta}
                     </button>
@@ -215,7 +217,7 @@ export function PrecoTrioDark() {
               <button
                 type="button"
                 onClick={() => setSelectedPlan(p)}
-                className="w-full rounded-[10px] border border-border/80 py-[10px] text-center text-[12.5px] font-bold uppercase tracking-wider text-foreground transition-colors duration-200 hover:bg-brand/10 hover:border-brand/40 cursor-pointer"
+                className="w-full rounded-[10px] border border-border/80 py-[10px] text-center text-[12.5px] font-bold uppercase tracking-wider text-foreground transition-colors duration-200 hover:bg-brand/10 hover:border-brand/40 cursor-pointer font-heading"
               >
                 {p.cta}
               </button>
