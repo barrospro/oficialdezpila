@@ -33,7 +33,7 @@ function CountdownTimer() {
 
 export function HeroSection() {
   return (
-    <section className="min-h-[90vh] flex flex-col justify-center px-6 lg:px-12 pt-24 pb-20 relative overflow-hidden">
+    <section className="min-h-[90vh] flex flex-col justify-center px-6 lg:px-12 pt-28 sm:pt-32 lg:pt-36 pb-20 relative overflow-hidden">
       {/* Ambient glows */}
       <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-brand/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-live/5 rounded-full blur-[100px] pointer-events-none" />
