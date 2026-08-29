@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, Zap } from "lucide-react";
+import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, Tv, LockKeyhole, Plus, Minus } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export interface PlanoData {
@@ -32,10 +32,13 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   const [lembrar, setLembrar] = useState(true);
 
   // OrderBump State
-  const [includeOrderBump, setIncludeOrderBump] = useState(false);
-  const orderBumpPrice = 9.90;
-  const orderBumpTitle = "⚡ Rota VIP 10Gbps + Canais Premiere Sem Delay";
-  const orderBumpDesc = "Garante prioridade máxima de transmissão em dias de grandes jogos e libera a biblioteca 4K em servidores dedicados anti-buffer.";
+  // 1. Tela Extra Adicional (+1 Conexão Simultânea) - R$ 5,90 por tela (quantidade livre)
+  const [telasExtras, setTelasExtras] = useState(0);
+  const telaExtraUnit = 5.90;
+
+  // 2. Pacote Adulto Privado com Proteção por Senha (PIN) - R$ 9,90 fixo
+  const [pacoteAdulto, setPacoteAdulto] = useState(false);
+  const pacoteAdultoPrice = 9.90;
 
   // Payment State
   const [copied, setCopied] = useState(false);
@@ -57,7 +60,8 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         }
       }
       setStep("CADASTRO");
-      setIncludeOrderBump(false);
+      setTelasExtras(0);
+      setPacoteAdulto(false);
       setTimerSeconds(900);
     }
   }, [open]);
@@ -103,7 +107,9 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   };
 
   const basePrice = parsePrice(plano.preco);
-  const totalPriceNum = includeOrderBump ? basePrice + orderBumpPrice : basePrice;
+  const telasPriceTotal = telasExtras * telaExtraUnit;
+  const adultoPriceTotal = pacoteAdulto ? pacoteAdultoPrice : 0;
+  const totalPriceNum = basePrice + telasPriceTotal + adultoPriceTotal;
   const totalPriceStr = formatPrice(totalPriceNum);
 
   const handleCadastroSubmit = (e: React.FormEvent) => {
@@ -124,12 +130,12 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     };
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
 
-    // Avança para a etapa de confirmação e OrderBump
+    // Avança para a etapa de confirmação e OrderBumps
     setStep("CONFIRMACAO");
   };
 
   const handleGerarPix = () => {
-    // Atualiza storage com o pedido completo (incluindo OrderBump se selecionado)
+    // Atualiza storage com o pedido completo (incluindo OrderBumps selecionados)
     const userData = {
       nome,
       cpf,
@@ -139,7 +145,10 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
       planoId: plano.id,
       planoNome: plano.nome,
       planoPreco: plano.preco,
-      orderBump: includeOrderBump ? { title: orderBumpTitle, price: formatPrice(orderBumpPrice) } : null,
+      orderBumps: {
+        telasExtras: telasExtras > 0 ? { qtd: telasExtras, subtotal: formatPrice(telasPriceTotal) } : null,
+        pacoteAdulto: pacoteAdulto ? { price: formatPrice(pacoteAdultoPrice) } : null,
+      },
       valorTotal: totalPriceStr,
       updatedAt: new Date().toISOString(),
     };
@@ -350,11 +359,11 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
           </form>
         )}
 
-        {/* PASSO 2: Confirmação do Plano + OrderBump */}
+        {/* PASSO 2: Confirmação do Plano + OrderBumps */}
         {step === "CONFIRMACAO" && (
           <div className="flex flex-col">
             <p className="mb-4 text-xs text-slate-400 font-body">
-              Confirme seu plano e escolha ofertas adicionais exclusivas antes de gerar o PIX.
+              Confirme seu plano e adicione ofertas exclusivas antes de gerar o PIX.
             </p>
 
             {/* Card do Plano Selecionado */}
@@ -373,16 +382,72 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* CARD DE ORDER BUMP / OFERTA ADICIONAL */}
-            <div className={`relative overflow-hidden rounded-2xl border transition-all p-4 mb-5 cursor-pointer ${includeOrderBump ? "bg-[#970202]/10 border-[#970202] shadow-[0_0_20px_rgba(151,2,2,0.25)]" : "bg-white/[0.02] border-white/10 hover:border-white/20"}`}
-              onClick={() => setIncludeOrderBump(!includeOrderBump)}
+            <div className="mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 font-heading">
+                Opcionais Recomendados:
+              </span>
+            </div>
+
+            {/* ORDER BUMP 1: Tela Extra Adicional (+1 Conexão Simultânea) com Seletor de Quantidade */}
+            <div className={`relative overflow-hidden rounded-2xl border transition-all p-4 mb-3 ${telasExtras > 0 ? "bg-[#970202]/10 border-[#970202] shadow-[0_0_20px_rgba(151,2,2,0.25)]" : "bg-white/[0.02] border-white/10"}`}>
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-white shrink-0 mt-0.5">
+                  <Tv className="h-5 w-5 text-red-500" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading">
+                      Tela Extra Adicional (+1 Conexão)
+                    </span>
+                    <span className="text-xs font-bold font-code text-red-400 bg-red-400/10 px-2 py-0.5 rounded shrink-0">
+                      R$ 5,90 / tela
+                    </span>
+                  </div>
+                  <p className="text-[11.5px] text-slate-300 font-body leading-relaxed mb-3">
+                    Assista simultaneamente em mais aparelhos da casa ou no celular sem derrubar o outro ponto.
+                  </p>
+
+                  {/* Seletor de Quantidade de Telas Extras */}
+                  <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                    <span className="text-xs font-semibold text-slate-300">
+                      Quantidade de telas extras:
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setTelasExtras((prev) => Math.max(0, prev - 1))}
+                        disabled={telasExtras === 0}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-slate-200 hover:bg-white/10 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                      >
+                        <Minus className="h-3.5 w-3.5" />
+                      </button>
+                      <span className="w-6 text-center text-sm font-bold text-white font-code">
+                        {telasExtras}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setTelasExtras((prev) => prev + 1)}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#970202] bg-[#970202]/30 text-white hover:bg-[#970202] cursor-pointer transition-colors shadow-[0_0_10px_rgba(151,2,2,0.4)]"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ORDER BUMP 2: Pacote Adulto Privado com Proteção por Senha (PIN) - R$ 9,90 */}
+            <div
+              className={`relative overflow-hidden rounded-2xl border transition-all p-4 mb-5 cursor-pointer ${pacoteAdulto ? "bg-[#970202]/10 border-[#970202] shadow-[0_0_20px_rgba(151,2,2,0.25)]" : "bg-white/[0.02] border-white/10 hover:border-white/20"}`}
+              onClick={() => setPacoteAdulto(!pacoteAdulto)}
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
                   <span
                     className={
                       "flex h-5 w-5 items-center justify-center rounded-md border-[1.5px] transition-colors " +
-                      (includeOrderBump
+                      (pacoteAdulto
                         ? "border-[#970202] bg-[#970202] text-white"
                         : "border-white/30 bg-white/5 text-transparent")
                     }
@@ -393,15 +458,15 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 <div className="flex-1">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1.5">
-                      <Zap className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                      {orderBumpTitle}
+                      <LockKeyhole className="h-3.5 w-3.5 text-amber-400" />
+                      Pacote Adulto Privado (PIN)
                     </span>
                     <span className="text-xs font-bold font-code text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded shrink-0">
                       + R$ 9,90
                     </span>
                   </div>
                   <p className="text-[11.5px] text-slate-300 font-body leading-relaxed">
-                    {orderBumpDesc}
+                    Liberação completa de canais e filmes adultos VIP com controle dos pais por código de segurança.
                   </p>
                 </div>
               </div>
@@ -413,9 +478,15 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 <span>Plano {plano.nome}:</span>
                 <span className="text-slate-200">R$ {plano.preco}</span>
               </div>
-              {includeOrderBump && (
+              {telasExtras > 0 && (
+                <div className="flex justify-between items-center text-xs text-red-400 font-code mb-1 animate-in fade-in duration-200">
+                  <span>Telas Extras ({telasExtras}x R$ 5,90):</span>
+                  <span>+ R$ {formatPrice(telasPriceTotal)}</span>
+                </div>
+              )}
+              {pacoteAdulto && (
                 <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
-                  <span>Adicional Rota VIP 10Gbps:</span>
+                  <span>Pacote Adulto Privado (PIN):</span>
                   <span>+ R$ 9,90</span>
                 </div>
               )}
@@ -459,10 +530,16 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 <span>Acesso:</span>
                 <span className="text-slate-200">{email}</span>
               </div>
-              {includeOrderBump && (
+              {telasExtras > 0 && (
+                <div className="flex justify-between items-center text-xs text-red-400 font-code mb-1">
+                  <span>Telas Extras ({telasExtras}x):</span>
+                  <span>+ R$ {formatPrice(telasPriceTotal)}</span>
+                </div>
+              )}
+              {pacoteAdulto && (
                 <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1">
-                  <span>Adicional:</span>
-                  <span>Rota VIP 10Gbps (+ R$ 9,90)</span>
+                  <span>Pacote Adulto (PIN):</span>
+                  <span>+ R$ 9,90</span>
                 </div>
               )}
               <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5 mt-1">
