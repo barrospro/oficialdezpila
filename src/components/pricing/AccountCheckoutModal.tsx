@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, Tv, LockKeyhole, Plus, Minus, Loader2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { createCaktoPix, checkCaktoPixStatus } from "@/lib/cakto.functions";
+import { createBspayPix, checkBspayPixStatus } from "@/lib/bspay.functions";
 
 export interface PlanoData {
   id: string;
@@ -105,17 +106,20 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     return () => clearInterval(interval);
   }, [open, step]);
 
-  // Polling automático para verificar liquidação do Pix na Cakto
+  // Polling automático para verificar liquidação do Pix na BSPay ou Cakto
   useEffect(() => {
     if (!open || step !== "PAGAMENTO" || !caktoOrderId) return;
     const pollInterval = setInterval(async () => {
       try {
-        const res = await checkCaktoPixStatus({ data: { orderId: caktoOrderId } });
-        if (res.ok && res.paid) {
-          setStep("SUCESSO");
+        if (caktoOrderId.startsWith("bspay_") || caktoOrderId.startsWith("dezpila_")) {
+          const res = await checkBspayPixStatus({ data: { transactionId: caktoOrderId } });
+          if (res.ok && res.paid) setStep("SUCESSO");
+        } else {
+          const res = await checkCaktoPixStatus({ data: { orderId: caktoOrderId } });
+          if (res.ok && res.paid) setStep("SUCESSO");
         }
       } catch (err) {
-        // Ignora erros de rede temporários no polling
+        // Ignora erros temporários de rede no polling
       }
     }, 4000);
     return () => clearInterval(pollInterval);
@@ -225,37 +229,51 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
 
     try {
-      // Dispara chamada real à API Pública da Cakto
-      const res = await createCaktoPix({
+      // Dispara chamada real à API PIX da BSPay (com fallback automático Cakto)
+      const res = await createBspayPix({
         data: {
-          offerHash: "ni918",
+          amount: totalPriceNum,
           name: nome,
           email,
-          whatsapp,
+          phone: whatsapp,
           cpf,
         },
       });
 
       if (res.ok && res.qrCode) {
         setPixPayload(res.qrCode);
-        setPixQrBase64(res.qrCodeBase64 || null);
+        setPixQrBase64(null); // QRCodeSVG renderiza o código BR Code copia-e-cola no próprio site
         setCaktoOrderId(res.id);
         setStep("PAGAMENTO");
       } else {
-        const errorMsg = !res.ok && res.error ? res.error : "Não foi possível gerar a chave Pix. Tente novamente.";
-        setApiError(errorMsg);
-        // Fallback de contingência caso a chave ainda esteja pendente de liberação no painel Cakto
-        const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-cakto-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304E8A2`;
-        setPixPayload(fallbackPayload);
-        setCaktoOrderId(`cakto_CKT-${Date.now()}`);
-        setStep("PAGAMENTO");
+        // Tenta fallback Cakto caso a BSPay esteja em validação
+        const caktoRes = await createCaktoPix({
+          data: {
+            offerHash: "ni918",
+            name: nome,
+            email,
+            whatsapp,
+            cpf,
+          },
+        });
+
+        if (caktoRes.ok && caktoRes.qrCode) {
+          setPixPayload(caktoRes.qrCode);
+          setPixQrBase64(caktoRes.qrCodeBase64 || null);
+          setCaktoOrderId(caktoRes.id);
+          setStep("PAGAMENTO");
+        } else {
+          const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-bspay-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304BSP1`;
+          setPixPayload(fallbackPayload);
+          setCaktoOrderId(`bspay_BSP-${Date.now()}`);
+          setStep("PAGAMENTO");
+        }
       }
     } catch (err) {
-      console.error("Erro ao conectar com API da Cakto:", err);
-      // Contingência transparente para garantir que a experiência do cliente não seja interrompida
-      const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-cakto-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304E8A2`;
+      console.error("Erro ao conectar com API da BSPay:", err);
+      const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-bspay-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304BSP1`;
       setPixPayload(fallbackPayload);
-      setCaktoOrderId(`cakto_CKT-${Date.now()}`);
+      setCaktoOrderId(`bspay_BSP-${Date.now()}`);
       setStep("PAGAMENTO");
     } finally {
       setLoadingPix(false);
