@@ -4,18 +4,18 @@ type Service = {
 };
 
 const services: Service[] = [
-  { name: "Netflix", price: "R$ 59,90" },
-  { name: "HBO Max", price: "R$ 55,90" },
+  { name: "Netflix", price: "R$ 44,90" },
+  { name: "HBO Max", price: "R$ 44,90" },
   { name: "Prime Video", price: "R$ 19,90" },
-  { name: "Disney+", price: "R$ 62,90" },
-  { name: "Apple TV+", price: "R$ 21,90" },
-  { name: "Telecine", price: "R$ 39,90" },
-  { name: "Combate", price: "R$ 34,90" },
-  { name: "Premiere", price: "R$ 39,90" },
-  { name: "Sky", price: "R$ 44,95" },
+  { name: "Disney+", price: "R$ 49,90" },
+  { name: "Apple TV+", price: "R$ 29,90" },
+  { name: "Telecine", price: "R$ 29,90" },
+  { name: "Combate", price: "R$ 49,90" },
+  { name: "Premiere", price: "R$ 59,90" },
+  { name: "Sky", price: "R$ 139,90" },
   { name: "Paramount+", price: "R$ 34,90" },
   { name: "Crunchyroll", price: "R$ 19,90" },
-  { name: "Claro TV", price: "R$ 89,90" },
+  { name: "Claro TV", price: "R$ 65,40" },
 ];
 
 function ServiceLogo({ name }: { name: string }) {
@@ -156,7 +156,7 @@ export function PriceComparison() {
             Total Combinado
           </p>
           <p className="text-5xl md:text-6xl font-bold line-through text-muted-foreground/40 tabular-nums font-code">
-            R$ 514,85
+            R$ 589,30
           </p>
 
           <div className="relative inline-block">
