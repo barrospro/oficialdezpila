@@ -1,31 +1,14 @@
+import { useState } from "react";
 import { Check } from "lucide-react";
+import { AccountCheckoutModal, PlanoData } from "./pricing/AccountCheckoutModal";
 
-interface PlanoTrio {
-  id: string;
-  nome: string;
-  desc: string;
-  preco: string;
-  periodo: string;
-  recursos: string[];
-  cta: string;
-  link: string;
-  popular?: boolean;
-}
-
-const planos: PlanoTrio[] = [
+const planos: PlanoData[] = [
   {
     id: "MENSAL",
     nome: "Starter Mensal",
     desc: "Para testar sem compromisso",
     preco: "10,00",
     periodo: "/mês",
-    recursos: [
-      "1 conexão simultânea",
-      "+60.000 conteúdos (4K/FHD)",
-      "Guia de programação (EPG)",
-      "Suporte via WhatsApp",
-    ],
-    cta: "Assinar Mensal",
     link: "https://go.nitropagamentos.com/ni918",
   },
   {
@@ -34,14 +17,6 @@ const planos: PlanoTrio[] = [
     desc: "Assista em até 2 telas",
     preco: "19,90",
     periodo: "/trim",
-    recursos: [
-      "2 conexões simultâneas",
-      "+60.000 conteúdos em 4K",
-      "Filmes, Séries & EPG completo",
-      "Canais Adultos (Opcional)",
-      "Suporte via WhatsApp",
-    ],
-    cta: "Assinar Trimestral",
     link: "https://go.nitropagamentos.com/h64gr",
   },
   {
@@ -50,16 +25,7 @@ const planos: PlanoTrio[] = [
     desc: "Economia de 66% de desconto",
     preco: "29,90",
     periodo: "/sem",
-    recursos: [
-      "3 conexões simultâneas",
-      "+60.000 conteúdos em 4K",
-      "Filmes, Séries & Premiere",
-      "Instalação em múltiplos TVs",
-      "Suporte prioritário 24/7",
-    ],
-    cta: "Assinar Semestral",
     link: "https://go.nitropagamentos.com/oinxr",
-    popular: true,
   },
   {
     id: "ANUAL",
@@ -67,18 +33,49 @@ const planos: PlanoTrio[] = [
     desc: "Maior economia de 71%",
     preco: "47,90",
     periodo: "/ano",
-    recursos: [
-      "4 conexões simultâneas",
-      "+60.000 conteúdos 4K liberados",
-      "Canais Adultos (Opcional)",
-      "Garantia total de estabilidade",
-    ],
-    cta: "Assinar Anual",
     link: "https://go.nitropagamentos.com/lzcus",
   },
 ];
 
+const planoRecursos: Record<string, string[]> = {
+  MENSAL: [
+    "1 conexão simultânea",
+    "+60.000 conteúdos (4K/FHD)",
+    "Guia de programação (EPG)",
+    "Suporte via WhatsApp",
+  ],
+  TRIMESTRAL: [
+    "2 conexões simultâneas",
+    "+60.000 conteúdos em 4K",
+    "Filmes, Séries & EPG completo",
+    "Canais Adultos (Opcional)",
+    "Suporte via WhatsApp",
+  ],
+  SEMESTRAL: [
+    "3 conexões simultâneas",
+    "+60.000 conteúdos em 4K",
+    "Filmes, Séries & Premiere",
+    "Instalação em múltiplos TVs",
+    "Suporte prioritário 24/7",
+  ],
+  ANUAL: [
+    "4 conexões simultâneas",
+    "+60.000 conteúdos 4K liberados",
+    "Canais Adultos (Opcional)",
+    "Garantia total de estabilidade",
+  ],
+};
+
+const ctaLabels: Record<string, string> = {
+  MENSAL: "Assinar Mensal",
+  TRIMESTRAL: "Assinar Trimestral",
+  SEMESTRAL: "Assinar Semestral",
+  ANUAL: "Assinar Anual",
+};
+
 export function PrecoTrioDark() {
+  const [selectedPlan, setSelectedPlan] = useState<PlanoData | null>(null);
+
   return (
     <section
       id="planos"
@@ -109,7 +106,11 @@ export function PrecoTrioDark() {
 
       <div className="relative flex flex-wrap lg:flex-nowrap items-stretch gap-[16px] w-full max-w-6xl justify-center pt-3">
         {planos.map((p) => {
-          if (p.popular) {
+          const isPopular = p.id === "SEMESTRAL";
+          const recursos = planoRecursos[p.id] || [];
+          const cta = ctaLabels[p.id] || "Assinar Agora";
+
+          if (isPopular) {
             return (
               <div
                 key={p.id}
@@ -151,7 +152,7 @@ export function PrecoTrioDark() {
                     </div>
 
                     <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
-                      {p.recursos.map((r) => (
+                      {recursos.map((r) => (
                         <li
                           key={r}
                           className="flex items-center gap-2.5 text-xs text-[#d4d4d8]"
@@ -165,14 +166,13 @@ export function PrecoTrioDark() {
                       ))}
                     </ul>
 
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full block rounded-[12px] border-none bg-[#970202] hover:bg-[#b80303] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(151,2,2,0.9)] transition-all"
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPlan(p)}
+                      className="w-full cursor-pointer rounded-[12px] border-none bg-[#970202] hover:bg-[#b80303] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(151,2,2,0.9)] transition-all"
                     >
-                      {p.cta}
-                    </a>
+                      {cta}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -204,7 +204,7 @@ export function PrecoTrioDark() {
               </div>
 
               <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
-                {p.recursos.map((r) => (
+                {recursos.map((r) => (
                   <li
                     key={r}
                     className="flex items-center gap-2.5 text-xs text-[#d4d4d8]"
@@ -218,18 +218,23 @@ export function PrecoTrioDark() {
                 ))}
               </ul>
 
-              <a
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#970202]/60 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
+              <button
+                type="button"
+                onClick={() => setSelectedPlan(p)}
+                className="w-full cursor-pointer rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#970202]/60 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
               >
-                {p.cta}
-              </a>
+                {cta}
+              </button>
             </div>
           );
         })}
       </div>
+
+      <AccountCheckoutModal
+        open={!!selectedPlan}
+        plano={selectedPlan}
+        onClose={() => setSelectedPlan(null)}
+      />
     </section>
   );
 }
