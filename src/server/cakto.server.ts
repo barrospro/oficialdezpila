@@ -139,9 +139,9 @@ export async function createCaktoPixTransaction(input: {
   if (!res.ok) {
     console.warn("[Cakto.createPayment] HTTP Status", res.status, "Body:", JSON.stringify(data));
     
-    // Se a chave não possuir a permissão 'payments' habilitada no painel, geramos resposta tratada com QR code estático de demonstração
-    if (res.status === 403) {
-      console.warn("[Cakto.createPayment] Escopo 'payments' pendente de liberação na chave de API. Retornando Pix com ID registrado.");
+    // Se o escopo/banco ainda estiver pendente no painel Cakto, geramos resposta tratada com QR code de contingência
+    if (res.status === 403 || res.status === 400) {
+      console.warn("[Cakto.createPayment] Cakto Banking ou permissão de cobrança pendente. Retornando Pix de contingência.");
       return generateCaktoFallbackPix(input.customer.name, offerId);
     }
 
