@@ -2,10 +2,10 @@ import { randomUUID } from "node:crypto";
 
 const CAKTO_BASE = "https://api.cakto.com.br/public_api";
 
-// Credenciais fornecidas do painel Cakto
-const DEFAULT_CLIENT_ID = "ZCtBCZkOVo7D7yJcEMR3TVhCD5aEPruLl0JezsUC";
+// Credenciais fornecidas do painel Cakto (Atualizadas)
+const DEFAULT_CLIENT_ID = "eJJ9L3BoQey51rJbjxMcuDm5ygtIu4gdaqpp7snV";
 const DEFAULT_CLIENT_SECRET =
-  "g0YWJZpefCmLg8lCZrXFo7Oor7cTOVawKoZFi5wA38cmw6gfPOpNa1G7vnWSjwoxWnJ8vuNh776kEqJTTdWff4ZpZENxtjivCBtJoog50jpATVPrbDc7vSJ9Br6Fv8kh";
+  "71jrRdTQEg85fS9YE9lmNriPeJZG9oE42gvT46OCuhsCLXA3Km7QgwJG3RNIiKv5gY3j6Vx7Wuh2oQQFzRAAoHHQi5eJ0odeaqV1ObYVSVLRhzrBF0wLlb61s7CTgfD6";
 
 // Mapeamento de Ofertas ativas da Cakto para os planos do DezPila
 // cw64b77 = Offer "10 Pila Oficial" (R$ 10,00)
