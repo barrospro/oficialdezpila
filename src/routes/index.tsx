@@ -3,7 +3,7 @@ import { TopBanner } from "@/components/TopBanner";
 import { HeroSection } from "@/components/HeroSection";
 import { ContentSection } from "@/components/ContentSection";
 import { PriceComparison } from "@/components/PriceComparison";
-import { PricingPlans } from "@/components/PricingPlans";
+import { PrecoTrioDark } from "@/components/PrecoTrioDark";
 import { MarqueeDepoimentos } from "@/components/MarqueeDepoimentos";
 import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
@@ -45,7 +45,7 @@ function Index() {
         <PriceComparison />
       </Reveal>
       <Reveal>
-        <PricingPlans />
+        <PrecoTrioDark />
       </Reveal>
       <Reveal>
         <MarqueeDepoimentos />
