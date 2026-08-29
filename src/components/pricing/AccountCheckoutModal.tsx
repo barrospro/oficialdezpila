@@ -437,7 +437,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* ORDER BUMP 2: Conteúdo Adulto Premium (Vazados Privacy / OnlyFans VIP) - R$ 12,90 */}
+            {/* ORDER BUMP 2: Conteúdo Adulto Privacy - Vazados - R$ 12,90 */}
             <div
               className={`relative overflow-hidden rounded-2xl border transition-all p-4 mb-5 cursor-pointer ${pacoteAdulto ? "bg-[#10B981]/10 border-[#10B981] shadow-[0_0_20px_rgba(16,185,129,0.2)]" : "bg-white/[0.02] border-white/10 hover:border-white/20"}`}
               onClick={() => setPacoteAdulto(!pacoteAdulto)}
@@ -459,15 +459,51 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1.5">
                       <LockKeyhole className="h-3.5 w-3.5 text-amber-400" />
-                      Conteúdo Adulto Premium (Vazados VIP)
+                      Conteúdo Adulto Privacy - Vazados
                     </span>
                     <span className="text-xs font-bold font-code text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded shrink-0">
                       + R$ 12,90
                     </span>
                   </div>
                   <p className="text-[11.5px] text-slate-300 font-body leading-relaxed">
-                    Acesso exclusivo ao acervo privado de influencers, conteúdos vazados Privacy e OnlyFans com senha pessoal.
+                    Acesso exclusivo ao acervo privado de conteúdos vazados do Privacy, OnlyFans e influencers em alta.
                   </p>
+
+                  {/* Linha de Avatares das Influencers (Estilo do anexo) */}
+                  <div className="mt-2.5 flex items-center gap-2">
+                    <div className="flex -space-x-2 overflow-hidden py-0.5 shrink-0">
+                      <img
+                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                        alt="Mirella"
+                        title="Mirella"
+                      />
+                      <img
+                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
+                        src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80"
+                        alt="Mel Maia"
+                        title="Mel Maia"
+                      />
+                      <img
+                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
+                        src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&q=80"
+                        alt="Bruna Marquezine"
+                        title="Bruna Marquezine"
+                      />
+                      <img
+                        className="inline-block h-7 w-7 rounded-full ring-2 ring-[#14161f] object-cover"
+                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80"
+                        alt="Virginia"
+                        title="Virginia"
+                      />
+                      <div className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#181a26] border border-amber-500/40 ring-2 ring-[#14161f] text-[10px] font-extrabold text-amber-400 font-code shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                        +18k
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-semibold text-amber-400/90 font-code truncate">
+                      Mirella, Mel Maia, Bruna & +18k
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
