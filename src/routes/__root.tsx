@@ -29,16 +29,15 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "This application facilitates a streamlined checkout process, generating Pix payment codes and QR codes." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "This application facilitates a streamlined checkout process, generating Pix payment codes and QR codes." },
+      { title: "DezPila — Streaming Ilimitado por R$10/mês" },
+      { name: "description", content: "Acesse +2.000 canais, Netflix, Disney+, HBO Max e 60.000 conteúdos em 4K por apenas R$10/mês. Liberação imediata via PIX." },
+      { property: "og:title", content: "DezPila — Streaming Ilimitado por R$10/mês" },
+      { property: "og:description", content: "+2.000 canais e 60.000 conteúdos em 4K por apenas R$10/mês. Liberação imediata via PIX." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "This application facilitates a streamlined checkout process, generating Pix payment codes and QR codes." },
+      { property: "og:site_name", content: "DezPila" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "DezPila — Streaming Ilimitado por R$10/mês" },
+      { name: "twitter:description", content: "+2.000 canais e 60.000 conteúdos em 4K por apenas R$10/mês. Liberação imediata via PIX." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a67c200d-b885-4e47-8238-f45b23006116/id-preview-5f25eb4c--b79df9fc-d6af-4585-aafc-8762a17c8993.lovable.app-1777662804757.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a67c200d-b885-4e47-8238-f45b23006116/id-preview-5f25eb4c--b79df9fc-d6af-4585-aafc-8762a17c8993.lovable.app-1777662804757.png" },
     ],
@@ -62,7 +61,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>

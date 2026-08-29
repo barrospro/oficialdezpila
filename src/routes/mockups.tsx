@@ -7,6 +7,9 @@ import { Check, Monitor, Smartphone, Laptop, Tablet } from "lucide-react";
 
 export const Route = createFileRoute("/mockups")({
   component: MockupsPage,
+  head: () => ({
+    meta: [{ name: "robots", content: "noindex, nofollow" }],
+  }),
 });
 
 function MockupsPage() {

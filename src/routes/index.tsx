@@ -25,7 +25,11 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "+2.000 canais e 60.000 conteúdos por apenas R$10/mês",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://oficialdezpila.lovable.app/" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://oficialdezpila.lovable.app/" }],
   }),
 });
 

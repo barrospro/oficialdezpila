@@ -4,6 +4,9 @@ import { Check } from "lucide-react";
 
 export const Route = createFileRoute("/design-system")({
   component: DesignSystem,
+  head: () => ({
+    meta: [{ name: "robots", content: "noindex, nofollow" }],
+  }),
 });
 
 function DesignSystem() {
