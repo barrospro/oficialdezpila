@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TopBanner } from "@/components/TopBanner";
+import { NavbarGlassFixa } from "@/components/NavbarGlassFixa";
 import { HeroSection } from "@/components/HeroSection";
 import { ContentSection } from "@/components/ContentSection";
 import { PriceComparison } from "@/components/PriceComparison";
@@ -37,6 +38,7 @@ function Index() {
   return (
     <div className="min-h-screen">
       <TopBanner />
+      <NavbarGlassFixa />
       <HeroSection />
       <Reveal>
         <ContentSection />

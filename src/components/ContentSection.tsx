@@ -40,7 +40,7 @@ const categories = [
 
 export function ContentSection() {
   return (
-    <section className="py-24 px-6 lg:px-12 relative z-10 border-t border-border">
+    <section id="conteudo" className="py-24 px-6 lg:px-12 relative z-10 border-t border-border">
       <div className="max-w-[1440px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
