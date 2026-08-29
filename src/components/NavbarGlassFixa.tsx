@@ -24,9 +24,11 @@ export function NavbarGlassFixa() {
           : "bg-[#0b0b14]/60 shadow-[0_14px_40px_rgba(0,0,0,0.5)]")
       }
     >
-      <a href="#" className="flex items-center gap-2 text-[15px] font-extrabold tracking-tight text-white font-heading">
-        <span className="h-6 w-6 rounded-[7px] bg-gradient-to-br from-brand to-orange-500 shadow-[0_0_12px_var(--brand-glow)]" />
-        DezPila
+      <a href="#" className="flex items-center gap-2 text-base font-bold tracking-tighter uppercase text-white font-heading">
+        <div className="size-3.5 bg-brand skew-x-[-15deg] shadow-[0_0_10px_var(--brand-glow)]" />
+        <span>
+          DEZ<span className="text-muted-foreground">PILA</span>
+        </span>
       </a>
 
       <div className="hidden gap-1 md:flex">
