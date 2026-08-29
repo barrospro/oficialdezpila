@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Check } from "lucide-react";
-import { CheckoutModal } from "./pricing/CheckoutModal";
 
 interface PlanoTrio {
   id: string;
@@ -81,8 +79,6 @@ const planos: PlanoTrio[] = [
 ];
 
 export function PrecoTrioDark() {
-  const [selectedPlan, setSelectedPlan] = useState<PlanoTrio | null>(null);
-
   return (
     <section
       id="planos"
@@ -169,13 +165,14 @@ export function PrecoTrioDark() {
                       ))}
                     </ul>
 
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPlan(p)}
-                      className="w-full cursor-pointer rounded-[12px] border-none bg-[#970202] hover:bg-[#b80303] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(151,2,2,0.9)] transition-all"
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full block rounded-[12px] border-none bg-[#970202] hover:bg-[#b80303] py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white shadow-[0_8px_24px_-8px_rgba(151,2,2,0.9)] transition-all"
                     >
                       {p.cta}
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -221,27 +218,18 @@ export function PrecoTrioDark() {
                 ))}
               </ul>
 
-              <button
-                type="button"
-                onClick={() => setSelectedPlan(p)}
-                className="w-full cursor-pointer rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#970202]/60 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full block rounded-[12px] border border-white/10 bg-[#0d0d11] hover:bg-[#15151c] hover:border-[#970202]/60 py-3 text-center text-xs font-bold font-heading uppercase tracking-wider text-white transition-all"
               >
                 {p.cta}
-              </button>
+              </a>
             </div>
           );
         })}
       </div>
-
-      {selectedPlan && (
-        <CheckoutModal
-          open={!!selectedPlan}
-          planId={selectedPlan.id}
-          planName={selectedPlan.nome}
-          link={selectedPlan.link}
-          onClose={() => setSelectedPlan(null)}
-        />
-      )}
     </section>
   );
 }

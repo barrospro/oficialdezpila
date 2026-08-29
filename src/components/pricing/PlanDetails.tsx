@@ -38,13 +38,14 @@ export function PlanDetails({ plan, features, onCheckout }: Props) {
         ))}
       </ul>
 
-      <button
-        type="button"
-        onClick={onCheckout}
+      <a
+        href={plan.link}
+        target="_blank"
+        rel="noopener noreferrer"
         className="w-full py-5 text-center font-bold uppercase tracking-widest text-base block bg-brand text-brand-foreground hover:bg-foreground hover:text-background transition-colors shadow-[0_0_30px_var(--brand-glow)] rounded-sm"
       >
         ESCOLHER PLANO {plan.name}
-      </button>
+      </a>
 
       <div className="mt-6 text-center space-y-1">
         <div className="flex items-center justify-center gap-2 text-muted-foreground font-code text-xs uppercase tracking-widest">
