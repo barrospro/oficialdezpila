@@ -36,9 +36,9 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   const [telasExtras, setTelasExtras] = useState(0);
   const telaExtraUnit = 5.90;
 
-  // 2. Pacote Adulto Privado com Proteção por Senha (PIN) - R$ 9,90 fixo
+  // 2. Conteúdo Adulto Premium (Vazados Privacy / Hot Influencers) - R$ 12,90 fixo
   const [pacoteAdulto, setPacoteAdulto] = useState(false);
-  const pacoteAdultoPrice = 9.90;
+  const pacoteAdultoPrice = 12.90;
 
   // Payment State
   const [copied, setCopied] = useState(false);
@@ -437,7 +437,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* ORDER BUMP 2: Pacote Adulto Privado com Proteção por Senha (PIN) - R$ 9,90 */}
+            {/* ORDER BUMP 2: Conteúdo Adulto Premium (Vazados Privacy / OnlyFans VIP) - R$ 12,90 */}
             <div
               className={`relative overflow-hidden rounded-2xl border transition-all p-4 mb-5 cursor-pointer ${pacoteAdulto ? "bg-[#10B981]/10 border-[#10B981] shadow-[0_0_20px_rgba(16,185,129,0.2)]" : "bg-white/[0.02] border-white/10 hover:border-white/20"}`}
               onClick={() => setPacoteAdulto(!pacoteAdulto)}
@@ -459,14 +459,14 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1.5">
                       <LockKeyhole className="h-3.5 w-3.5 text-amber-400" />
-                      Pacote Adulto Privado (PIN)
+                      Conteúdo Adulto Premium (Vazados VIP)
                     </span>
                     <span className="text-xs font-bold font-code text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded shrink-0">
-                      + R$ 9,90
+                      + R$ 12,90
                     </span>
                   </div>
                   <p className="text-[11.5px] text-slate-300 font-body leading-relaxed">
-                    Liberação completa de canais e filmes adultos VIP com controle dos pais por código de segurança.
+                    Acesso exclusivo ao acervo privado de influencers, conteúdos vazados Privacy e OnlyFans com senha pessoal.
                   </p>
                 </div>
               </div>
@@ -486,8 +486,8 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               )}
               {pacoteAdulto && (
                 <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
-                  <span>Pacote Adulto Privado (PIN):</span>
-                  <span>+ R$ 9,90</span>
+                  <span>Conteúdo Adulto Premium (Vazados):</span>
+                  <span>+ R$ 12,90</span>
                 </div>
               )}
               <div className="flex justify-between items-center text-sm font-bold text-white font-heading pt-2 border-t border-white/10 mt-2">
@@ -531,15 +531,15 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 <span className="text-slate-200">{email}</span>
               </div>
               {telasExtras > 0 && (
-                <div className="flex justify-between items-center text-xs text-red-400 font-code mb-1">
+                <div className="flex justify-between items-center text-xs text-emerald-400 font-code mb-1">
                   <span>Telas Extras ({telasExtras}x):</span>
                   <span>+ R$ {formatPrice(telasPriceTotal)}</span>
                 </div>
               )}
               {pacoteAdulto && (
                 <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1">
-                  <span>Pacote Adulto (PIN):</span>
-                  <span>+ R$ 9,90</span>
+                  <span>Conteúdo Adulto Premium:</span>
+                  <span>+ R$ 12,90</span>
                 </div>
               )}
               <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5 mt-1">
