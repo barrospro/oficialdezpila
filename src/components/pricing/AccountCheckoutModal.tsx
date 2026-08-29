@@ -41,6 +41,19 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   const [pacoteAdulto, setPacoteAdulto] = useState(false);
   const pacoteAdultoPrice = 12.90;
 
+  // Payment Method State: 'pix' | 'cartao' | 'boleto'
+  const [paymentMethod, setPaymentMethod] = useState<"pix" | "cartao" | "boleto">("pix");
+
+  // Credit Card Form State
+  const [numCartao, setNumCartao] = useState("");
+  const [nomeCartao, setNomeCartao] = useState("");
+  const [validadeCartao, setValidadeCartao] = useState("");
+  const [cvvCartao, setCvvCartao] = useState("");
+  const [parcelas, setParcelas] = useState("1");
+
+  // Boleto State
+  const [boletoBarcode, setBoletoBarcode] = useState("");
+
   // Payment State & Real Cakto API Integration
   const [copied, setCopied] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(900); // 15 minutos
@@ -138,6 +151,33 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
   const adultoPriceTotal = pacoteAdulto ? pacoteAdultoPrice : 0;
   const totalPriceNum = basePrice + telasPriceTotal + adultoPriceTotal;
   const totalPriceStr = formatPrice(totalPriceNum);
+
+  const maskCardNumber = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 16);
+    return d.replace(/(\d{4})(?=\d)/g, "$1 ");
+  };
+
+  const maskExpiry = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 4);
+    if (d.length <= 2) return d;
+    return `${d.slice(0, 2)}/${d.slice(2)}`;
+  };
+
+  const handlePayWithCard = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!numCartao || !nomeCartao || !validadeCartao || !cvvCartao) return;
+    setLoadingPix(true);
+    setTimeout(() => {
+      setLoadingPix(false);
+      setStep("SUCESSO");
+    }, 1500);
+  };
+
+  const handlePayWithBoleto = () => {
+    const mockBoleto = `34191.79001 01043.510047 91020.150008 8 9654000000${Math.round(totalPriceNum * 100)}`;
+    setBoletoBarcode(mockBoleto);
+    setStep("PAGAMENTO");
+  };
 
   const handleCadastroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -569,46 +609,211 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* VALOR TOTAL DO PEDIDO */}
-            <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-4 mb-5">
-              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
-                <span>Plano {plano.nome}:</span>
-                <span className="text-slate-200">R$ {plano.preco}</span>
-              </div>
-              {telasExtras > 0 && (
-                <div className="flex justify-between items-center text-xs text-emerald-400 font-code mb-1 animate-in fade-in duration-200">
-                  <span>Telas Extras ({telasExtras}x R$ 5,90):</span>
-                  <span>+ R$ {formatPrice(telasPriceTotal)}</span>
-                </div>
-              )}
-              {pacoteAdulto && (
-                <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
-                  <span>Conteúdo Adulto Premium (Vazados):</span>
-                  <span>+ R$ 12,90</span>
-                </div>
-              )}
-              <div className="flex justify-between items-center text-sm font-bold text-white font-heading pt-2 border-t border-white/10 mt-2">
-                <span className="uppercase tracking-wider">Valor Total a Pagar:</span>
-                <span className="text-lg text-emerald-400 font-heading">R$ {totalPriceStr}</span>
+            {/* SELEÇÃO DA FORMA DE PAGAMENTO */}
+            <div className="mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 font-heading block mb-2">
+                Forma de Pagamento:
+              </span>
+              <div className="grid grid-cols-3 gap-2">
+                {/* PIX Tab */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("pix")}
+                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all cursor-pointer ${
+                    paymentMethod === "pix"
+                      ? "border-[#10B981] bg-[#10B981]/15 text-white shadow-[0_0_15px_rgba(16,185,129,0.25)]"
+                      : "border-white/10 bg-white/[0.02] text-slate-400 hover:border-white/20"
+                  }`}
+                >
+                  <span className="text-xs font-extrabold uppercase font-heading text-emerald-400 flex items-center gap-1">
+                    ⚡ PIX
+                  </span>
+                  <span className="text-[9.5px] font-code text-slate-300 mt-0.5">Instantâneo</span>
+                </button>
+
+                {/* Cartão de Crédito Tab */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("cartao")}
+                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all cursor-pointer ${
+                    paymentMethod === "cartao"
+                      ? "border-[#10B981] bg-[#10B981]/15 text-white shadow-[0_0_15px_rgba(16,185,129,0.25)]"
+                      : "border-white/10 bg-white/[0.02] text-slate-400 hover:border-white/20"
+                  }`}
+                >
+                  <span className="text-xs font-extrabold uppercase font-heading text-white flex items-center gap-1">
+                    💳 Cartão
+                  </span>
+                  <span className="text-[9.5px] font-code text-slate-300 mt-0.5">Até 12x</span>
+                </button>
+
+                {/* Boleto Tab */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("boleto")}
+                  className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all cursor-pointer ${
+                    paymentMethod === "boleto"
+                      ? "border-[#10B981] bg-[#10B981]/15 text-white shadow-[0_0_15px_rgba(16,185,129,0.25)]"
+                      : "border-white/10 bg-white/[0.02] text-slate-400 hover:border-white/20"
+                  }`}
+                >
+                  <span className="text-xs font-extrabold uppercase font-heading text-slate-200 flex items-center gap-1">
+                    📄 Boleto
+                  </span>
+                  <span className="text-[9.5px] font-code text-slate-400 mt-0.5">À Vista</span>
+                </button>
               </div>
             </div>
 
-            {/* Botão de Gerar PIX (Verde Suave Alta Conversão com Spinner Cakto) */}
-            <button
-              type="button"
-              disabled={loadingPix}
-              onClick={handleGerarPix}
-              className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#34D399] hover:to-[#10B981] py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(16,185,129,0.45)] transition-all hover:brightness-110 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed font-heading flex items-center justify-center gap-2"
-            >
-              {loadingPix ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>Gerando PIX via Cakto...</span>
-                </>
-              ) : (
-                <span>Gerar PIX de R$ {totalPriceStr} →</span>
-              )}
-            </button>
+            {/* FORMULÁRIO DE CARTÃO DE CRÉDITO */}
+            {paymentMethod === "cartao" && (
+              <form onSubmit={handlePayWithCard} className="w-full mb-4 space-y-3 animate-in fade-in duration-200">
+                <div>
+                  <label className="mb-1 block text-[11px] font-semibold text-slate-300">
+                    Número do Cartão
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={numCartao}
+                    onChange={(e) => setNumCartao(maskCardNumber(e.target.value))}
+                    placeholder="0000 0000 0000 0000"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 px-3 text-xs text-white font-mono outline-none focus:border-[#10B981]"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-[11px] font-semibold text-slate-300">
+                    Nome Impresso no Cartão
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={nomeCartao}
+                    onChange={(e) => setNomeCartao(e.target.value.toUpperCase())}
+                    placeholder="COMO ESTÁ NO CARTÃO"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 px-3 text-xs text-white uppercase outline-none focus:border-[#10B981]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1 block text-[11px] font-semibold text-slate-300">
+                      Validade
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={validadeCartao}
+                      onChange={(e) => setValidadeCartao(maskExpiry(e.target.value))}
+                      placeholder="MM/AA"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 px-3 text-xs text-white font-mono outline-none focus:border-[#10B981]"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-[11px] font-semibold text-slate-300">
+                      CVV
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      maxLength={4}
+                      value={cvvCartao}
+                      onChange={(e) => setCvvCartao(e.target.value.replace(/\D/g, ""))}
+                      placeholder="123"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 px-3 text-xs text-white font-mono outline-none focus:border-[#10B981]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-[11px] font-semibold text-slate-300">
+                    Parcelamento
+                  </label>
+                  <select
+                    value={parcelas}
+                    onChange={(e) => setParcelas(e.target.value)}
+                    className="w-full rounded-xl border border-white/10 bg-[#14161f] py-2.5 px-3 text-xs text-white outline-none focus:border-[#10B981]"
+                  >
+                    <option value="1">1x de R$ {totalPriceStr} (Sem Juros)</option>
+                    <option value="2">2x de R$ {formatPrice(totalPriceNum / 2)}</option>
+                    <option value="3">3x de R$ {formatPrice(totalPriceNum / 3)}</option>
+                    <option value="6">6x de R$ {formatPrice(totalPriceNum / 6)}</option>
+                    <option value="12">12x de R$ {formatPrice(totalPriceNum / 12)}</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loadingPix}
+                  className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#34D399] hover:to-[#10B981] py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(16,185,129,0.45)] transition-all cursor-pointer font-heading flex items-center justify-center gap-2 mt-2"
+                >
+                  {loadingPix ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <span>Processando Cartão...</span>
+                    </>
+                  ) : (
+                    <span>Pagar R$ {totalPriceStr} no Cartão →</span>
+                  )}
+                </button>
+              </form>
+            )}
+
+            {/* VALOR TOTAL DO PEDIDO E BOTÃO PIX / BOLETO */}
+            {paymentMethod !== "cartao" && (
+              <>
+                <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-4 mb-5">
+                  <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                    <span>Plano {plano.nome}:</span>
+                    <span className="text-slate-200">R$ {plano.preco}</span>
+                  </div>
+                  {telasExtras > 0 && (
+                    <div className="flex justify-between items-center text-xs text-emerald-400 font-code mb-1 animate-in fade-in duration-200">
+                      <span>Telas Extras ({telasExtras}x R$ 5,90):</span>
+                      <span>+ R$ {formatPrice(telasPriceTotal)}</span>
+                    </div>
+                  )}
+                  {pacoteAdulto && (
+                    <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
+                      <span>Conteúdo Adulto Premium (Vazados):</span>
+                      <span>+ R$ 12,90</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center text-sm font-bold text-white font-heading pt-2 border-t border-white/10 mt-2">
+                    <span className="uppercase tracking-wider">Valor Total a Pagar:</span>
+                    <span className="text-lg text-emerald-400 font-heading">R$ {totalPriceStr}</span>
+                  </div>
+                </div>
+
+                {/* Botão de Gerar PIX ou Gerar Boleto */}
+                {paymentMethod === "pix" ? (
+                  <button
+                    type="button"
+                    disabled={loadingPix}
+                    onClick={handleGerarPix}
+                    className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#34D399] hover:to-[#10B981] py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(16,185,129,0.45)] transition-all hover:brightness-110 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed font-heading flex items-center justify-center gap-2"
+                  >
+                    {loadingPix ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <span>Gerando PIX...</span>
+                      </>
+                    ) : (
+                      <span>Gerar PIX de R$ {totalPriceStr} →</span>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handlePayWithBoleto}
+                    className="w-full rounded-xl bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(255,255,255,0.1)] transition-all cursor-pointer font-heading flex items-center justify-center gap-2"
+                  >
+                    <span>Gerar Boleto de R$ {totalPriceStr} →</span>
+                  </button>
+                )}
+              </>
+            )}
           </div>
         )}
 
