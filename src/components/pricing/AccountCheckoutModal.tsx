@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock } from "lucide-react";
+import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export interface PlanoData {
@@ -24,6 +24,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
 
   // Form State
   const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [verSenha, setVerSenha] = useState(false);
@@ -40,6 +41,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         try {
           const parsed = JSON.parse(savedUser);
           if (parsed.nome) setNome(parsed.nome);
+          if (parsed.cpf) setCpf(parsed.cpf);
           if (parsed.email) setEmail(parsed.email);
           if (parsed.whatsapp) setWhatsapp(parsed.whatsapp);
         } catch {
@@ -62,6 +64,14 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
 
   if (!open || !plano) return null;
 
+  const maskCpf = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return `${d.slice(0, 3)}.${d.slice(3)}`;
+    if (d.length <= 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
+    return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+  };
+
   const maskWhatsapp = (v: string) => {
     const d = v.replace(/\D/g, "").slice(0, 11);
     if (d.length <= 2) return d;
@@ -71,11 +81,12 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
 
   const handleCadastroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome || !email || !senha || !whatsapp) return;
+    if (!nome || !cpf || !email || !senha || !whatsapp) return;
 
     // Salva tudo no LocalStorage
     const userData = {
       nome,
+      cpf,
       email,
       senha,
       whatsapp,
@@ -90,7 +101,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     setStep("PAGAMENTO");
   };
 
-  // Payload PIX para teste (pronto para receber API real do Pix)
+  // Payload PIX para teste (pronto para receber API real do Pix com CPF, Nome, Email, etc)
   const mockPixPayload = `00020126580014br.gov.bcb.pix0136dezpila-checkout-${plano.id.toLowerCase()}-pix-key5204000053039865405${plano.preco.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304E8A2`;
 
   const handleCopyPix = async () => {
@@ -111,27 +122,33 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-b from-[#14161f] to-[#0e0f17] p-6 sm:p-8 shadow-[0_30px_70px_rgba(0,0,0,0.8)]">
+      <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-3xl border border-white/[0.08] bg-gradient-to-b from-[#14161f] to-[#0e0f17] p-6 sm:p-8 shadow-[0_30px_70px_rgba(0,0,0,0.8)]">
         
-        {/* Header do Modal com botão fechar */}
+        {/* Header do Modal com Logomarca idêntica ao site */}
         <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             {step === "PAGAMENTO" && (
               <button
                 type="button"
                 onClick={() => setStep("CADASTRO")}
-                className="mr-1 p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 aria-label="Voltar"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
             )}
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#970202] to-red-600 text-xs font-extrabold text-white shadow-[0_4px_14px_rgba(151,2,2,0.5)]">
-              DP
+
+            {/* Logo idêntica à do Header / Favicon */}
+            <div className="flex items-center gap-2 text-base font-bold tracking-tighter uppercase text-white font-heading shrink-0">
+              <div className="size-3.5 bg-brand skew-x-[-15deg] shadow-[0_0_10px_var(--brand-glow)]" />
+              <span>
+                DEZ<span className="text-muted-foreground">PILA</span>
+              </span>
             </div>
-            <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white font-heading">
-                {step === "CADASTRO" ? "Criar Sua Conta" : "Checkout de Pagamento"}
+
+            <div className="border-l border-white/15 pl-3">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
+                {step === "CADASTRO" ? "Criar Conta" : "Checkout PIX"}
               </h2>
               <span className="text-[11px] font-code text-[#970202] font-semibold">
                 Plano {plano.nome} — R$ {plano.preco}
@@ -152,54 +169,70 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         {/* PASSO 1: Form de Cadastro de Conta */}
         {step === "CADASTRO" && (
           <form onSubmit={handleCadastroSubmit}>
-            <p className="mb-5 text-xs text-slate-400 font-body">
+            <p className="mb-4 text-xs text-slate-400 font-body">
               Preencha seus dados para criar sua conta DezPila e liberar seu acesso imediatamente.
             </p>
 
             {/* Nome Completo */}
-            <label className="mb-1.5 ml-0.5 block text-[12px] font-semibold text-slate-300">
+            <label className="mb-1 ml-0.5 block text-[12px] font-semibold text-slate-300">
               Nome Completo
             </label>
-            <div className="relative mb-3.5">
+            <div className="relative mb-3">
               <input
                 type="text"
                 required
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Seu nome completo"
-                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-3 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
+                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-2.5 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
               />
               <User className="absolute right-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-slate-500" />
             </div>
 
+            {/* CPF */}
+            <label className="mb-1 ml-0.5 block text-[12px] font-semibold text-slate-300">
+              CPF
+            </label>
+            <div className="relative mb-3">
+              <input
+                type="text"
+                required
+                value={cpf}
+                onChange={(e) => setCpf(maskCpf(e.target.value))}
+                placeholder="000.000.000-00"
+                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-2.5 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
+              />
+              <Shield className="absolute right-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-slate-500" />
+            </div>
+
             {/* Email */}
-            <label className="mb-1.5 ml-0.5 block text-[12px] font-semibold text-slate-300">
+            <label className="mb-1 ml-0.5 block text-[12px] font-semibold text-slate-300">
               E-mail para Acesso à Plataforma
             </label>
-            <div className="relative mb-3.5">
+            <div className="relative mb-3">
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="voce@email.com"
-                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-3 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
+                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-2.5 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
               />
               <Mail className="absolute right-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-slate-500" />
             </div>
 
             {/* Senha */}
-            <label className="mb-1.5 ml-0.5 block text-[12px] font-semibold text-slate-300">
+            <label className="mb-1 ml-0.5 block text-[12px] font-semibold text-slate-300">
               Senha
             </label>
-            <div className="relative mb-3.5">
+            <div className="relative mb-3">
               <input
                 type={verSenha ? "text" : "password"}
                 required
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 placeholder="Crie uma senha de acesso"
-                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-3 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
+                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-2.5 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
               />
               <button
                 type="button"
@@ -212,7 +245,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
             </div>
 
             {/* WhatsApp */}
-            <label className="mb-1.5 ml-0.5 block text-[12px] font-semibold text-slate-300">
+            <label className="mb-1 ml-0.5 block text-[12px] font-semibold text-slate-300">
               WhatsApp
             </label>
             <div className="relative mb-4">
@@ -222,13 +255,13 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(maskWhatsapp(e.target.value))}
                 placeholder="(11) 99999-9999"
-                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-3 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
+                className="w-full rounded-xl border-[1.5px] border-white/10 bg-white/[0.04] py-2.5 pl-4 pr-11 text-xs sm:text-sm text-slate-100 outline-none focus:border-[#970202] focus:shadow-[0_0_0_3px_rgba(151,2,2,0.2)] transition-all"
               />
               <Phone className="absolute right-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-slate-500" />
             </div>
 
             {/* Checkbox */}
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-5 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setLembrar((v) => !v)}
@@ -262,7 +295,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         {step === "PAGAMENTO" && (
           <div className="flex flex-col items-center text-center">
             {/* Resumo do Pedido */}
-            <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-4 mb-5 text-left">
+            <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-4 mb-4 text-left">
               <div className="flex justify-between items-center mb-2 pb-2 border-b border-white/10">
                 <span className="text-xs font-bold text-slate-300 uppercase font-heading">Resumo da Compra</span>
                 <span className="text-xs font-code font-bold text-[#970202] bg-[#970202]/10 px-2 py-0.5 rounded">
@@ -272,6 +305,10 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
                 <span>Cliente:</span>
                 <span className="text-slate-200 font-semibold">{nome}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+                <span>CPF:</span>
+                <span className="text-slate-200 font-mono">{cpf}</span>
               </div>
               <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
                 <span>Acesso:</span>
@@ -299,7 +336,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
             </p>
 
             {/* Chave PIX Copia e Cola */}
-            <div className="w-full mb-4">
+            <div className="w-full mb-5">
               <div className="relative flex items-center">
                 <input
                   type="text"
@@ -327,18 +364,8 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
-            {/* Link de fallback Nitro */}
-            <a
-              href={plano.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-xs font-bold font-heading text-slate-200 uppercase tracking-wider transition-all block mb-2"
-            >
-              Ou Pagar no Checkout Oficial (Nitro) ↗
-            </a>
-
-            <span className="text-[10px] font-code text-slate-500 flex items-center gap-1">
-              <Lock className="h-3 w-3" /> Pagamento 100% criptografado e seguro
+            <span className="text-[11px] font-code text-slate-500 flex items-center gap-1">
+              <Lock className="h-3.5 w-3.5 text-slate-400" /> Pagamento 100% criptografado e seguro
             </span>
           </div>
         )}
