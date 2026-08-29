@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield } from "lucide-react";
+import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export interface PlanoData {
@@ -17,7 +17,7 @@ interface AccountCheckoutModalProps {
   onClose: () => void;
 }
 
-type Step = "CADASTRO" | "PAGAMENTO";
+type Step = "CADASTRO" | "PAGAMENTO" | "SUCESSO";
 
 export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutModalProps) {
   const [step, setStep] = useState<Step>("CADASTRO");
@@ -101,7 +101,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     setStep("PAGAMENTO");
   };
 
-  // Payload PIX para teste (pronto para receber API real do Pix com CPF, Nome, Email, etc)
+  // Payload PIX para teste (pronto para receber API real do Pix)
   const mockPixPayload = `00020126580014br.gov.bcb.pix0136dezpila-checkout-${plano.id.toLowerCase()}-pix-key5204000053039865405${plano.preco.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304E8A2`;
 
   const handleCopyPix = async () => {
@@ -124,7 +124,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
       <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-3xl border border-white/[0.08] bg-gradient-to-b from-[#14161f] to-[#0e0f17] p-6 sm:p-8 shadow-[0_30px_70px_rgba(0,0,0,0.8)]">
         
-        {/* Header do Modal com Logomarca idêntica ao site */}
+        {/* Header do Modal */}
         <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
             {step === "PAGAMENTO" && (
@@ -148,7 +148,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
 
             <div className="border-l border-white/15 pl-3">
               <h2 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
-                {step === "CADASTRO" ? "Criar Conta" : "Checkout PIX"}
+                {step === "CADASTRO" ? "Criar Conta" : step === "PAGAMENTO" ? "Checkout PIX" : "Pagamento Confirmado"}
               </h2>
               <span className="text-[11px] font-code text-[#970202] font-semibold">
                 Plano {plano.nome} — R$ {plano.preco}
@@ -336,7 +336,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
             </p>
 
             {/* Chave PIX Copia e Cola */}
-            <div className="w-full mb-5">
+            <div className="w-full mb-4">
               <div className="relative flex items-center">
                 <input
                   type="text"
@@ -364,9 +364,76 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
               </div>
             </div>
 
+            {/* Botão de Simulação de Pagamento para Teste de Webhook */}
+            <button
+              type="button"
+              onClick={() => setStep("SUCESSO")}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00C853] to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(0,200,83,0.4)] flex items-center justify-center gap-2 cursor-pointer mb-3"
+            >
+              <CheckCircle className="h-4 w-4" />
+              <span>Simular Pagamento Confirmado (Testar Tela Verde)</span>
+            </button>
+
             <span className="text-[11px] font-code text-slate-500 flex items-center gap-1">
               <Lock className="h-3.5 w-3.5 text-slate-400" /> Pagamento 100% criptografado e seguro
             </span>
+          </div>
+        )}
+
+        {/* PASSO 3: TELA VERDE — Pagamento Confirmado */}
+        {step === "SUCESSO" && (
+          <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
+            {/* Ícone de Sucesso em Círculo Verde com Glow */}
+            <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#00C853]/15 border-2 border-[#00C853] text-[#00C853] shadow-[0_0_40px_rgba(0,200,83,0.5)]">
+              <CheckCircle className="h-10 w-10" strokeWidth={2.5} />
+            </div>
+
+            <span className="mb-2 inline-block rounded-full bg-[#00C853]/20 px-3.5 py-1 text-[11px] font-bold font-code uppercase tracking-widest text-[#00C853] border border-[#00C853]/40">
+              ✓ PAGAMENTO IDENTIFICADO
+            </span>
+
+            <h3 className="text-xl sm:text-2xl font-extrabold uppercase text-white font-heading tracking-tight mb-2">
+              PAGAMENTO CONFIRMADO COM SUCESSO!
+            </h3>
+
+            <p className="text-xs sm:text-sm text-slate-300 font-body max-w-sm mb-6 leading-relaxed">
+              Olá, <strong className="text-white font-semibold">{nome}</strong>! O pagamento do seu plano <strong className="text-[#00C853]">{plano.nome}</strong> foi aprovado instantaneamente.
+            </p>
+
+            {/* Caixas de confirmação de envio automático */}
+            <div className="w-full space-y-3 mb-6 text-left">
+              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30">
+                <Mail className="h-5 w-5 text-[#00C853] shrink-0 mt-0.5" />
+                <div className="text-xs font-body">
+                  <span className="font-bold text-white block mb-0.5">Enviado por E-mail</span>
+                  <span className="text-slate-300 font-code">
+                    Enviamos os dados de acesso e tutorial para <strong className="text-white">{email}</strong>.
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30">
+                <Phone className="h-5 w-5 text-[#00C853] shrink-0 mt-0.5" />
+                <div className="text-xs font-body">
+                  <span className="font-bold text-white block mb-0.5">Enviado por WhatsApp</span>
+                  <span className="text-slate-300 font-code">
+                    Disparado automaticamente via mensagem para <strong className="text-white">{whatsapp}</strong>.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 w-full mb-6 text-xs text-slate-400 font-code">
+              ⚡ Ativação automática em andamento. Verifique sua caixa de entrada e seu WhatsApp!
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full rounded-xl bg-gradient-to-r from-[#00C853] to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_8px_20px_rgba(0,200,83,0.4)] transition-all cursor-pointer font-heading"
+            >
+              Concluído — Fechar
+            </button>
           </div>
         )}
 
