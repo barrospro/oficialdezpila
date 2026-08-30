@@ -23,6 +23,7 @@ import {
   CreditCard,
   X,
   ZoomIn,
+  Flame,
 } from "lucide-react";
 import {
   INSTAGRAM_CREATIVES,
@@ -52,8 +53,8 @@ function AdminDashboard() {
 
   // Sub-Tab State inside 'identidade'
   const [brandSubTab, setBrandSubTab] = useState<
-    "todos" | "logotipos" | "molduras" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
-  >("todos");
+    "todos" | "artes" | "logotipos" | "molduras" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
+  >("artes");
 
   // Modal de visualização de imagem em tela cheia (Fullscreen Preview Modal)
   const [previewModal, setPreviewModal] = useState<{
@@ -151,6 +152,7 @@ function AdminDashboard() {
 
     // Filtragem por sub-aba
     if (brandSubTab === "todos") return true;
+    if (brandSubTab === "artes") return item.id.startsWith("arte_");
     if (brandSubTab === "logotipos")
       return item.id.startsWith("brand_") && !item.id.includes("moldura");
     if (brandSubTab === "molduras") return item.id.includes("moldura");
@@ -388,6 +390,19 @@ function AdminDashboard() {
             <div className="p-2 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-2 overflow-x-auto no-scrollbar">
               <button
                 type="button"
+                onClick={() => setBrandSubTab("artes")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "artes"
+                    ? "bg-[#970202] text-white shadow-[0_0_15px_rgba(151,2,2,0.6)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Flame className="h-3.5 w-3.5 text-[#ff4d4d]" />
+                <span>🔥 Artes Promocionais (3:4)</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setBrandSubTab("todos")}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                   brandSubTab === "todos"
@@ -500,6 +515,7 @@ function AdminDashboard() {
               <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-sm font-bold uppercase tracking-wider text-white font-heading">
+                    {brandSubTab === "artes" && "🔥 ARTES PROMOCIONAIS PREMIUM ULTRA-HD (3:4 — CINEMA, FUTEBOL, OFERTAS)"}
                     {brandSubTab === "molduras" && "🎬 MOLDURAS TRANSPARENTES PARA REELS & STORIES (PNG ALPHA 1080x1920 9:16)"}
                     {brandSubTab === "depoimentos" && "⭐ DESTAQUE: DEPOIMENTOS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
                     {brandSubTab === "catalogo" && "🍿 DESTAQUE: CATÁLOGO (1 CAPA + 3 STORIES DE CONTEÚDO)"}

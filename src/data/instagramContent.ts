@@ -22,6 +22,86 @@ export interface BrandAsset {
 
 export const BRAND_ASSETS: BrandAsset[] = [
   {
+    id: "arte_cinema_em_familia",
+    name: "Arte: 🎬 Cinema em Família (R$ 10/Mês)",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/01_cinema_em_familia.jpg",
+    description:
+      "Arte ultra-realista de sala de cinema aconchegante com família reunida, pipoca, Smart TV gigante 4K com luzes LED vermelhas e selo R$ 10,00/mês.",
+  },
+  {
+    id: "arte_futebol_ao_vivo",
+    name: "Arte: ⚽ Futebol Ao Vivo 4K (Seu Time Sem Travar)",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/02_futebol_ao_vivo.jpg",
+    description:
+      "Arte dinâmica de jogador chutando bola em chamas com estádio e TV 4K transmitindo futebol ao vivo com badge 'Futebol Ao Vivo 4K - R$ 10/mês'.",
+  },
+  {
+    id: "arte_catalogo_60k",
+    name: "Arte: 🍿 +60.000 Conteúdos na Palma da Mão",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/03_catalogo_60k_titulos.jpg",
+    description:
+      "Arte 3D impressionante com mural curvo de pôsteres, aplicativo DezPila no celular e TV 4K com selo dourado de +60.000 títulos.",
+  },
+  {
+    id: "arte_depoimento_cliente",
+    name: "Arte: ⭐ O Que Nossos Clientes Dizem",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/04_depoimento_cliente.jpg",
+    description:
+      "Prova social com balão de fala neon vermelho glassmorphism, avaliação 5 estrelas e depoimento real de cancelamento de TV a cabo cara.",
+  },
+  {
+    id: "arte_maratona_fimsemana",
+    name: "Arte: 🛋️ Maratona Liberada (Final de Semana)",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/05_maratona_final_de_semana.jpg",
+    description:
+      "Ambiente noturno acolhedor com sofá aveludado, pipoca, TV com iluminação traseira vermelha e letreiro neon 'Maratona Liberada - R$ 10/mês'.",
+  },
+  {
+    id: "arte_comparativo_pizza",
+    name: "Arte: 🍕 1 Pizza vs 1 Mês de DezPila",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/06_comparativo_pizza_dezpila.jpg",
+    description:
+      "Comparativo de alto impacto mostrando 1 pizza de R$ 80 (dura 30 min) vs 1 mês completo de DezPila por R$ 10 (dura 30 dias).",
+  },
+  {
+    id: "arte_multi_dispositivos",
+    name: "Arte: 📱 Uma Assinatura, Todas as Telas",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/07_uma_assinatura_todas_telas.jpg",
+    description:
+      "Ecossistema completo com Smart TV 4K, iPad Pro, iPhone e MacBook sincronizados com filmes e esportes em alta definição.",
+  },
+  {
+    id: "arte_pix_ativacao",
+    name: "Arte: ⚡ Ativação Automática no PIX em 2 Minutos",
+    category: "Arte Promocional (3:4)",
+    dimensions: "1080 x 1440 px (3:4)",
+    format: "JPG Alta Resolução",
+    imagePath: "/instagram/artes/08_ativacao_pix_2minutos.jpg",
+    description:
+      "Visual fintech futurista com celular aprovando pagamento PIX instantâneo e liberando os canais e filmes 4K na Smart TV.",
+  },
+  {
     id: "brand_favicon",
     name: "Favicon Ícone DezPila",
     category: "Ícone / Favicon",
