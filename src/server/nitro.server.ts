@@ -3,31 +3,61 @@ import { randomUUID } from "node:crypto";
 const NITRO_BASE = "https://api.nitropagamentos.com/api/public/v1";
 const DEFAULT_NITRO_TOKEN = "rvbTw7GZtAX9435nUw6X8Gcqfdq6wJJ2x4oaRz1TulWIMWf5IpZIv6CbyqwQ";
 
-// Mapeamento de ofertas Nitro para planos do DezPila
-export const NITRO_OFFERS: Record<string, { productHash: string; offerHash: string; priceCents: number; title: string }> = {
+// Mapeamento completo de ofertas da Nitro Pagamentos sincronizado com os planos do site
+export const NITRO_OFFERS: Record<string, { productHash: string; offerHash: string; defaultPriceCents: number; title: string }> = {
+  MENSAL: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "ni918",
+    defaultPriceCents: 1000, // R$ 10,00
+    title: "Starter Mensal",
+  },
   ni918: {
     productHash: "b7jx2s8xqw",
     offerHash: "ni918",
-    priceCents: 1000, // R$ 10,00
-    title: "DezPila Mensal",
+    defaultPriceCents: 1000, // R$ 10,00
+    title: "Starter Mensal",
+  },
+  TRIMESTRAL: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "h64gr",
+    defaultPriceCents: 1990, // R$ 19,90
+    title: "Plus Trimestral",
+  },
+  h64gr: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "h64gr",
+    defaultPriceCents: 1990, // R$ 19,90
+    title: "Plus Trimestral",
+  },
+  SEMESTRAL: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "oinxr",
+    defaultPriceCents: 2990, // R$ 29,90
+    title: "Pro Semestral",
   },
   oinxr: {
     productHash: "b7jx2s8xqw",
     offerHash: "oinxr",
-    priceCents: 2990, // R$ 29,90
-    title: "DezPila Semestral",
+    defaultPriceCents: 2990, // R$ 29,90
+    title: "Pro Semestral",
+  },
+  ANUAL: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "lzcus",
+    defaultPriceCents: 4790, // R$ 47,90
+    title: "VIP Anual",
   },
   lzcus: {
     productHash: "b7jx2s8xqw",
     offerHash: "lzcus",
-    priceCents: 4790, // R$ 47,90
-    title: "DezPila Anual",
+    defaultPriceCents: 4790, // R$ 47,90
+    title: "VIP Anual",
   },
   ewef62edbu: {
     productHash: "deuj6f9wzx",
     offerHash: "ewef62edbu",
-    priceCents: 500, // R$ 5,00
-    title: "Tela Adicional DezPila",
+    defaultPriceCents: 590, // R$ 5,90
+    title: "Tela Extra Adicional",
   },
 };
 
