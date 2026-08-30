@@ -23,6 +23,12 @@ import {
   CreditCard,
   X,
   ZoomIn,
+  Calendar,
+  Clock,
+  Flame,
+  Target,
+  CheckCircle2,
+  TrendingUp,
 } from "lucide-react";
 import {
   INSTAGRAM_CREATIVES,
@@ -39,15 +45,49 @@ export const Route = createFileRoute("/admin")({
   }),
 });
 
+// Metadados estratégicos para o cronograma editorial
+const EDITORIAL_SCHEDULE_META = [
+  { day: 1, bestTime: "19:30", pillar: "Economia", hook: "Por que pagar R$ 350 se você pode pagar R$ 10?", tip: "Post de abertura da semana. Foque na quebra de padrão de gastos com TV a cabo." },
+  { day: 2, bestTime: "12:30", pillar: "Comparativo", hook: "A Tabela que as operadoras não querem que você veja", tip: "Perfeito para o horário de almoço. Gere salvamentos e compartilhamentos." },
+  { day: 3, bestTime: "19:00", pillar: "Prova Social", hook: "Cancelar a TV a cabo foi a melhor decisão do ano", tip: "Use stickers de enquete nos Stories: 'Você ainda paga mais de R$ 150 em TV?'" },
+  { day: 4, bestTime: "20:00", pillar: "Cinema", hook: "Cinema em Casa por R$ 10 por mês", tip: "Foco no público de streaming e maratonas de séries noturnas." },
+  { day: 5, bestTime: "18:30", pillar: "Esportes", hook: "Não perca nenhum lance do seu time por R$ 10/mês", tip: "Poste 1h antes das rodadas de futebol para capturar ativações imediatas." },
+  { day: 6, bestTime: "12:00", pillar: "Objeções", hook: "Mito vs. Fato: Por R$ 10 deve travar toda hora?", tip: "Explique a estabilidade dos servidores dedicados e tecnologia anti-bloqueio." },
+  { day: 7, bestTime: "19:30", pillar: "Conversão", hook: "Sua única dúvida é por que não assinou antes", tip: "Fechamento de semana. Chamada direta para o link da Bio." },
+  { day: 8, bestTime: "13:00", pillar: "Catálogo", hook: "+60.000 Conteúdos na palma da sua mão", tip: "Destaque a variedade: Filmes, Séries, Esportes e Infantis." },
+  { day: 9, bestTime: "19:00", pillar: "Prova Social", hook: "O que nossos clientes dizem sobre o DezPila", tip: "Prints e avaliações 5 estrelas geram forte autoridade." },
+  { day: 10, bestTime: "20:30", pillar: "Engajamento", hook: "Pronto para a Maratona do Final de Semana?", tip: "Sexta à noite: Pergunte nos comentários qual filme vão assistir hoje." },
+  { day: 11, bestTime: "12:30", pillar: "Família", hook: "Diversão Garantida Para Toda a Família", tip: "Foque em pais e mães que buscam controle parental e conteúdos seguros." },
+  { day: 12, bestTime: "19:30", pillar: "Tecnologia", hook: "Qualidade 4K Ultra HD Crisp", tip: "Mostre a fidelidade visual das transmissões em Smart TVs 4K." },
+  { day: 13, bestTime: "12:00", pillar: "Economia", hook: "Apenas R$ 0,33 por Dia!", tip: "Comparativo de preço irrisório: mais barato que um cafezinho na padaria." },
+  { day: 14, bestTime: "18:00", pillar: "Matchday", hook: "Hoje tem jogão! Você já garantiu sua tela?", tip: "Dia de clássico! Faça contagem regressiva nos Stories." },
+  { day: 15, bestTime: "13:00", pillar: "Compatibilidade", hook: "Funciona em Qualquer Tela Que Você Tiver", tip: "Smart TV, Celular, TV Box, Fire Stick e Computador." },
+  { day: 16, bestTime: "19:00", pillar: "Tutorial", hook: "Como Ativar Seu DezPila em 3 Passos Fáceis", tip: "Passo a passo simples: Escolha > PIX > Assista." },
+  { day: 17, bestTime: "12:30", pillar: "Segurança", hook: "Pagamento no PIX: Liberação em Segundos", tip: "Enfatize a segurança e a rapidez do checkout nativo automatizado." },
+  { day: 18, bestTime: "19:30", pillar: "Liberdade", hook: "Sem Contrato de Fidelidade: Cancele Quando Quiser", tip: "Quebre o medo de multas e contratos de fidelidade de 12 meses." },
+  { day: 19, bestTime: "13:00", pillar: "Suporte", hook: "Precisa de Ajuda? Suporte Via WhatsApp", tip: "Humanize o atendimento: equipe de prontidão para ajudar." },
+  { day: 20, bestTime: "20:00", pillar: "Recursos", hook: "Guia de Programação EPG: Nunca Perca Um Horário", tip: "Destaque a comodidade de navegar pela grade com o controle remoto." },
+  { day: 21, bestTime: "12:00", pillar: "FAQ", hook: "As 3 Perguntas Que Todo Mundo Faz", tip: "Responda as dúvidas mais comuns de forma transparente e direta." },
+  { day: 22, bestTime: "19:30", pillar: "Ofertas", hook: "Plano Pro Semestral: 3 Telas por R$ 29,90", tip: "Apresente o campeão de vendas: menos de R$ 5/mês por tela!" },
+  { day: 23, bestTime: "20:00", pillar: "Oferta VIP", hook: "Plano VIP Anual: 4 Telas por R$ 47,90", tip: "O combo mais econômico do ano com 71% de desconto real." },
+  { day: 24, bestTime: "19:00", pillar: "Família", hook: "Telas Extras Adicionais: Sem Briga Pelo Controle", tip: "Resolva o problema da família: cada um assiste o que quer por +R$ 5,90." },
+  { day: 25, bestTime: "21:00", pillar: "Privacidade", hook: "Pacote Adulto Opcional: Proteção com Senha PIN", tip: "Conteúdo adulto opcional com discrição total e controle parental." },
+  { day: 26, bestTime: "12:30", pillar: "Escassez", hook: "Últimas Vagas Com Preço Fixado em R$ 10", tip: "Gere urgência real: limite de conexões por servidor para zero travamento." },
+  { day: 27, bestTime: "19:30", pillar: "Comparativo", hook: "1 Pizza VS 1 Mês de DezPila: O Que Vale Mais?", tip: "Viral de comparação de valor: 30 minutos de pizza vs 30 dias de 4K." },
+  { day: 28, bestTime: "13:00", pillar: "Velocidade", hook: "Pagou, Gerou, Assistiu: Simples e Direto", tip: "Sem formulários chatos e sem espera de atendente." },
+  { day: 29, bestTime: "19:00", pillar: "Fim de Semana", hook: "Seu Fim de Semana Merece O Melhor Do Streaming", tip: "Sexta/Sábado: prepare o público para os lançamentos e jogos." },
+  { day: 30, bestTime: "20:00", pillar: "Manifesto", hook: "Chega De Pagar Caro. O Futuro da TV É DezPila.", tip: "Post manifesto impactante de fechamento e consolidação de marca." },
+];
+
 function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Main Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
+  // Main Tab State: 'feed' | 'stories' | 'todos' | 'cronograma' | 'identidade'
   const [activeTab, setActiveTab] = useState<
-    "feed" | "stories" | "todos" | "identidade"
+    "feed" | "stories" | "todos" | "cronograma" | "identidade"
   >("feed");
 
   // Sub-Tab State inside 'identidade'
@@ -151,7 +191,8 @@ function AdminDashboard() {
 
     // Filtragem por sub-aba
     if (brandSubTab === "todos") return true;
-    if (brandSubTab === "logotipos") return item.id.startsWith("brand_") && !item.id.includes("moldura");
+    if (brandSubTab === "logotipos")
+      return item.id.startsWith("brand_") && !item.id.includes("moldura");
     if (brandSubTab === "molduras") return item.id.includes("moldura");
     if (brandSubTab === "depoimentos")
       return item.id.includes("depoimento");
@@ -298,21 +339,21 @@ function AdminDashboard() {
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[#141624] via-[#0e0f17] to-[#18080b] p-6 sm:p-8 mb-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
           <div className="absolute right-0 top-0 w-96 h-96 bg-[#970202]/20 rounded-full blur-[100px] pointer-events-none" />
 
-          <div className="relative z-10 max-w-2xl">
+          <div className="relative z-10 max-w-3xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider font-code mb-3">
               <Sparkles className="h-3.5 w-3.5" />
-              Acervo de Criativos & Marca Liberado
+              Acervo de Criativos & Marca Liberado (30 Dias)
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white font-heading mb-2">
-              CENTRAL DE CRIATIVOS E IDENTIDADE VISUAL
+              CENTRAL DE CRIATIVOS, MARCA E CRONOGRAMA
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as artes dos posts (Feed e Story) em alta resolução (4K), copie as legendas formatadas e navegue pelas capas e variações de destaques na aba Identidade Visual. Clique em qualquer imagem para abrir a visualização em tela cheia!
+              Acesse as 30 publicações completas de Feed e Story em alta resolução (4K), o cronograma editorial estratégico dia a dia com horários de postagem, e todos os ativos da Identidade Visual. Clique em qualquer imagem para abrir em tela cheia!
             </p>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
+        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / TODAS / CRONOGRAMA / IDENTIDADE VISUAL) */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar gap-4">
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -356,6 +397,19 @@ function AdminDashboard() {
 
             <button
               type="button"
+              onClick={() => setActiveTab("cronograma")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
+                activeTab === "cronograma"
+                  ? "bg-[#970202] text-white shadow-[0_0_20px_rgba(151,2,2,0.6)]"
+                  : "bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <Calendar className="h-4 w-4 text-amber-400" />
+              <span>📅 Cronograma 30 Dias</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab("identidade")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
                 activeTab === "identidade"
@@ -380,6 +434,216 @@ function AdminDashboard() {
             )}
           </div>
         </div>
+
+        {/* ABA CRONOGRAMA 30 DIAS — VISÃO EDITORIAL DE SOCIAL MEDIA */}
+        {activeTab === "cronograma" && (
+          <div className="space-y-8 animate-in fade-in duration-200">
+            {/* Header de Insights Estratégicos */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-3.5">
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-400 font-code uppercase">Frequência</div>
+                  <div className="text-base font-bold font-heading text-white">30 DIAS COMPLETOS</div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-3.5">
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
+                  <Clock className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-400 font-code uppercase">Picos de Alcance</div>
+                  <div className="text-base font-bold font-heading text-white">12:30 & 19:30</div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-3.5">
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                  <Target className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-400 font-code uppercase">Pilares de Conteúdo</div>
+                  <div className="text-base font-bold font-heading text-white">7 PILARES VIRAIS</div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-3.5">
+                <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400">
+                  <TrendingUp className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-400 font-code uppercase">Criativos Prontos</div>
+                  <div className="text-base font-bold font-heading text-white">60 IMAGENS 4K</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Lista Cronológica dos 30 Dias */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold uppercase text-white font-heading tracking-wide flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-[#ff4d4d]" />
+                  <span>Programação Editorial Dia a Dia</span>
+                </h2>
+                <span className="text-xs font-code text-slate-400">
+                  Clique nas artes para abrir o modal de tela cheia
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                {EDITORIAL_SCHEDULE_META.map((sched) => {
+                  const creative = INSTAGRAM_CREATIVES.find(
+                    (c) => c.day === sched.day
+                  );
+                  if (!creative) return null;
+
+                  return (
+                    <div
+                      key={sched.day}
+                      className="rounded-2xl border border-white/10 bg-[#0d0e17] p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-[#970202]/50 transition-all shadow-md"
+                    >
+                      {/* Bloco 1: Informações do Dia e Gancho */}
+                      <div className="flex-1 space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#970202] text-white text-[11px] font-bold font-code uppercase">
+                            DIA {String(sched.day).padStart(2, "0")}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300 text-[10.5px] font-code">
+                            🏷️ {sched.pillar}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10.5px] font-code flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {sched.bestTime} (Melhor Horário)
+                          </span>
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-bold text-white font-heading uppercase leading-snug">
+                            {creative.title}
+                          </h3>
+                          <p className="text-xs text-slate-400 font-body mt-1 leading-relaxed">
+                            💡 <strong className="text-slate-300">Dica Social Media:</strong> {sched.tip}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Bloco 2: Miniaturas Clicáveis (Feed & Story) */}
+                      <div className="flex items-center gap-3 shrink-0 self-center md:self-auto">
+                        {/* Miniatura Feed */}
+                        <div
+                          onClick={() =>
+                            setPreviewModal({
+                              url: creative.feedImage,
+                              title: `${creative.title} (Feed - Dia ${creative.day})`,
+                              category: creative.category,
+                              dimensions: "Feed 4:5",
+                            })
+                          }
+                          className="relative flex flex-col items-center cursor-zoom-in group/feed"
+                          title="Ver Feed em Tela Cheia"
+                        >
+                          <img
+                            src={creative.feedImage}
+                            alt={`Feed Dia ${creative.day}`}
+                            className="w-16 h-20 object-cover rounded-lg border border-white/15 shadow-sm group-hover/feed:scale-105 transition-transform"
+                            loading="lazy"
+                          />
+                          <span className="text-[9.5px] font-code text-slate-400 mt-1">
+                            Feed (4:5)
+                          </span>
+                        </div>
+
+                        {/* Miniatura Story */}
+                        <div
+                          onClick={() =>
+                            setPreviewModal({
+                              url: creative.storyImage,
+                              title: `${creative.title} (Story - Dia ${creative.day})`,
+                              category: creative.category,
+                              dimensions: "Story 9:16",
+                            })
+                          }
+                          className="relative flex flex-col items-center cursor-zoom-in group/story"
+                          title="Ver Story em Tela Cheia"
+                        >
+                          <img
+                            src={creative.storyImage}
+                            alt={`Story Dia ${creative.day}`}
+                            className="w-12 h-20 object-cover rounded-lg border border-white/15 shadow-sm group-hover/story:scale-105 transition-transform"
+                            loading="lazy"
+                          />
+                          <span className="text-[9.5px] font-code text-slate-400 mt-1">
+                            Story (9:16)
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Bloco 3: Botões de Ação */}
+                      <div className="flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-44 shrink-0">
+                        <div className="grid grid-cols-2 gap-1.5 w-full">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDownload(
+                                creative.feedImage,
+                                `DezPila_Feed_Dia_${creative.day}.png`
+                              )
+                            }
+                            className="py-1.5 px-2 rounded-lg bg-[#970202] hover:bg-[#b80303] text-white text-[10.5px] font-bold uppercase font-heading flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                          >
+                            <Download className="h-3 w-3" />
+                            <span>Feed</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDownload(
+                                creative.storyImage,
+                                `DezPila_Story_Dia_${creative.day}.png`
+                              )
+                            }
+                            className="py-1.5 px-2 rounded-lg bg-[#970202] hover:bg-[#b80303] text-white text-[10.5px] font-bold uppercase font-heading flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                          >
+                            <Download className="h-3 w-3" />
+                            <span>Story</span>
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopyCaption(creative.id, creative.caption)
+                          }
+                          className={
+                            "w-full py-1.5 px-2.5 rounded-lg text-[10.5px] font-bold uppercase font-heading flex items-center justify-center gap-1.5 cursor-pointer transition-all " +
+                            (copiedId === creative.id
+                              ? "bg-emerald-600 text-white"
+                              : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
+                          }
+                        >
+                          {copiedId === creative.id ? (
+                            <>
+                              <Check className="h-3.5 w-3.5" />
+                              <span>✓ Copiado!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="h-3.5 w-3.5" />
+                              <span>Copiar Legenda</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* SUB-ABAS DE IDENTIDADE VISUAL */}
         {activeTab === "identidade" && (
@@ -591,7 +855,7 @@ function AdminDashboard() {
         )}
 
         {/* GRID DE CRIATIVOS DE FEED E STORY (POSTS) */}
-        {activeTab !== "identidade" && (
+        {activeTab !== "identidade" && activeTab !== "cronograma" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCreatives.map((creative) => {
               const showFeed = activeTab === "feed" || activeTab === "todos";
