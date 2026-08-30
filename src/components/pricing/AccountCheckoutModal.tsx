@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckCircle2, Clock, Shield, CheckCircle, Tv, LockKeyhole, Plus, Minus, Loader2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import { createCaktoPix, checkCaktoPixStatus } from "@/lib/cakto.functions";
-import { createBspayPix, checkBspayPixStatus } from "@/lib/bspay.functions";
-import { createNitroPix, checkNitroPixStatus } from "@/lib/nitro.functions";
+import { createNitroPix, createNitroCard, checkNitroPixStatus } from "@/lib/nitro.functions";
 
 export interface PlanoData {
   id: string;
@@ -107,67 +105,21 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     return () => clearInterval(interval);
   }, [open, step]);
 
-  // Polling automático para verificar liquidação do Pix na Nitro, BSPay ou Cakto
+  // Polling automático para verificar liquidação do Pix na Nova API Nitro Pagamentos v2.0
   useEffect(() => {
     if (!open || step !== "PAGAMENTO" || !caktoOrderId) return;
     const pollInterval = setInterval(async () => {
       try {
-        if (caktoOrderId.startsWith("nitro_") || caktoOrderId.startsWith("NTR-")) {
-          const res = await checkNitroPixStatus({ data: { transactionHash: caktoOrderId } });
-          if (res.ok && res.paid) setStep("SUCESSO");
-        } else if (caktoOrderId.startsWith("bspay_") || caktoOrderId.startsWith("dezpila_")) {
-          const res = await checkBspayPixStatus({ data: { transactionId: caktoOrderId } });
-          if (res.ok && res.paid) setStep("SUCESSO");
-        } else {
-          const res = await checkCaktoPixStatus({ data: { orderId: caktoOrderId } });
-          if (res.ok && res.paid) setStep("SUCESSO");
+        const res = await checkNitroPixStatus({ data: { transactionId: caktoOrderId } });
+        if (res.ok && res.paid) {
+          setStep("SUCESSO");
         }
       } catch (err) {
         // Ignora erros temporários de rede no polling
       }
-    }, 4000);
+    }, 3500);
     return () => clearInterval(pollInterval);
   }, [open, step, caktoOrderId]);
-
-  function buildClientPixBrCode(pixKey = "51095324861", recipientName = "DEZPILA DIGITAL", city = "SAO PAULO", amount: number): string {
-    const cleanKey = pixKey.replace(/\D/g, "");
-    const cleanName = recipientName.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const cleanCity = city.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const formattedAmount = amount.toFixed(2);
-
-    const gui = "br.gov.bcb.pix";
-    const field26 =
-      "00" + String(gui.length).padStart(2, "0") + gui +
-      "01" + String(cleanKey.length).padStart(2, "0") + cleanKey;
-
-    const field62 = "0503***";
-
-    let payload =
-      "000201" +
-      "26" + String(field26.length).padStart(2, "0") + field26 +
-      "52040000" +
-      "5303986" +
-      "54" + String(formattedAmount.length).padStart(2, "0") + formattedAmount +
-      "5802BR" +
-      "59" + String(cleanName.length).padStart(2, "0") + cleanName +
-      "60" + String(cleanCity.length).padStart(2, "0") + cleanCity +
-      "62" + String(field62.length).padStart(2, "0") + field62 +
-      "6304";
-
-    let crc = 0xffff;
-    for (let i = 0; i < payload.length; i++) {
-      crc ^= payload.charCodeAt(i) << 8;
-      for (let j = 0; j < 8; j++) {
-        if ((crc & 0x8000) !== 0) {
-          crc = ((crc << 1) ^ 0x1021) & 0xffff;
-        } else {
-          crc = (crc << 1) & 0xffff;
-        }
-      }
-    }
-
-    return payload + crc.toString(16).toUpperCase().padStart(4, "0");
-  }
 
   if (!open || !plano) return null;
 
@@ -211,14 +163,45 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     return `${d.slice(0, 2)}/${d.slice(2)}`;
   };
 
-  const handlePayWithCard = (e: React.FormEvent) => {
+  const handlePayWithCard = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!numCartao || !nomeCartao || !validadeCartao || !cvvCartao) return;
     setLoadingPix(true);
-    setTimeout(() => {
+    setApiError(null);
+
+    const [expMonth, expYear] = validadeCartao.split("/");
+
+    try {
+      const res = await createNitroCard({
+        data: {
+          amountNum: totalPriceNum,
+          planName: plano.nome,
+          planId: plano.id,
+          name: nome,
+          email,
+          phone: whatsapp,
+          document: cpf,
+          cardNumber: numCartao,
+          holderName: nomeCartao,
+          expirationMonth: expMonth || "12",
+          expirationYear: expYear || "26",
+          cvv: cvvCartao,
+          installments: parseInt(parcelas, 10) || 1,
+          sourceUrl: window.location.href,
+        },
+      });
+
+      if (res.ok && res.paid) {
+        setStep("SUCESSO");
+      } else {
+        setApiError(res.error || "Pagamento recusado pela operadora do cartão.");
+      }
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : "Erro ao processar cartão.";
+      setApiError(errorMsg);
+    } finally {
       setLoadingPix(false);
-      setStep("SUCESSO");
-    }, 1500);
+    }
   };
 
   const handlePayWithBoleto = () => {
@@ -273,48 +256,33 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
 
     try {
-      // Dispara chamada real à API PIX da Nitro Pagamentos (com fallback BSPay / Cakto)
-      const offerHash = plano.id || "ni918";
+      // Dispara chamada real à Nova API PIX da Nitro Pagamentos (v2.0)
       const res = await createNitroPix({
         data: {
-          offerHash,
           amountNum: totalPriceNum,
+          planName: plano.nome,
+          planId: plano.id,
           name: nome,
           email,
           phone: whatsapp,
-          cpf,
+          document: cpf,
+          sourceUrl: window.location.href,
         },
       });
 
       if (res.ok && res.qrCode) {
         setPixPayload(res.qrCode);
-        setPixQrBase64(null); // QRCodeSVG renderiza o código BR Code copia-e-cola no próprio site
+        setPixQrBase64(res.qrCodeBase64 || null);
         setCaktoOrderId(res.id);
         setStep("PAGAMENTO");
       } else {
-        // Fallback BSPay
-        const bspayRes = await createBspayPix({
-          data: { amount: totalPriceNum, name: nome, email, phone: whatsapp, cpf },
-        });
-
-        if (bspayRes.ok && bspayRes.qrCode) {
-          setPixPayload(bspayRes.qrCode);
-          setPixQrBase64(null);
-          setCaktoOrderId(bspayRes.id);
-          setStep("PAGAMENTO");
-        } else {
-          const fallbackPayload = buildClientPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", totalPriceNum);
-          setPixPayload(fallbackPayload);
-          setCaktoOrderId(`nitro_NTR-${Date.now()}`);
-          setStep("PAGAMENTO");
-        }
+        const errorMsg = res.error || "Não foi possível gerar a cobrança PIX.";
+        setApiError(errorMsg);
       }
-    } catch (err) {
-      console.error("Erro ao conectar com API da Nitro:", err);
-      const fallbackPayload = buildClientPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", totalPriceNum);
-      setPixPayload(fallbackPayload);
-      setCaktoOrderId(`nitro_NTR-${Date.now()}`);
-      setStep("PAGAMENTO");
+    } catch (err: unknown) {
+      console.error("Erro ao conectar com Nova API Nitro Pagamentos:", err);
+      const errorMsg = err instanceof Error ? err.message : "Erro ao gerar PIX.";
+      setApiError(errorMsg);
     } finally {
       setLoadingPix(false);
     }
