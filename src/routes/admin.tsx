@@ -14,6 +14,8 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  Instagram,
+  Share2,
 } from "lucide-react";
 import { INSTAGRAM_CREATIVES, InstagramCreative } from "@/data/instagramContent";
 
@@ -37,6 +39,7 @@ function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<"feed" | "stories" | "todos">("feed");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [postedId, setPostedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Restaura autenticação do localStorage
@@ -75,6 +78,31 @@ function AdminDashboard() {
       setTimeout(() => setCopiedId(null), 2500);
     } catch {
       // Fallback
+    }
+  };
+
+  const handlePostToInstagram = async (creative: InstagramCreative) => {
+    try {
+      // 1. Copia a legenda para o clipboard
+      await navigator.clipboard.writeText(creative.caption);
+      setPostedId(creative.id);
+
+      // 2. Tenta abrir o App do Instagram ou Web
+      setTimeout(() => {
+        setPostedId(null);
+        // Se for mobile, o link abre o app do Instagram
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+          window.location.href = "instagram://camera";
+          setTimeout(() => {
+            window.open("https://www.instagram.com/", "_blank");
+          }, 800);
+        } else {
+          window.open("https://www.instagram.com/create/select/", "_blank");
+        }
+      }, 600);
+    } catch {
+      window.open("https://www.instagram.com/", "_blank");
     }
   };
 
@@ -123,13 +151,13 @@ function AdminDashboard() {
               Painel Administrativo
             </h1>
             <p className="text-xs text-slate-400 font-body mt-1">
-              Entre com suas credenciais de administrador para acessar o acervo criativo.
+              Entre com suas credenciais para acessar o acervo criativo.
             </p>
           </div>
 
           {loginError && (
             <div className="mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-400 text-xs font-code text-center">
-              ⚠️ Usuário ou senha incorretos. (Padrão: Admin / admin)
+              ⚠️ Usuário ou senha incorretos.
             </div>
           )}
 
@@ -144,7 +172,7 @@ function AdminDashboard() {
                   required
                   value={user}
                   onChange={(e) => setUser(e.target.value)}
-                  placeholder="Admin"
+                  placeholder="Seu usuário"
                   className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 px-3.5 pr-10 text-xs text-white outline-none focus:border-[#970202] transition-all"
                 />
                 <User className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
@@ -177,7 +205,7 @@ function AdminDashboard() {
           </form>
 
           <div className="mt-6 text-center text-[10.5px] font-code text-slate-500">
-            Acesso protegido por autenticação local DezPila v2.0
+            Acesso encriptado — Sistema Administrativo DezPila
           </div>
         </div>
       </div>
@@ -243,7 +271,7 @@ function AdminDashboard() {
               CENTRAL DE CRIATIVOS E LEGENDA
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as artes em altíssima qualidade (HD/4K) e copie as legendas otimizadas para conversão no Instagram. Escolha abaixo a aba desejada.
+              Baixe as artes em alta resolução (4K), copie as legendas e publique diretamente no Instagram com 1 clique.
             </p>
           </div>
         </div>
@@ -292,7 +320,7 @@ function AdminDashboard() {
           </div>
 
           <div className="text-xs font-code text-slate-400 shrink-0">
-            Total: <strong className="text-white font-bold">{filteredCreatives.length}</strong> publicações encontradas
+            Total: <strong className="text-white font-bold">{filteredCreatives.length}</strong> publicações
           </div>
         </div>
 
@@ -333,19 +361,6 @@ function AdminDashboard() {
                         className="w-36 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
                         loading="lazy"
                       />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleDownload(
-                            creative.feedImage,
-                            `DezPila_Feed_Dia_${creative.day}.png`
-                          )
-                        }
-                        className="mt-2 text-[10.5px] font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-[#970202] px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer font-heading"
-                      >
-                        <Download className="h-3 w-3" />
-                        <span>Baixar Feed</span>
-                      </button>
                     </div>
                   )}
 
@@ -360,19 +375,6 @@ function AdminDashboard() {
                         className="w-24 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
                         loading="lazy"
                       />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleDownload(
-                            creative.storyImage,
-                            `DezPila_Story_Dia_${creative.day}.png`
-                          )
-                        }
-                        className="mt-2 text-[10.5px] font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-[#970202] px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer font-heading"
-                      >
-                        <Download className="h-3 w-3" />
-                        <span>Baixar Story</span>
-                      </button>
                     </div>
                   )}
                 </div>
@@ -417,31 +419,111 @@ function AdminDashboard() {
                     </div>
                   </div>
 
-                  {/* Ação de Copiar Legenda */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleCopyCaption(creative.id, creative.caption)
-                    }
-                    className={
-                      "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
-                      (copiedId === creative.id
-                        ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
-                        : "bg-white/10 hover:bg-[#970202] text-white shadow-sm")
-                    }
-                  >
-                    {copiedId === creative.id ? (
-                      <>
-                        <Check className="h-4 w-4" />
-                        <span>✓ Legenda Copiada!</span>
-                      </>
+                  {/* AÇÕES (ORDEM: 1. BAIXAR IMAGEM | 2. COPIAR LEGENDA | 3. POSTAR INSTAGRAM) */}
+                  <div className="space-y-2 pt-1 border-t border-white/10">
+                    {/* BOTÃO 1 (TOPO): BAIXAR IMAGEM */}
+                    {activeTab === "todos" ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDownload(
+                              creative.feedImage,
+                              `DezPila_Feed_Dia_${creative.day}.png`
+                            )
+                          }
+                          className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          <span>Baixar Feed</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDownload(
+                              creative.storyImage,
+                              `DezPila_Story_Dia_${creative.day}.png`
+                            )
+                          }
+                          className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          <span>Baixar Story</span>
+                        </button>
+                      </div>
                     ) : (
-                      <>
-                        <Copy className="h-4 w-4" />
-                        <span>Copiar Legenda</span>
-                      </>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDownload(
+                            activeTab === "stories"
+                              ? creative.storyImage
+                              : creative.feedImage,
+                            `DezPila_${
+                              activeTab === "stories" ? "Story" : "Feed"
+                            }_Dia_${creative.day}.png`
+                          )
+                        }
+                        className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>
+                          Baixar Imagem (
+                          {activeTab === "stories" ? "Story" : "Feed"})
+                        </span>
+                      </button>
                     )}
-                  </button>
+
+                    {/* BOTÃO 2 (MEIO): COPIAR LEGENDA */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleCopyCaption(creative.id, creative.caption)
+                      }
+                      className={
+                        "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
+                        (copiedId === creative.id
+                          ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                          : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
+                      }
+                    >
+                      {copiedId === creative.id ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          <span>✓ Legenda Copiada!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4" />
+                          <span>Copiar Legenda</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* BOTÃO 3 (BASE): POSTAR NO INSTAGRAM */}
+                    <button
+                      type="button"
+                      onClick={() => handlePostToInstagram(creative)}
+                      className={
+                        "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading text-white " +
+                        (postedId === creative.id
+                          ? "bg-gradient-to-r from-emerald-500 to-teal-600 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                          : "bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:brightness-110 shadow-[0_4px_16px_rgba(253,29,29,0.35)]")
+                      }
+                    >
+                      {postedId === creative.id ? (
+                        <>
+                          <Check className="h-4 w-4 animate-bounce" />
+                          <span>Legenda Copiada! Abrindo Instagram...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Instagram className="h-4 w-4" />
+                          <span>Postar no Instagram</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             );
