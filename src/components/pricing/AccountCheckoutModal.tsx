@@ -357,8 +357,8 @@ export function AccountCheckoutModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 overscroll-contain">
-      <div className="relative w-full max-w-lg max-h-[92vh] flex flex-col rounded-3xl border border-white/[0.08] bg-gradient-to-b from-[#14161f] to-[#0e0f17] shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden">
+    <div className="fixed inset-0 z-[999999] flex flex-col items-center justify-end sm:justify-center bg-black/85 backdrop-blur-md p-0 sm:p-4 overscroll-contain">
+      <div className="relative w-full max-w-lg h-[95dvh] sm:h-auto sm:max-h-[90vh] flex flex-col rounded-t-[28px] sm:rounded-3xl border-t sm:border border-white/10 bg-gradient-to-b from-[#14161f] to-[#0e0f17] shadow-[0_-10px_40px_rgba(0,0,0,0.9)] sm:shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden">
         {/* Header Fixo do Modal */}
         <div className="shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-white/10 bg-[#14161f]/80 backdrop-blur-md z-10">
           <div className="flex items-center gap-3">
