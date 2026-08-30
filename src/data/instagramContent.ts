@@ -8,6 +8,70 @@ export interface InstagramCreative {
   caption: string;
 }
 
+export interface BrandAsset {
+  id: string;
+  name: string;
+  category: string;
+  dimensions: string;
+  format: string;
+  imagePath: string;
+  description: string;
+}
+
+export const BRAND_ASSETS: BrandAsset[] = [
+  {
+    id: "brand_favicon",
+    name: "Favicon Ícone DezPila",
+    category: "Ícone / Favicon",
+    dimensions: "512 x 512 px",
+    format: "PNG Alta Definição",
+    imagePath: "/brand/favicon_512.png",
+    description:
+      "Ícone oficial em formato quadrado arredondado com borda neon vermelha para favicons de navegadores, apps e perfis sociais.",
+  },
+  {
+    id: "brand_logo_horizontal",
+    name: "Logo DezPila Horizontal",
+    category: "Logotipo Principal",
+    dimensions: "1200 x 400 px",
+    format: "PNG Fundo Escuro",
+    imagePath: "/brand/logo_horizontal_dark.png",
+    description:
+      "Logotipo oficial estilizado em versão horizontal com o distintivo vermelho inclinado e tipografia em destaque.",
+  },
+  {
+    id: "brand_logo_quadrada",
+    name: "Logo DezPila Quadrada",
+    category: "Perfil / Avatar",
+    dimensions: "800 x 800 px",
+    format: "PNG Fundo Escuro",
+    imagePath: "/brand/logo_quadrada.png",
+    description:
+      "Versão quadrada com badge de autenticidade 'OFICIAL 4K' ideal para avatares do WhatsApp, Instagram e TikTok.",
+  },
+  {
+    id: "brand_banner_og",
+    name: "Banner OpenGraph (Redes Sociais)",
+    category: "Marketing / Card",
+    dimensions: "1200 x 630 px",
+    format: "PNG",
+    imagePath: "/brand/banner_opengraph_1200x630.png",
+    description:
+      "Banner promocional para prévias automáticas de links compartilhados no WhatsApp, Facebook, Twitter e LinkedIn.",
+  },
+  {
+    id: "brand_capa_perfil",
+    name: "Capa de Perfil / Banner HQ",
+    category: "Banner Social / YouTube",
+    dimensions: "1920 x 1080 px",
+    format: "PNG Full HD",
+    imagePath: "/brand/capa_perfil_1920x1080.png",
+    description:
+      "Banner principal em resolução 1080p Full HD para fundos de canais, capas de grupos e apresentações institucionais.",
+  },
+];
+
+
 export const INSTAGRAM_CREATIVES: InstagramCreative[] = [
   {
     day: 1,

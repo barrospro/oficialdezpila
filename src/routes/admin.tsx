@@ -14,10 +14,12 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
-  Instagram,
-  Share2,
+  Palette,
 } from "lucide-react";
-import { INSTAGRAM_CREATIVES, InstagramCreative } from "@/data/instagramContent";
+import {
+  INSTAGRAM_CREATIVES,
+  BRAND_ASSETS,
+} from "@/data/instagramContent";
 
 export const Route = createFileRoute("/admin")({
   component: AdminDashboard,
@@ -35,11 +37,12 @@ function AdminDashboard() {
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Tab State: 'feed' | 'stories' | 'todos'
-  const [activeTab, setActiveTab] = useState<"feed" | "stories" | "todos">("feed");
+  // Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
+  const [activeTab, setActiveTab] = useState<
+    "feed" | "stories" | "todos" | "identidade"
+  >("feed");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [postedId, setPostedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Restaura autenticação do localStorage
@@ -81,31 +84,6 @@ function AdminDashboard() {
     }
   };
 
-  const handlePostToInstagram = async (creative: InstagramCreative) => {
-    try {
-      // 1. Copia a legenda para o clipboard
-      await navigator.clipboard.writeText(creative.caption);
-      setPostedId(creative.id);
-
-      // 2. Tenta abrir o App do Instagram ou Web
-      setTimeout(() => {
-        setPostedId(null);
-        // Se for mobile, o link abre o app do Instagram
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-          window.location.href = "instagram://camera";
-          setTimeout(() => {
-            window.open("https://www.instagram.com/", "_blank");
-          }, 800);
-        } else {
-          window.open("https://www.instagram.com/create/select/", "_blank");
-        }
-      }, 600);
-    } catch {
-      window.open("https://www.instagram.com/", "_blank");
-    }
-  };
-
   const handleDownload = (imgUrl: string, fileName: string) => {
     const link = document.createElement("a");
     link.href = imgUrl;
@@ -124,6 +102,17 @@ function AdminDashboard() {
       item.title.toLowerCase().includes(q) ||
       item.category.toLowerCase().includes(q) ||
       item.caption.toLowerCase().includes(q)
+    );
+  });
+
+  // Filtragem dos ativos de marca por busca
+  const filteredBrandAssets = BRAND_ASSETS.filter((item) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      item.name.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q) ||
+      item.description.toLowerCase().includes(q)
     );
   });
 
@@ -238,7 +227,7 @@ function AdminDashboard() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por dia, título..."
+                placeholder="Buscar por nome, dia, filtro..."
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-1.5 px-3 pl-9 text-xs text-white outline-none focus:border-[#970202] transition-all"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
@@ -265,18 +254,18 @@ function AdminDashboard() {
           <div className="relative z-10 max-w-2xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider font-code mb-3">
               <Sparkles className="h-3.5 w-3.5" />
-              Acervo de 30 Dias Liberado
+              Acervo de Criativos & Marca Liberado
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white font-heading mb-2">
-              CENTRAL DE CRIATIVOS E LEGENDA
+              CENTRAL DE CRIATIVOS E IDENTIDADE VISUAL
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as artes em alta resolução (4K), copie as legendas e publique diretamente no Instagram com 1 clique.
+              Baixe as artes dos posts (Feed e Story) em alta resolução (4K), copie as legendas formatadas e faça o download da identidade visual completa da marca DezPila.
             </p>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS (FEED / STORY / TODAS) */}
+        {/* NAVEGAÇÃO POR ABAS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-8 overflow-x-auto no-scrollbar gap-4">
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -317,218 +306,282 @@ function AdminDashboard() {
               <Layers className="h-4 w-4" />
               <span>Todas Imagens</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("identidade")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
+                activeTab === "identidade"
+                  ? "bg-[#970202] text-white shadow-[0_0_20px_rgba(151,2,2,0.6)]"
+                  : "bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <Palette className="h-4 w-4 text-emerald-400" />
+              <span>Identidade Visual</span>
+            </button>
           </div>
 
           <div className="text-xs font-code text-slate-400 shrink-0">
-            Total: <strong className="text-white font-bold">{filteredCreatives.length}</strong> publicações
+            {activeTab === "identidade" ? (
+              <>
+                Total: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> arquivos de marca
+              </>
+            ) : (
+              <>
+                Total: <strong className="text-white font-bold">{filteredCreatives.length}</strong> publicações
+              </>
+            )}
           </div>
         </div>
 
-        {/* GRID DE CRIATIVOS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCreatives.map((creative) => {
-            const showFeed = activeTab === "feed" || activeTab === "todos";
-            const showStories = activeTab === "stories" || activeTab === "todos";
-            const isCaptionExpanded = expandedId === creative.id;
-
-            return (
+        {/* ABA IDENTIDADE VISUAL */}
+        {activeTab === "identidade" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
+            {filteredBrandAssets.map((asset) => (
               <div
-                key={creative.id}
+                key={asset.id}
                 className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
               >
                 {/* Header do Card */}
                 <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md bg-[#970202] text-white text-[11px] font-bold font-code uppercase tracking-wider">
-                      DIA {String(creative.day).padStart(2, "0")}
+                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10.5px] font-bold font-code uppercase tracking-wider">
+                      {asset.format}
                     </span>
-                    <span className="text-[11px] font-code text-slate-400 truncate max-w-[150px]">
-                      {creative.category}
+                    <span className="text-[11px] font-code text-slate-400">
+                      {asset.category}
                     </span>
                   </div>
+                  <span className="text-[10.5px] font-code text-slate-400">
+                    {asset.dimensions}
+                  </span>
                 </div>
 
-                {/* Prévia Visual da Imagem */}
-                <div className="p-4 bg-black/40 flex items-center justify-center gap-3">
-                  {showFeed && (
-                    <div className="relative flex flex-col items-center">
-                      <span className="text-[10px] font-code text-slate-400 mb-1">
-                        Feed (4:5)
-                      </span>
-                      <img
-                        src={creative.feedImage}
-                        alt={`Feed Dia ${creative.day}`}
-                        className="w-36 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-                  )}
-
-                  {showStories && (
-                    <div className="relative flex flex-col items-center">
-                      <span className="text-[10px] font-code text-slate-400 mb-1">
-                        Story (9:16)
-                      </span>
-                      <img
-                        src={creative.storyImage}
-                        alt={`Story Dia ${creative.day}`}
-                        className="w-24 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-                  )}
+                {/* Prévia Visual do Ativo de Marca */}
+                <div className="p-6 bg-black/60 flex items-center justify-center min-h-[220px]">
+                  <img
+                    src={asset.imagePath}
+                    alt={asset.name}
+                    className="max-h-[170px] w-auto max-w-full object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
                 </div>
 
                 {/* Título & Detalhes */}
                 <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                   <div>
-                    <h3 className="text-xs font-bold uppercase text-white font-heading leading-tight mb-2">
-                      {creative.title}
+                    <h3 className="text-sm font-bold uppercase text-white font-heading leading-tight mb-1">
+                      {asset.name}
                     </h3>
+                    <p className="text-xs text-slate-300 font-body leading-relaxed">
+                      {asset.description}
+                    </p>
+                  </div>
 
-                    {/* Caixa da Legenda com Expansor */}
-                    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300 font-body relative">
-                      <div
-                        className={
-                          "whitespace-pre-line overflow-hidden font-body text-[11.5px] leading-relaxed transition-all " +
-                          (isCaptionExpanded ? "max-h-none" : "max-h-24 line-clamp-4")
-                        }
-                      >
-                        {creative.caption}
+                  {/* BOTÃO BAIXAR IMAGEM MARCA */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleDownload(asset.imagePath, `${asset.id}.png`)
+                    }
+                    className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Baixar Imagem PNG ({asset.dimensions})</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* GRID DE CRIATIVOS (POSTS / STORIES) */}
+        {activeTab !== "identidade" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCreatives.map((creative) => {
+              const showFeed = activeTab === "feed" || activeTab === "todos";
+              const showStories = activeTab === "stories" || activeTab === "todos";
+              const isCaptionExpanded = expandedId === creative.id;
+
+              return (
+                <div
+                  key={creative.id}
+                  className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
+                >
+                  {/* Header do Card */}
+                  <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-md bg-[#970202] text-white text-[11px] font-bold font-code uppercase tracking-wider">
+                        DIA {String(creative.day).padStart(2, "0")}
+                      </span>
+                      <span className="text-[11px] font-code text-slate-400 truncate max-w-[150px]">
+                        {creative.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Prévia Visual da Imagem */}
+                  <div className="p-4 bg-black/40 flex items-center justify-center gap-3">
+                    {showFeed && (
+                      <div className="relative flex flex-col items-center">
+                        <span className="text-[10px] font-code text-slate-400 mb-1">
+                          Feed (4:5)
+                        </span>
+                        <img
+                          src={creative.feedImage}
+                          alt={`Feed Dia ${creative.day}`}
+                          className="w-36 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
+                          loading="lazy"
+                        />
                       </div>
+                    )}
 
+                    {showStories && (
+                      <div className="relative flex flex-col items-center">
+                        <span className="text-[10px] font-code text-slate-400 mb-1">
+                          Story (9:16)
+                        </span>
+                        <img
+                          src={creative.storyImage}
+                          alt={`Story Dia ${creative.day}`}
+                          className="w-24 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Título & Detalhes */}
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div>
+                      <h3 className="text-xs font-bold uppercase text-white font-heading leading-tight mb-2">
+                        {creative.title}
+                      </h3>
+
+                      {/* Caixa da Legenda com Expansor */}
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300 font-body relative">
+                        <div
+                          className={
+                            "whitespace-pre-line overflow-hidden font-body text-[11.5px] leading-relaxed transition-all " +
+                            (isCaptionExpanded
+                              ? "max-h-none"
+                              : "max-h-24 line-clamp-4")
+                          }
+                        >
+                          {creative.caption}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedId(
+                              isCaptionExpanded ? null : creative.id
+                            )
+                          }
+                          className="mt-2 text-[10.5px] font-bold text-[#ff4d4d] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          {isCaptionExpanded ? (
+                            <>
+                              <span>Recolher legenda</span>
+                              <ChevronUp className="h-3 w-3" />
+                            </>
+                          ) : (
+                            <>
+                              <span>Ver legenda completa</span>
+                              <ChevronDown className="h-3 w-3" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* AÇÕES DOS CARDS (1. BAIXAR IMAGEM | 2. COPIAR LEGENDA) */}
+                    <div className="space-y-2 pt-1 border-t border-white/10">
+                      {/* BOTÃO 1 (TOPO): BAIXAR IMAGEM */}
+                      {activeTab === "todos" ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDownload(
+                                creative.feedImage,
+                                `DezPila_Feed_Dia_${creative.day}.png`
+                              )
+                            }
+                            className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            <span>Baixar Feed</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDownload(
+                                creative.storyImage,
+                                `DezPila_Story_Dia_${creative.day}.png`
+                              )
+                            }
+                            className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            <span>Baixar Story</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDownload(
+                              activeTab === "stories"
+                                ? creative.storyImage
+                                : creative.feedImage,
+                              `DezPila_${
+                                activeTab === "stories" ? "Story" : "Feed"
+                              }_Dia_${creative.day}.png`
+                            )
+                          }
+                          className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
+                        >
+                          <Download className="h-4 w-4" />
+                          <span>
+                            Baixar Imagem (
+                            {activeTab === "stories" ? "Story" : "Feed"})
+                          </span>
+                        </button>
+                      )}
+
+                      {/* BOTÃO 2 (MEIO): COPIAR LEGENDA */}
                       <button
                         type="button"
                         onClick={() =>
-                          setExpandedId(isCaptionExpanded ? null : creative.id)
+                          handleCopyCaption(creative.id, creative.caption)
                         }
-                        className="mt-2 text-[10.5px] font-bold text-[#ff4d4d] hover:underline flex items-center gap-1 cursor-pointer"
+                        className={
+                          "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
+                          (copiedId === creative.id
+                            ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                            : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
+                        }
                       >
-                        {isCaptionExpanded ? (
+                        {copiedId === creative.id ? (
                           <>
-                            <span>Recolher legenda</span>
-                            <ChevronUp className="h-3 w-3" />
+                            <Check className="h-4 w-4" />
+                            <span>✓ Legenda Copiada!</span>
                           </>
                         ) : (
                           <>
-                            <span>Ver legenda completa</span>
-                            <ChevronDown className="h-3 w-3" />
+                            <Copy className="h-4 w-4" />
+                            <span>Copiar Legenda</span>
                           </>
                         )}
                       </button>
                     </div>
                   </div>
-
-                  {/* AÇÕES (ORDEM: 1. BAIXAR IMAGEM | 2. COPIAR LEGENDA | 3. POSTAR INSTAGRAM) */}
-                  <div className="space-y-2 pt-1 border-t border-white/10">
-                    {/* BOTÃO 1 (TOPO): BAIXAR IMAGEM */}
-                    {activeTab === "todos" ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDownload(
-                              creative.feedImage,
-                              `DezPila_Feed_Dia_${creative.day}.png`
-                            )
-                          }
-                          className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
-                        >
-                          <Download className="h-3.5 w-3.5" />
-                          <span>Baixar Feed</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDownload(
-                              creative.storyImage,
-                              `DezPila_Story_Dia_${creative.day}.png`
-                            )
-                          }
-                          className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
-                        >
-                          <Download className="h-3.5 w-3.5" />
-                          <span>Baixar Story</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleDownload(
-                            activeTab === "stories"
-                              ? creative.storyImage
-                              : creative.feedImage,
-                            `DezPila_${
-                              activeTab === "stories" ? "Story" : "Feed"
-                            }_Dia_${creative.day}.png`
-                          )
-                        }
-                        className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
-                      >
-                        <Download className="h-4 w-4" />
-                        <span>
-                          Baixar Imagem (
-                          {activeTab === "stories" ? "Story" : "Feed"})
-                        </span>
-                      </button>
-                    )}
-
-                    {/* BOTÃO 2 (MEIO): COPIAR LEGENDA */}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleCopyCaption(creative.id, creative.caption)
-                      }
-                      className={
-                        "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
-                        (copiedId === creative.id
-                          ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
-                          : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
-                      }
-                    >
-                      {copiedId === creative.id ? (
-                        <>
-                          <Check className="h-4 w-4" />
-                          <span>✓ Legenda Copiada!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4" />
-                          <span>Copiar Legenda</span>
-                        </>
-                      )}
-                    </button>
-
-                    {/* BOTÃO 3 (BASE): POSTAR NO INSTAGRAM */}
-                    <button
-                      type="button"
-                      onClick={() => handlePostToInstagram(creative)}
-                      className={
-                        "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading text-white " +
-                        (postedId === creative.id
-                          ? "bg-gradient-to-r from-emerald-500 to-teal-600 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
-                          : "bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:brightness-110 shadow-[0_4px_16px_rgba(253,29,29,0.35)]")
-                      }
-                    >
-                      {postedId === creative.id ? (
-                        <>
-                          <Check className="h-4 w-4 animate-bounce" />
-                          <span>Legenda Copiada! Abrindo Instagram...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Instagram className="h-4 w-4" />
-                          <span>Postar no Instagram</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </main>
     </div>
   );
