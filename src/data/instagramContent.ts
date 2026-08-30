@@ -836,49 +836,107 @@ Junte-se a milhares de brasileiros satisfeitos.
 
 export const INSTAGRAM_REELS: InstagramReels[] = [
   {
-    id: "reels_01",
-    title: "Demonstração da Qualidade 4K Ultra HD",
-    category: "🎬 Reels Promo 01",
+    id: "veo3_01",
+    title: "⚽ O Gol Decisivo Sem Travamentos (Veo 3 4K)",
+    category: "⚽ Reels Esportes 60fps",
     dimensions: "720 x 1280 px (9:16)",
-    videoImage: "/instagram/videos/reels_01_demo_4k.png",
-    videoPath: "/instagram/videos/reels_01_demo_4k.png",
-    caption: `🍿 TUDO O QUE VOCÊ PRECISA PARA MARATONAR!
+    videoImage: "/instagram/videos/veo3_01_futebol_sem_travar.png",
+    videoPath: "/instagram/videos/veo3_01_futebol_sem_travar.png",
+    caption: `⚽ CHEGA DE PASSAR RAIVA NA HORA DO GOL!
 
-Sinal 4K Ultra HD sem travamentos, com todos os lançamentos de cinema e campeonatos de futebol inclusos.
+Ele economizou R$ 180 no mês e nunca mais viu a transmissão travar durante o jogo do seu time.
 
-👉 Assine agora em 2 minutos por apenas R$ 10/mês no link da bio!
+Assista ao Brasileirão, UEFA Champions League e Libertadores em 4K 60fps por apenas R$ 10,00/mês.
 
-#DezPila #Streaming4K #FilmesESeries #Futebol4K #ReelsPromo`,
+💬 COMENTE "TV" nos comentários para receber o link de ativação no seu Direct!
+
+#DezPila #FutebolAoVivo #Champions #Brasileirao #Futebol4K #ComenteTV`,
   },
   {
-    id: "reels_02",
-    title: "Futebol ao Vivo em 60fps sem Travamentos",
-    category: "⚽ Reels Esportes 02",
+    id: "veo3_02",
+    title: "🍿 Cinema de Luxo em Casa (Veo 3 Ultra HD)",
+    category: "🎬 Reels Filmes & Séries",
     dimensions: "720 x 1280 px (9:16)",
-    videoImage: "/instagram/videos/reels_02_futebol_60fps.png",
-    videoPath: "/instagram/videos/reels_02_futebol_60fps.png",
-    caption: `⚽ NUNCA MAIS PERCA UM GOL POR TRAVAMENTOS!
+    videoImage: "/instagram/videos/veo3_02_cinema_luxo.png",
+    videoPath: "/instagram/videos/veo3_02_cinema_luxo.png",
+    caption: `🍿 POR QUE PAGAR 5 ASSINATURAS SE VOCÊ PODE TER TUDO POR R$ 10?
 
-Assista ao Brasileirão, UEFA Champions League e Libertadores com transmissão fluida em 60fps e baixíssima latência.
+Transforme sua sala num cinema de verdade com mais de 60.000 filmes, séries e lançamentos em 4K Ultra HD.
 
-👉 Ative seu sinal agora por R$ 10 no link da Bio!
+Ativação instantânea sem fidelidade e sem burocracia.
 
-#FutebolAoVivo #DezPila #Champions #Brasileirao #ReelsFutebol`,
+💬 COMENTE "TV" nos comentários para receber o link de ativação no seu Direct!
+
+#DezPila #CinemaEmCasa #FilmesESeries #Streaming4K #ComenteTV`,
   },
   {
-    id: "reels_03",
-    title: "Como Instalar em 2 Minutos na Smart TV",
-    category: "📲 Reels Tutorial 03",
+    id: "veo3_03",
+    title: "⚡ O Antes vs Depois da Fatura (Veo 3 Economia)",
+    category: "💰 Reels Economia Real",
     dimensions: "720 x 1280 px (9:16)",
-    videoImage: "/instagram/videos/reels_03_tutorial_instala.png",
-    videoPath: "/instagram/videos/reels_03_tutorial_instala.png",
-    caption: `📲 PASSO A PASSO SUPER SIMPLES!
+    videoImage: "/instagram/videos/veo3_03_fatura_vs_dezpila.png",
+    videoPath: "/instagram/videos/veo3_03_fatura_vs_dezpila.png",
+    caption: `⚡ QUAL DESSAS DUAS CONTAS VOCÊ PREFERE PAGAR NO FIM DO MÊS?
 
-Aprenda a instalar o DezPila na sua Smart TV (Samsung, LG, Android TV), Celular ou TV Box em menos de 2 minutos.
+Troque a fatura abusiva de R$ 250 da TV a cabo tradicional por um sinal completo em 4K por apenas R$ 10,00 por mês!
 
-👉 Assine agora no link da Bio e receba seu login no WhatsApp!
+Economize mais de R$ 2.000 por ano mantendo todo o entretenimento da sua família.
 
-#Tutorial #SmartTV #DezPila #TVBox #ReelsTutorial`,
+💬 COMENTE "TV" nos comentários para receber o link de ativação no seu Direct!
+
+#DezPila #Economia #TVaCabo #SemFidelidade #ComenteTV`,
+  },
+  {
+    id: "veo3_04",
+    title: "📲 Ativação Rápida no Celular & TV (Veo 3 Tutorial)",
+    category: "📲 Reels Tutorial 2 Minutos",
+    dimensions: "720 x 1280 px (9:16)",
+    videoImage: "/instagram/videos/veo3_04_ativacao_2min.png",
+    videoPath: "/instagram/videos/veo3_04_ativacao_2min.png",
+    caption: `📲 COMO TRANSFORMAR SUA TV EM UMA CENTRAL 4K EM 2 MINUTOS!
+
+Sem antenas, sem cabos espalhados e sem taxa de instalação. 
+
+Funciona na sua Smart TV (Samsung, LG, Android TV), Celular, Fire Stick e TV Box por apenas R$ 10,00/mês.
+
+💬 COMENTE "TV" nos comentários para receber o link de ativação no seu Direct!
+
+#DezPila #TutorialSmartTV #FireStick #AndroidTV #ComenteTV`,
+  },
+  {
+    id: "veo3_05",
+    title: "🧸 Família Reunida & CristoFlix Infantil (Veo 3)",
+    category: "👑 Reels Família & CristoFlix",
+    dimensions: "720 x 1280 px (9:16)",
+    videoImage: "/instagram/videos/veo3_05_cristoflix_familia.png",
+    videoPath: "/instagram/videos/veo3_05_cristoflix_familia.png",
+    caption: `🧸 ENTRETENIMENTO SEGURO E BÍBLICO PARA SEUS FILHOS!
+
+Com o opcional CristoFlix Infantil (+ R$ 7,90), seus filhos assistem a histórias bíblicas e desenhos educativos sem comerciais indesejados.
+
+Toda a família reunida com conteúdos de fé e valores por um preço justo.
+
+💬 COMENTE "TV" nos comentários para receber o link de ativação no seu Direct!
+
+#DezPila #CristoFlix #DesenhosBiblicos #Familia #ComenteTV`,
+  },
+  {
+    id: "veo3_06",
+    title: "🔥 Trailer Épico Dark / Manifesto DezPila (Veo 3 3D)",
+    category: "🔥 Reels Manifesto Ultra HD",
+    dimensions: "720 x 1280 px (9:16)",
+    videoImage: "/instagram/videos/veo3_06_manifesto_epic.png",
+    videoPath: "/instagram/videos/veo3_06_manifesto_epic.png",
+    caption: `🔥 A REVOLUÇÃO DO STREAMING INTELIGENTE NO BRASIL!
+
+Chega de refém de mensalidades abusivas e assinaturas picadas. O futuro do entretenimento é completo, sem travamentos e custa apenas R$ 10,00/mês.
+
+Junte-se a milhares de brasileiros que já fizeram a escolha inteligente.
+
+💬 COMENTE "TV" nos comentários para receber o link de ativação no seu Direct!
+
+#DezPila #Manifesto #FuturoDaTV #StreamingBrasil #ComenteTV`,
   },
 ];
+
 
