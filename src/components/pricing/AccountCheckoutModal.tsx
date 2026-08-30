@@ -689,19 +689,8 @@ export function AccountCheckoutModal({
                       </span>
                     </div>
 
-                    {/* Avatares & Badges dos Influencers & Vazados */}
-                    <div className="flex items-center gap-1.5 my-1.5">
-                      <div className="flex -space-x-2 overflow-hidden">
-                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-amber-500/50 bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
-                          🔥
-                        </div>
-                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-purple-500/50 bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
-                          💋
-                        </div>
-                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-red-500/50 bg-gradient-to-tr from-red-600 to-amber-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
-                          🔞
-                        </div>
-                      </div>
+                    {/* Badge Vazados */}
+                    <div className="my-1">
                       <span className="text-[10px] font-bold font-code text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
                         Vazados Privacy & OnlyFans VIP
                       </span>
