@@ -57,12 +57,14 @@ function AdminDashboard() {
     "todos" | "logotipos" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
   >("todos");
 
-  // Modal de visualização de imagem em tela cheia (Fullscreen Preview Modal)
+  // Modal de visualização de imagem/vídeo em tela cheia (Fullscreen Preview Modal)
   const [previewModal, setPreviewModal] = useState<{
     url: string;
     title: string;
     category?: string;
     dimensions?: string;
+    isVideo?: boolean;
+    videoUrl?: string;
   } | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -637,19 +639,24 @@ function AdminDashboard() {
                         title: reel.title,
                         category: reel.category,
                         dimensions: reel.dimensions,
+                        isVideo: true,
+                        videoUrl: reel.videoPath,
                       })
                     }
                     className="p-4 bg-black/60 flex items-center justify-center min-h-[220px] cursor-zoom-in relative group/reel"
                   >
-                    <img
-                      src={reel.videoImage}
-                      alt={reel.title}
+                    <video
+                      src={reel.videoPath}
+                      poster={reel.videoImage}
+                      controls
+                      loop
+                      muted
+                      playsInline
                       className="w-36 h-[200px] object-cover rounded-xl border border-white/15 shadow-md group-hover/reel:scale-105 transition-transform duration-300"
-                      loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/reel:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold font-heading text-white">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/reel:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold font-heading text-white pointer-events-none">
                       <ZoomIn className="h-5 w-5 text-rose-400" />
-                      <span>Ver em Tela Cheia</span>
+                      <span>Ver Vídeo em Tela Cheia</span>
                     </div>
                   </div>
 
@@ -696,21 +703,36 @@ function AdminDashboard() {
                       </div>
                     </div>
 
-                    {/* Ações do Reel (Baixar Imagem/Vídeo & Copiar Legenda) */}
+                    {/* Ações do Reel (Baixar Vídeo MP4, Baixar Capa PNG & Copiar Legenda) */}
                     <div className="space-y-2 pt-1 border-t border-white/10">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleDownload(
-                            reel.videoImage,
-                            `${reel.id}.png`
-                          )
-                        }
-                        className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
-                      >
-                        <Download className="h-4 w-4" />
-                        <span>Baixar Imagem Reels (9:16)</span>
-                      </button>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDownload(
+                              reel.videoPath,
+                              `${reel.id}.mp4`
+                            )
+                          }
+                          className="w-full py-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-rose-600 hover:bg-rose-700 text-white shadow-[0_4px_12px_rgba(225,29,72,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
+                        >
+                          <Video className="h-3.5 w-3.5" />
+                          <span>Baixar MP4</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDownload(
+                              reel.videoImage,
+                              `${reel.id}.png`
+                            )
+                          }
+                          className="w-full py-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          <span>Baixar PNG</span>
+                        </button>
+                      </div>
 
                       <button
                         type="button"
@@ -981,13 +1003,25 @@ function AdminDashboard() {
               <X className="h-6 w-6" />
             </button>
 
-            {/* Container da Imagem em Tela Cheia */}
+            {/* Container da Imagem ou Vídeo em Tela Cheia */}
             <div className="relative rounded-2xl border border-white/15 bg-[#0b0c13] p-2 sm:p-4 overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.95)] max-h-[80vh] flex items-center justify-center">
-              <img
-                src={previewModal.url}
-                alt={previewModal.title}
-                className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
-              />
+              {previewModal.isVideo ? (
+                <video
+                  src={previewModal.videoUrl || previewModal.url}
+                  poster={previewModal.url}
+                  controls
+                  autoPlay
+                  loop
+                  playsInline
+                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
+                />
+              ) : (
+                <img
+                  src={previewModal.url}
+                  alt={previewModal.title}
+                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
+                />
+              )}
             </div>
 
             {/* Rodapé Informativo do Modal com Ações */}
@@ -1014,14 +1048,24 @@ function AdminDashboard() {
                 type="button"
                 onClick={() =>
                   handleDownload(
-                    previewModal.url,
-                    `${previewModal.title.replace(/\s+/g, "_")}.png`
+                    previewModal.isVideo && previewModal.videoUrl
+                      ? previewModal.videoUrl
+                      : previewModal.url,
+                    `${previewModal.title.replace(/\s+/g, "_")}.${
+                      previewModal.isVideo ? "mp4" : "png"
+                    }`
                   )
                 }
                 className="px-4 py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center gap-2 cursor-pointer font-heading shrink-0"
               >
-                <Download className="h-4 w-4" />
-                <span>Baixar Imagem PNG</span>
+                {previewModal.isVideo ? (
+                  <Video className="h-4 w-4" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                <span>
+                  Baixar {previewModal.isVideo ? "Vídeo MP4" : "Imagem PNG"}
+                </span>
               </button>
             </div>
           </div>
