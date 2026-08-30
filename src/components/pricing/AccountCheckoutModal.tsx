@@ -656,7 +656,7 @@ export function AccountCheckoutModal({
                 </div>
               </div>
 
-              {/* ORDER BUMP 2: Conteúdo Adulto Privacy */}
+              {/* ORDER BUMP 2: Conteúdo Adulto VIP (Vazados Privacy & OnlyFans) */}
               <div
                 className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-3 cursor-pointer ${
                   pacoteAdulto
@@ -682,14 +682,33 @@ export function AccountCheckoutModal({
                     <div className="flex items-center justify-between gap-2 mb-0.5">
                       <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1">
                         <LockKeyhole className="h-3.5 w-3.5 text-amber-400" />
-                        Conteúdo Adulto (Opcional)
+                        Conteúdo Adulto VIP (+18 Hot)
                       </span>
                       <span className="text-[11px] font-bold font-code text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded shrink-0">
                         + R$ 12,90
                       </span>
                     </div>
+
+                    {/* Avatares & Badges dos Influencers & Vazados */}
+                    <div className="flex items-center gap-1.5 my-1.5">
+                      <div className="flex -space-x-2 overflow-hidden">
+                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-amber-500/50 bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+                          🔥
+                        </div>
+                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-purple-500/50 bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+                          💋
+                        </div>
+                        <div className="inline-block h-6 w-6 rounded-full ring-2 ring-red-500/50 bg-gradient-to-tr from-red-600 to-amber-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+                          🔞
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold font-code text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        Vazados Privacy & OnlyFans VIP
+                      </span>
+                    </div>
+
                     <p className="text-[11px] text-slate-300 font-body leading-relaxed">
-                      Acervo privado com proteção parental por senha PIN.
+                      Acesso exclusivo ao acervo privado de influencers, fotos e vídeos vazados do Privacy/OnlyFans e canais +18 com senha de segurança PIN.
                     </p>
                   </div>
                 </div>
