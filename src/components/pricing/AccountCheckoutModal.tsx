@@ -708,7 +708,7 @@ export function AccountCheckoutModal({
                     </div>
 
                     <p className="text-[11px] text-slate-300 font-body leading-relaxed">
-                      Acesso exclusivo ao acervo privado de influencers, fotos e vídeos vazados do Privacy/OnlyFans e canais +18 com senha de segurança PIN.
+                      Acesso exclusivo ao acervo privado de influencers, fotos e vídeos vazados do Privacy/OnlyFans.
                     </p>
                   </div>
                 </div>
