@@ -28,6 +28,7 @@ import {
 import {
   INSTAGRAM_CREATIVES,
   BRAND_ASSETS,
+  PROMOTIONAL_ARTWORKS,
 } from "@/data/instagramContent";
 
 export const Route = createFileRoute("/admin")({
@@ -46,15 +47,15 @@ function AdminDashboard() {
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Main Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
+  // Main Tab State: 'artes' | 'feed' | 'stories' | 'todos' | 'identidade'
   const [activeTab, setActiveTab] = useState<
-    "feed" | "stories" | "todos" | "identidade"
-  >("feed");
+    "artes" | "feed" | "stories" | "todos" | "identidade"
+  >("artes");
 
   // Sub-Tab State inside 'identidade'
   const [brandSubTab, setBrandSubTab] = useState<
-    "todos" | "artes" | "logotipos" | "molduras" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
-  >("artes");
+    "todos" | "logotipos" | "molduras" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
+  >("todos");
 
   // Modal de visualização de imagem em tela cheia (Fullscreen Preview Modal)
   const [previewModal, setPreviewModal] = useState<{
@@ -127,7 +128,7 @@ function AdminDashboard() {
     document.body.removeChild(link);
   };
 
-  // Filtragem dos criativos por busca
+  // Filtragem dos criativos de feed por busca
   const filteredCreatives = INSTAGRAM_CREATIVES.filter((item) => {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
@@ -139,8 +140,23 @@ function AdminDashboard() {
     );
   });
 
+  // Filtragem das 8 artes promocionais
+  const filteredArtworks = PROMOTIONAL_ARTWORKS.filter((item) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      item.name.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q) ||
+      item.description.toLowerCase().includes(q) ||
+      (item.caption && item.caption.toLowerCase().includes(q))
+    );
+  });
+
   // Filtragem dos ativos de marca por busca e sub-aba
   const filteredBrandAssets = BRAND_ASSETS.filter((item) => {
+    // Esconde as artes promocionais da aba de identidade visual para evitar repetição (já que estão na aba própria)
+    if (item.id.startsWith("arte_")) return false;
+
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
       !q ||
@@ -152,7 +168,6 @@ function AdminDashboard() {
 
     // Filtragem por sub-aba
     if (brandSubTab === "todos") return true;
-    if (brandSubTab === "artes") return item.id.startsWith("arte_");
     if (brandSubTab === "logotipos")
       return item.id.startsWith("brand_") && !item.id.includes("moldura");
     if (brandSubTab === "molduras") return item.id.includes("moldura");
@@ -277,7 +292,7 @@ function AdminDashboard() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por nome, filtro..."
+                placeholder="Buscar criativo, legenda..."
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-1.5 px-3 pl-9 text-xs text-white outline-none focus:border-[#970202] transition-all"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
@@ -304,20 +319,33 @@ function AdminDashboard() {
           <div className="relative z-10 max-w-3xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider font-code mb-3">
               <Sparkles className="h-3.5 w-3.5" />
-              Acervo de Criativos & Marca Liberado
+              Central Oficial de Criativos com CTA "Comente TV"
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white font-heading mb-2">
-              CENTRAL DE CRIATIVOS E IDENTIDADE VISUAL
+              ACERVO DE MARKETING & IDENTIDADE VISUAL
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as 30 publicações completas de Feed e Story em alta resolução (4K), copie as legendas formatadas e navegue pelos ativos da Identidade Visual. Clique em qualquer imagem para abrir em tela cheia!
+              Baixe as artes promocionais ultra-realistas (3:4), os 30 posts de feed do Instagram e stories em alta resolução, copie as legendas prontas com chamada para ação <strong>Comente TV</strong> e gerencie todos os ativos da marca. Clique em qualquer imagem para abrir em tela cheia!
             </p>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
+        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar gap-4">
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setActiveTab("artes")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
+                activeTab === "artes"
+                  ? "bg-[#970202] text-white shadow-[0_0_20px_rgba(151,2,2,0.6)]"
+                  : "bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <Flame className="h-4 w-4 text-[#ff4d4d]" />
+              <span>🔥 Artes Promocionais (3:4)</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setActiveTab("feed")}
@@ -328,7 +356,7 @@ function AdminDashboard() {
               }`}
             >
               <ImageIcon className="h-4 w-4" />
-              <span>Imagem Post (Feed 4:5)</span>
+              <span>📸 Posts Instagram (Feed 1 a 30)</span>
             </button>
 
             <button
@@ -341,7 +369,7 @@ function AdminDashboard() {
               }`}
             >
               <Tv className="h-4 w-4" />
-              <span>Imagem Story (9:16)</span>
+              <span>📱 Stories (9:16)</span>
             </button>
 
             <button
@@ -354,7 +382,7 @@ function AdminDashboard() {
               }`}
             >
               <Layers className="h-4 w-4" />
-              <span>Todas Imagens</span>
+              <span>🖼️ Todas Imagens</span>
             </button>
 
             <button
@@ -367,16 +395,22 @@ function AdminDashboard() {
               }`}
             >
               <Palette className="h-4 w-4 text-emerald-400" />
-              <span>Identidade Visual</span>
+              <span>🎨 Identidade Visual</span>
             </button>
           </div>
 
           <div className="text-xs font-code text-slate-400 shrink-0">
-            {activeTab === "identidade" ? (
+            {activeTab === "artes" && (
               <>
-                Exibindo: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> de {BRAND_ASSETS.length} ativos
+                Exibindo: <strong className="text-white font-bold">{filteredArtworks.length}</strong> artes (3:4)
               </>
-            ) : (
+            )}
+            {activeTab === "identidade" && (
+              <>
+                Exibindo: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> ativos
+              </>
+            )}
+            {activeTab !== "artes" && activeTab !== "identidade" && (
               <>
                 Total: <strong className="text-white font-bold">{filteredCreatives.length}</strong> publicações
               </>
@@ -384,23 +418,175 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* SUB-ABAS DE IDENTIDADE VISUAL */}
+        {/* ========================================================================= */}
+        {/* ABA 1: ARTES PROMOCIONAIS (3:4) — ALTA DEFINIÇÃO COM CTA COMENTE TV      */}
+        {/* ========================================================================= */}
+        {activeTab === "artes" && (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-white font-heading flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-[#ff4d4d]" />
+                  <span>ARTES PROMOCIONAIS ULTRA-REALISTAS (PASTA PUBLIC/INSTAGRAM/ARTES)</span>
+                </h2>
+                <p className="text-xs text-slate-400 font-body mt-0.5">
+                  Imagens conceituais de alto impacto (Cinema em família, Futebol, Catálogo 60K, Depoimentos, Comparativo Pizza e PIX) com legendas estratégicas e CTA <strong>"Comente TV"</strong>.
+                </p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-[#970202]/20 border border-[#970202]/40 text-[#ff4d4d] text-xs font-bold font-code shrink-0">
+                {filteredArtworks.length} ARTES 3:4
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredArtworks.map((art) => {
+                const isCaptionExpanded = expandedId === art.id;
+
+                return (
+                  <div
+                    key={art.id}
+                    className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
+                  >
+                    {/* Header do Card */}
+                    <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-0.5 rounded-md bg-[#970202] text-white text-[11px] font-bold font-code uppercase tracking-wider">
+                          {art.format}
+                        </span>
+                        <span className="text-[11px] font-code text-slate-400 truncate max-w-[140px]">
+                          {art.dimensions}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Prévia da Imagem (Clicável para Tela Cheia) */}
+                    <div
+                      onClick={() =>
+                        setPreviewModal({
+                          url: art.imagePath,
+                          title: art.name,
+                          category: art.category,
+                          dimensions: art.dimensions,
+                        })
+                      }
+                      className="p-4 bg-black/40 flex items-center justify-center cursor-zoom-in relative group/img min-h-[260px]"
+                    >
+                      <div className="relative overflow-hidden rounded-xl border border-white/15 shadow-md">
+                        <img
+                          src={art.imagePath}
+                          alt={art.name}
+                          className="max-h-[250px] w-auto object-cover group-hover/img:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center text-white">
+                          <ZoomIn className="h-6 w-6 text-white" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Título & Detalhes */}
+                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                      <div>
+                        <h3 className="text-xs font-bold uppercase text-white font-heading leading-tight mb-1">
+                          {art.name}
+                        </h3>
+                        <p className="text-[11px] text-slate-400 font-body mb-2 leading-relaxed">
+                          {art.description}
+                        </p>
+
+                        {/* Caixa da Legenda com Expansor */}
+                        {art.caption && (
+                          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300 font-body relative">
+                            <div
+                              className={
+                                "whitespace-pre-line overflow-hidden font-body text-[11.5px] leading-relaxed transition-all " +
+                                (isCaptionExpanded
+                                  ? "max-h-none"
+                                  : "max-h-24 line-clamp-4")
+                              }
+                            >
+                              {art.caption}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpandedId(
+                                  isCaptionExpanded ? null : art.id
+                                )
+                              }
+                              className="mt-2 text-[10.5px] font-bold text-[#ff4d4d] hover:underline flex items-center gap-1 cursor-pointer"
+                            >
+                              {isCaptionExpanded ? (
+                                <>
+                                  <span>Recolher legenda</span>
+                                  <ChevronUp className="h-3 w-3" />
+                                </>
+                              ) : (
+                                <>
+                                  <span>Ver legenda completa</span>
+                                  <ChevronDown className="h-3 w-3" />
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* AÇÕES DOS CARDS */}
+                      <div className="space-y-2 pt-1 border-t border-white/10">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDownload(art.imagePath, `${art.id}.jpg`)
+                          }
+                          className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
+                        >
+                          <Download className="h-4 w-4" />
+                          <span>Baixar Arte Promocional ({art.dimensions})</span>
+                        </button>
+
+                        {art.caption && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleCopyCaption(art.id, art.caption || "")
+                            }
+                            className={
+                              "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
+                              (copiedId === art.id
+                                ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                                : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
+                            }
+                          >
+                            {copiedId === art.id ? (
+                              <>
+                                <Check className="h-4 w-4" />
+                                <span>✓ Legenda Copiada!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="h-4 w-4" />
+                                <span>Copiar Legenda (CTA Comente TV)</span>
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* ABA 2: SUB-ABAS DE IDENTIDADE VISUAL                                      */}
+        {/* ========================================================================= */}
         {activeTab === "identidade" && (
           <div className="mb-8">
             <div className="p-2 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-2 overflow-x-auto no-scrollbar">
-              <button
-                type="button"
-                onClick={() => setBrandSubTab("artes")}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                  brandSubTab === "artes"
-                    ? "bg-[#970202] text-white shadow-[0_0_15px_rgba(151,2,2,0.6)]"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <Flame className="h-3.5 w-3.5 text-[#ff4d4d]" />
-                <span>🔥 Artes Promocionais (3:4)</span>
-              </button>
-
               <button
                 type="button"
                 onClick={() => setBrandSubTab("todos")}
@@ -411,7 +597,7 @@ function AdminDashboard() {
                 }`}
               >
                 <FolderOpen className="h-3.5 w-3.5" />
-                <span>Todos os Ativos ({BRAND_ASSETS.length})</span>
+                <span>Todos os Ativos ({filteredBrandAssets.length})</span>
               </button>
 
               <button
@@ -515,7 +701,6 @@ function AdminDashboard() {
               <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-sm font-bold uppercase tracking-wider text-white font-heading">
-                    {brandSubTab === "artes" && "🔥 ARTES PROMOCIONAIS PREMIUM ULTRA-HD (3:4 — CINEMA, FUTEBOL, OFERTAS)"}
                     {brandSubTab === "molduras" && "🎬 MOLDURAS TRANSPARENTES PARA REELS & STORIES (PNG ALPHA 1080x1920 9:16)"}
                     {brandSubTab === "depoimentos" && "⭐ DESTAQUE: DEPOIMENTOS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
                     {brandSubTab === "catalogo" && "🍿 DESTAQUE: CATÁLOGO (1 CAPA + 3 STORIES DE CONTEÚDO)"}
@@ -612,8 +797,10 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* GRID DE CRIATIVOS DE FEED E STORY (POSTS) */}
-        {activeTab !== "identidade" && (
+        {/* ========================================================================= */}
+        {/* ABA 3: GRID DE CRIATIVOS DE FEED E STORY (30 POSTS COM CTA COMENTE TV)    */}
+        {/* ========================================================================= */}
+        {activeTab !== "identidade" && activeTab !== "artes" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCreatives.map((creative) => {
               const showFeed = activeTab === "feed" || activeTab === "todos";
@@ -629,7 +816,7 @@ function AdminDashboard() {
                   <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-md bg-[#970202] text-white text-[11px] font-bold font-code uppercase tracking-wider">
-                        DIA {String(creative.day).padStart(2, "0")}
+                        POST {String(creative.day).padStart(2, "0")}
                       </span>
                       <span className="text-[11px] font-code text-slate-400 truncate max-w-[150px]">
                         {creative.category}
@@ -644,7 +831,7 @@ function AdminDashboard() {
                         onClick={() =>
                           setPreviewModal({
                             url: creative.feedImage,
-                            title: `${creative.title} (Feed - Dia ${creative.day})`,
+                            title: `${creative.title} (Feed Post ${creative.day})`,
                             category: creative.category,
                             dimensions: "Feed 4:5",
                           })
@@ -657,7 +844,7 @@ function AdminDashboard() {
                         <div className="relative overflow-hidden rounded-xl border border-white/15 shadow-md">
                           <img
                             src={creative.feedImage}
-                            alt={`Feed Dia ${creative.day}`}
+                            alt={`Feed Post ${creative.day}`}
                             className="w-36 h-[180px] object-cover group-hover/feed:scale-105 transition-transform duration-300"
                             loading="lazy"
                           />
@@ -673,7 +860,7 @@ function AdminDashboard() {
                         onClick={() =>
                           setPreviewModal({
                             url: creative.storyImage,
-                            title: `${creative.title} (Story - Dia ${creative.day})`,
+                            title: `${creative.title} (Story Post ${creative.day})`,
                             category: creative.category,
                             dimensions: "Story 9:16",
                           })
@@ -686,7 +873,7 @@ function AdminDashboard() {
                         <div className="relative overflow-hidden rounded-xl border border-white/15 shadow-md">
                           <img
                             src={creative.storyImage}
-                            alt={`Story Dia ${creative.day}`}
+                            alt={`Story Post ${creative.day}`}
                             className="w-24 h-[180px] object-cover group-hover/story:scale-105 transition-transform duration-300"
                             loading="lazy"
                           />
@@ -742,9 +929,9 @@ function AdminDashboard() {
                       </div>
                     </div>
 
-                    {/* AÇÕES DOS CARDS (1. BAIXAR IMAGEM | 2. COPIAR LEGENDA) */}
+                    {/* AÇÕES DOS CARDS (1. BAIXAR IMAGEM | 2. COPIAR LEGENDA COM CTA COMENTE TV) */}
                     <div className="space-y-2 pt-1 border-t border-white/10">
-                      {/* BOTÃO 1 (TOPO): BAIXAR IMAGEM */}
+                      {/* BOTÃO 1: BAIXAR IMAGEM */}
                       {activeTab === "todos" ? (
                         <div className="grid grid-cols-2 gap-2">
                           <button
@@ -752,7 +939,7 @@ function AdminDashboard() {
                             onClick={() =>
                               handleDownload(
                                 creative.feedImage,
-                                `DezPila_Feed_Dia_${creative.day}.png`
+                                `DezPila_Feed_Post_${creative.day}.png`
                               )
                             }
                             className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
@@ -765,7 +952,7 @@ function AdminDashboard() {
                             onClick={() =>
                               handleDownload(
                                 creative.storyImage,
-                                `DezPila_Story_Dia_${creative.day}.png`
+                                `DezPila_Story_Post_${creative.day}.png`
                               )
                             }
                             className="w-full py-2 px-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
@@ -784,7 +971,7 @@ function AdminDashboard() {
                                 : creative.feedImage,
                               `DezPila_${
                                 activeTab === "stories" ? "Story" : "Feed"
-                              }_Dia_${creative.day}.png`
+                              }_Post_${creative.day}.png`
                             )
                           }
                           className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
@@ -797,7 +984,7 @@ function AdminDashboard() {
                         </button>
                       )}
 
-                      {/* BOTÃO 2 (MEIO): COPIAR LEGENDA */}
+                      {/* BOTÃO 2: COPIAR LEGENDA COM CTA COMENTE TV */}
                       <button
                         type="button"
                         onClick={() =>
@@ -818,7 +1005,7 @@ function AdminDashboard() {
                         ) : (
                           <>
                             <Copy className="h-4 w-4" />
-                            <span>Copiar Legenda</span>
+                            <span>Copiar Legenda (CTA Comente TV)</span>
                           </>
                         )}
                       </button>
@@ -898,7 +1085,7 @@ function AdminDashboard() {
                 className="px-4 py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center gap-2 cursor-pointer font-heading shrink-0"
               >
                 <Download className="h-4 w-4" />
-                <span>Baixar Imagem PNG</span>
+                <span>Baixar Imagem</span>
               </button>
             </div>
           </div>

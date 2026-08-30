@@ -16,91 +16,187 @@ export interface BrandAsset {
   format: string;
   imagePath: string;
   description: string;
+  caption?: string;
 }
 
-
-
-export const BRAND_ASSETS: BrandAsset[] = [
+// 8 ARTES PROMOCIONAIS PREMIUM (GERADAS EM ALTA RESOLUÇÃO 3:4) COM LEGENDA E CTA "COMENTE TV"
+export const PROMOTIONAL_ARTWORKS: BrandAsset[] = [
   {
     id: "arte_cinema_em_familia",
-    name: "Arte: 🎬 Cinema em Família (R$ 10/Mês)",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 01: 🎬 Cinema em Família (R$ 10/Mês)",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/01_cinema_em_familia.jpg",
     description:
       "Arte ultra-realista de sala de cinema aconchegante com família reunida, pipoca, Smart TV gigante 4K com luzes LED vermelhas e selo R$ 10,00/mês.",
+    caption: `🍿 Cinema na sua sala de estar sem gastar uma fortuna no final do mês!
+
+Com o DezPila, você transforma sua Smart TV em uma verdadeira sala de cinema com mais de 60.000 filmes, séries e todos os lançamentos em 4K Ultra HD.
+
+✅ +60.000 títulos e canais ao vivo
+✅ Qualidade 4K sem travar
+✅ Sem contrato de fidelidade e sem taxas extras
+✅ Por apenas R$ 10,00/mês
+
+💬 Comente "TV" aqui nos comentários que enviamos o link com seu teste liberado no Direct agora mesmo! 🚀
+
+#dezpila #cinemaemcasa #streamingbrasil #filmeseseries #smarttv #economia #iptv4k`,
   },
   {
     id: "arte_futebol_ao_vivo",
-    name: "Arte: ⚽ Futebol Ao Vivo 4K (Seu Time Sem Travar)",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 02: ⚽ Futebol Ao Vivo 4K (Seu Time Sem Travar)",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/02_futebol_ao_vivo.jpg",
     description:
       "Arte dinâmica de jogador chutando bola em chamas com estádio e TV 4K transmitindo futebol ao vivo com badge 'Futebol Ao Vivo 4K - R$ 10/mês'.",
+    caption: `⚽ Cansado de travamentos bem na hora do gol decisivo?
+
+Assista a todos os jogos do seu time ao vivo em 60fps e 4K real: Brasileirão (todas as divisões), Libertadores, Champions League, Copa do Brasil e canais esportivos premium (Premiere, ESPN, SporTV, DAZN).
+
+✅ Transmissão em 60fps sem delay
+✅ Sinal anti-queda de alta performance
+✅ Funciona no celular, TV ou computador
+✅ Por apenas R$ 10,00/mês
+
+💬 Comente "TV" nos comentários para receber o acesso ao jogo no seu Direct! 🔥
+
+#futebolaovivo #brasileirao #libertadores #premiere #dezpila #championsleague #futebol4k`,
   },
   {
     id: "arte_catalogo_60k",
-    name: "Arte: 🍿 +60.000 Conteúdos na Palma da Mão",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 03: 🍿 +60.000 Conteúdos na Palma da Mão",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/03_catalogo_60k_titulos.jpg",
     description:
       "Arte 3D impressionante com mural curvo de pôsteres, aplicativo DezPila no celular e TV 4K com selo dourado de +60.000 títulos.",
+    caption: `📱 O catálogo mais completo do Brasil por menos de R$ 0,33 por dia!
+
+Reunimos todos os seus streamings favoritos e canais fechados em um único aplicativo leve e intuitivo. Filmes de cinema, séries completas, desenhos e esportes ao vivo.
+
+✅ Todos os canais abertos e fechados
+✅ Lançamentos de cinema atualizados diariamente
+✅ Compatível com Smart TV, TV Box, Fire Stick e Celular
+✅ Apenas R$ 10,00 mensais
+
+💬 Comente "TV" aqui embaixo e receba o acesso imediato no seu Direct! 🍿
+
+#streaming #filmes4k #series #dezpila #tvporassinatura #smarttv #iptvbrasil`,
   },
   {
     id: "arte_depoimento_cliente",
-    name: "Arte: ⭐ O Que Nossos Clientes Dizem",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 04: ⭐ O Que Nossos Clientes Dizem",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/04_depoimento_cliente.jpg",
     description:
       "Prova social com balão de fala neon vermelho glassmorphism, avaliação 5 estrelas e depoimento real de cancelamento de TV a cabo cara.",
+    caption: `⭐ "Pegou direto na minha Smart TV em menos de 2 minutos. Cancelei minha TV a cabo de R$ 280 no mesmo dia!" — Veja o relato de quem já economiza com a gente.
+
+Chega de pagar faturas abusivas todo mês para ter o que assistir. O DezPila entrega sinal 100% estável e catálogo completo por R$ 10,00 fixos.
+
+✅ Ativação expressa no PIX
+✅ Suporte dedicado no WhatsApp
+✅ Avaliação média 5.0 estrelas
+
+💬 Quer testar na sua TV? Comente "TV" nos comentários que te envio o link no Direct! 🚀
+
+#depoimento #avaliacaocliente #smarttv #dezpila #economiadomestica #tvbox #streamings`,
   },
   {
     id: "arte_maratona_fimsemana",
-    name: "Arte: 🛋️ Maratona Liberada (Final de Semana)",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 05: 🛋️ Maratona Liberada (Final de Semana)",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/05_maratona_final_de_semana.jpg",
     description:
       "Ambiente noturno acolhedor com sofá aveludado, pipoca, TV com iluminação traseira vermelha e letreiro neon 'Maratona Liberada - R$ 10/mês'.",
+    caption: `🛋️ Sofá confortável, balde de pipoca e milhares de filmes e séries liberados!
+
+Seu final de semana merece entretenimento de verdade em 4K. Assista aos maiores lançamentos sem mensalidades caras de múltiplos aplicativos.
+
+✅ Séries completas em alta definição
+✅ Interface rápida e organizada por gêneros
+✅ Assista no conforto da sua sala
+
+💬 Comente "TV" para liberar seu acesso para maratonar agora mesmo no Direct! 🎬
+
+#maratona #filmes #seriesnetflix #dezpila #pipocaefilme #sextou #finaldesemana`,
   },
   {
     id: "arte_comparativo_pizza",
-    name: "Arte: 🍕 1 Pizza vs 1 Mês de DezPila",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 06: 🍕 1 Pizza vs 1 Mês de DezPila",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/06_comparativo_pizza_dezpila.jpg",
     description:
       "Comparativo de alto impacto mostrando 1 pizza de R$ 80 (dura 30 min) vs 1 mês completo de DezPila por R$ 10 (dura 30 dias).",
+    caption: `🍕 1 Pizza no delivery = R$ 80,00 (dura 30 minutos)
+📺 1 Mês de DezPila = R$ 10,00 (dura 30 dias inteiros com +60.000 conteúdos)
+
+A matemática é simples: pelo preço de uma fatia de pizza, você tem acesso ao melhor do entretenimento 4K durante todo o mês para a família inteira.
+
+✅ Mais de 60.000 opções de canais, filmes e esportes
+✅ Sem fidelidade e cancelamento livre
+✅ Economia de mais de R$ 2.000 por ano
+
+💬 Comente "TV" para receber seu link de ativação no Direct! 💸
+
+#comparativo #economiafinanceira #dezpila #pizzatime #financas #streamingbarato #iptv`,
   },
   {
     id: "arte_multi_dispositivos",
-    name: "Arte: 📱 Uma Assinatura, Todas as Telas",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 07: 📱 Uma Assinatura, Todas as Telas",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/07_uma_assinatura_todas_telas.jpg",
     description:
       "Ecossistema completo com Smart TV 4K, iPad Pro, iPhone e MacBook sincronizados com filmes e esportes em alta definição.",
+    caption: `📱💻📺 Na sala, no quarto ou no trajeto para o trabalho.
+
+Com o DezPila, você pode assistir na Smart TV (Samsung, LG, TCL, Android), no Celular (Android e iPhone), no Computador, Tablet, TV Box ou Fire Stick.
+
+✅ Instalação fácil em qualquer aparelho
+✅ Sem necessidade de aparelhos caros
+✅ Leve seu entretenimento para onde você for
+
+💬 Comente "TV" e descubra como instalar em menos de 2 minutos pelo Direct! ⚡
+
+#multitelas #smarttvsamsung #smarttvlg #firestick #tvbox #dezpila #androidtv`,
   },
   {
     id: "arte_pix_ativacao",
-    name: "Arte: ⚡ Ativação Automática no PIX em 2 Minutos",
-    category: "Arte Promocional (3:4)",
+    name: "Arte 08: ⚡ Ativação Automática no PIX em 2 Minutos",
+    category: "🔥 Artes Promocionais (3:4)",
     dimensions: "1080 x 1440 px (3:4)",
     format: "JPG Alta Resolução",
     imagePath: "/instagram/artes/08_ativacao_pix_2minutos.jpg",
     description:
       "Visual fintech futurista com celular aprovando pagamento PIX instantâneo e liberando os canais e filmes 4K na Smart TV.",
+    caption: `⚡ Sem esperar atendente, sem formulários chatos e sem burocracia.
+
+Nosso sistema de liberação é 100% automatizado: você escolhe o plano, gera o PIX nativo seguro e recebe os dados de acesso instantaneamente no seu WhatsApp e na tela.
+
+✅ Liberação automática em segundos
+✅ Pagamento seguro com QR Code e Copia e Cola
+✅ Acesso imediato ao catálogo completo
+
+💬 Comente "TV" nos comentários para receber o link do teste direto no seu Direct! 🚀
+
+#pix #ativacaorapida #dezpila #pagamentorapido #streamingfacil #tecnologia`,
   },
+];
+
+export const BRAND_ASSETS: BrandAsset[] = [
+  ...PROMOTIONAL_ARTWORKS,
   {
     id: "brand_favicon",
     name: "Favicon Ícone DezPila",
@@ -250,51 +346,51 @@ export const BRAND_ASSETS: BrandAsset[] = [
     format: "PNG Vertical",
     imagePath: "/brand/destaques/depoimentos_var3.png",
     description:
-      "Variação de Story para o destaque Depoimentos (Recomendação em múltiplos aparelhos).",
+      "Variação de Story para o destaque Depoimentos (Cliente utilizando em múltiplos aparelhos).",
   },
   {
     id: "catalogo_var1",
-    name: "Destaque: 🍿 Catálogo 01 (+60 Mil Títulos)",
+    name: "Destaque: 🍿 Catálogo 01 (Filmes de Cinema)",
     category: "🍿 Catálogo (9:16)",
     dimensions: "1080 x 1920 px",
     format: "PNG Vertical",
     imagePath: "/brand/destaques/catalogo_var1.png",
     description:
-      "Variação de Story para o destaque Catálogo (Lançamentos de cinema e volume de títulos).",
+      "Variação de Story para o destaque Catálogo (Filmes recém-lançados do cinema em 4K).",
   },
   {
     id: "catalogo_var2",
-    name: "Destaque: 🍿 Catálogo 02 (Plataformas Inclusas)",
+    name: "Destaque: 🍿 Catálogo 02 (Séries Populares)",
     category: "🍿 Catálogo (9:16)",
     dimensions: "1080 x 1920 px",
     format: "PNG Vertical",
     imagePath: "/brand/destaques/catalogo_var2.png",
     description:
-      "Variação de Story para o destaque Catálogo (Netflix, Prime, HBO Max e Disney+ inclusos).",
+      "Variação de Story para o destaque Catálogo (Séries completas de todos os streamings).",
   },
   {
     id: "catalogo_var3",
-    name: "Destaque: 🍿 Catálogo 03 (Infantil & Família)",
+    name: "Destaque: 🍿 Catálogo 03 (Desenhos & Animes)",
     category: "🍿 Catálogo (9:16)",
     dimensions: "1080 x 1920 px",
     format: "PNG Vertical",
     imagePath: "/brand/destaques/catalogo_var3.png",
     description:
-      "Variação de Story para o destaque Catálogo (Desenhos, animes e opção do CristoFlix).",
+      "Variação de Story para o destaque Catálogo (Conteúdos infantis e animes dublados).",
   },
   {
     id: "futebol_var1",
-    name: "Destaque: ⚽ Futebol 01 (Ligas Nacionais)",
+    name: "Destaque: ⚽ Futebol 01 (Brasileirão)",
     category: "⚽ Futebol (9:16)",
     dimensions: "1080 x 1920 px",
     format: "PNG Vertical",
     imagePath: "/brand/destaques/futebol_var1.png",
     description:
-      "Variação de Story para o destaque Futebol (Brasileirão Série A & B e Copa do Brasil).",
+      "Variação de Story para o destaque Futebol (Série A e B do Brasileirão em 4K).",
   },
   {
     id: "futebol_var2",
-    name: "Destaque: ⚽ Futebol 02 (UEFA Champions)",
+    name: "Destaque: ⚽ Futebol 02 (Internacionais)",
     category: "⚽ Futebol (9:16)",
     dimensions: "1080 x 1920 px",
     format: "PNG Vertical",
@@ -374,557 +470,551 @@ export const BRAND_ASSETS: BrandAsset[] = [
   },
 ];
 
-
+// 30 PUBLICAÇÕES COMPLETAS (INSTAGRAM POSTS 01 A 30) COM CTA "COMENTE TV"
 export const INSTAGRAM_CREATIVES: InstagramCreative[] = [
   {
     day: 1,
     id: "post_01",
     title: "Por que pagar R$ 350 se você pode pagar R$ 10?",
-    category: "Custo Benefício",
-    feedImage: "/instagram/feed/01.png",
+    category: "💰 Economia & Custo",
+    feedImage: "/instagram_posts/01.png",
     storyImage: "/instagram/stories/01.png",
-    caption: `🔥 Você sabia que está rasgando dinheiro todo mês com streaming?
+    caption: `🔥 Você sabia que está rasgando dinheiro todo mês com contas caras de TV e streamings?
 
-Netflix + Disney+ + HBO Max + Futebol ao vivo... No final do mês, a conta facilmente passa de R$ 300,00! 😱
+Netflix + Disney+ + HBO Max + Futebol ao vivo... No final do mês, a conta passa fácil de R$ 300,00! 😱
 
 No DezPila, você tem acesso a mais de 60.000 conteúdos, incluindo TODOS os canais abertos e fechados, filmes, séries e futebol em 4K por APENAS R$ 10,00/mês.
 
-✅ Zero travamentos
-✅ Funciona na Smart TV, Celular ou PC
+✅ Zero travamentos com servidor de alta velocidade
+✅ Funciona na Smart TV, Celular ou Computador
 ✅ Instalação simples em menos de 2 minutos
 ✅ Sem contrato de fidelidade
 
-👉 Clique no link da nossa Bio e ative seu teste agora mesmo!
+💬 Comente "TV" nos comentários para receber seu link de teste gratuito no Direct agora mesmo! 🚀
 
 #dezpila #iptvbrasil #streamingbrasil #futebolaovivo #filmeseseries #economia #streaming4k`,
   },
   {
     day: 2,
     id: "post_02",
-    title: "A Tabela que as operadoras não querem que você veja",
-    category: "Comparativo",
-    feedImage: "/instagram/feed/02.png",
+    title: "A Tabela que as Operadoras Não Querem Que Você Veja",
+    category: "📊 Comparativo",
+    feedImage: "/instagram_posts/02.png",
     storyImage: "/instagram/stories/02.png",
-    caption: `📊 A TABELA DA VERDADE!
+    caption: `📊 Compare e tire suas próprias conclusões!
 
-Compare e veja com seus próprios olhos: por que continuar pagando mensalidades absurdas para operadoras de TV a cabo tradicionais?
+❌ TV a Cabo Tradicional:
+• R$ 250 a R$ 350 por mês
+• Contrato de 12 meses com multa
+• Grade de canais limitada
+• Aparelhos alugados e fios pela casa
 
-Com o DezPila por apenas R$ 10,00/mês você garante:
-✔️ +60.000 títulos (Filmes, Séries e Novelas)
-✔️ Qualidade de imagem 4K Ultra HD
-✔️ Todos os jogos do seu time ao vivo
-✔️ Suporte dedicado via WhatsApp
+✅ DezPila:
+• Apenas R$ 10,00 por mês
+• Mais de 60.000 filmes, séries e canais
+• Sem fidelidade: cancele quando quiser
+• Imagem 4K Ultra HD nativa
 
-Chega de pagar caro. O futuro do entretenimento é DezPila!
+💬 Comente "TV" aqui embaixo e receba o acesso no seu Direct em menos de 1 minuto! 📲
 
-👉 Acesse o link na Bio e assine em 2 minutos via PIX!
-
-#dezpila #comparativo #tvacabo #economia #semfidelidade #streamingbarato`,
+#comparativo #economia #dezpila #fimdatvacabo #smarttv #streaming4k #tvdigital`,
   },
   {
     day: 3,
     id: "post_03",
-    title: "Cancelar a TV a cabo foi a melhor decisão do ano",
-    category: "Depoimento / Prova Social",
-    feedImage: "/instagram/feed/03.png",
+    title: "Cancelar a TV a Cabo Foi a Melhor Decisão do Ano",
+    category: "⭐ Prova Social",
+    feedImage: "/instagram_posts/03.png",
     storyImage: "/instagram/stories/03.png",
-    caption: `💬 "Cancelei minha TV a cabo e agora economizo mais de R$ 2.500 no ano!"
+    caption: `⭐ "Eu gastava R$ 290 todo mês. Conheci o DezPila por indicação e instalei na minha Smart TV em 2 minutos. Economizo mais de R$ 3.000 por ano!" — Marcos S., São Paulo.
 
-Quem experimenta o DezPila não volta atrás. Com uma interface simples e moderna, você instala direto na sua Smart TV em menos de 2 minutos e já sai assistindo a tudo!
+Milhares de famílias já abandonaram as contas absurdas para aproveitar o melhor do entretenimento por R$ 10,00 mensais.
 
-Sem fios espalhados, sem visitas de técnicos e sem multas rescisórias.
+✅ Servidor ultra veloz 60fps
+✅ Grade de programação completa (EPG)
+✅ Suporte via WhatsApp de prontidão
 
-🚀 Apenas R$ 10,00 por mês.
+💬 Quer economizar também? Comente "TV" nos comentários para receber o link no Direct! 🚀
 
-👉 Clique no link da Bio e venha para o DezPila!
-
-#dezpila #depoimento #liberdade #economiadomestica #smarttv #iptv`,
+#depoimento #clientesatisfeito #dezpila #economiadomestica #smarttvsamsung #smarttvlg`,
   },
   {
     day: 4,
     id: "post_04",
-    title: "Cinema em Casa por R$ 10 por mês",
-    category: "Lifestyle / Entretenimento",
-    feedImage: "/instagram/feed/04.png",
+    title: "Cinema em Casa por R$ 10 por Mês",
+    category: "🍿 Cinema & Filmes",
+    feedImage: "/instagram_posts/04.png",
     storyImage: "/instagram/stories/04.png",
-    caption: `🍿 PIPOCA PRONTA + SOFÁ + DEZPILA = A COMBINAÇÃO PERFEITA!
+    caption: `🍿 Pipoca quentinha, sofá confortável e os maiores lançamentos do cinema na sua Smart TV!
 
-Transforme a sala da sua casa em um verdadeiro cinema 4K por menos de R$ 0,33 por dia.
+No DezPila, os filmes que acabaram de sair do cinema já estão disponíveis em 4K com áudio dublado e legendado.
 
-São mais de 60.000 lançamentos de bilheteria, clássicos e séries atualizadas diariamente.
+🎬 Mais de 60.000 filmes e séries
+📺 Todos os lançamentos atualizados toda semana
+🍿 Diversão garantida para a família inteira
 
-O que você vai marotandar hoje à noite?
+💬 Comente "TV" nos comentários e receba seu teste liberado no Direct agora mesmo! 🎬
 
-👉 Link na Bio para assinar instantaneamente!
-
-#cinemaemcasa #dezpila #pipocaeserie #maratona #filmes4k #streaming`,
+#cinemaemcasa #lancamentos4k #dezpila #filmeseseries #smarttv #maratona`,
   },
   {
     day: 5,
     id: "post_05",
-    title: "Não perca nenhum lance do seu time por R$ 10/mês",
-    category: "Esportes",
-    feedImage: "/instagram/feed/05.png",
+    title: "Não Perca Nenhum Lance do Seu Time por R$ 10/mês",
+    category: "⚽ Esportes & Futebol",
+    feedImage: "/instagram_posts/05.png",
     storyImage: "/instagram/stories/05.png",
-    caption: `⚽ DIA DE JOGO É SAGRADO!
+    caption: `⚽ Dia de clássico não combina com travamento ou tela preta na hora do gol!
 
-Não fique dependendo de links piratas travando no meio do gol! Com o DezPila, você acompanha Brasileirão, Libertadores, Champions League e campeonatos estaduais com imagem 4K e sem delay!
+Com o DezPila, você assiste a todos os jogos do seu time ao vivo em 60fps:
+🏆 Brasileirão Série A e B
+🏆 Copa do Brasil & Libertadores
+🏆 Champions League & Premier League
+🥊 UFC, F1 e NBA
 
-🔥 Transmissão ultra estável direto na sua TV ou Celular.
+💬 Comente "TV" nos comentários para receber o link do jogo liberado no seu Direct! 🔥
 
-Garanta sua tela agora mesmo por apenas R$ 10,00/mês.
-
-👉 Clique no link da Bio e não perca mais nenhum lance!
-
-#futebolaovivo #brasileirao #libertadores #dezpila #futebol4k #mengao #palmeiras #corinthians #saopaulofc`,
+#futebolaovivo #brasileirao #libertadores #premiere #dezpila #championsleague #futebolsemtravar`,
   },
   {
     day: 6,
     id: "post_06",
-    title: "Mito vs. Fato: Por R$ 10 deve travar?",
-    category: "Quebra de Objeções",
-    feedImage: "/instagram/feed/06.png",
+    title: "Mito vs. Fato: Por R$ 10 Deve Travar Toda Hora?",
+    category: "❓ Quebra de Objeções",
+    feedImage: "/instagram_posts/06.png",
     storyImage: "/instagram/stories/06.png",
-    caption: `❓ "Por R$ 10,00 por mês a imagem deve travar toda hora, né?"
+    caption: `🤔 "Por apenas R$ 10,00 deve travar toda hora, né?"
 
-❌ MITO! O DezPila utiliza infraestrutura com servidores dedicados de alta velocidade e tecnologia anti-bloqueio avançada.
+👉 MITO! O DezPila utiliza infraestrutura dedicada com tecnologia anti-bloqueio (CDN redundante). Nosso sinal roda liso até em conexões de 10 Mega!
 
-✅ FATO: O sinal roda com 100% de estabilidade mesmo no horário de pico de jogos decisivos!
+✅ 100% de estabilidade comprovada
+✅ Sem necessidade de antenas ou aparelhos caros
+✅ Teste liberado antes de pagar
 
-Faça o teste e comprove com seus próprios olhos.
+💬 Quer ver na prática? Comente "TV" e receba seu teste no Direct em segundos! ⚡
 
-👉 Clique na Bio e ative seu acesso em menos de 2 minutos!
-
-#mitovsfato #estabilidade #servidordedicado #dezpila #tecnologia #streaming`,
+#mitosverdes #iptvdequalidade #dezpila #tecnologia #smarttv #estabilidade`,
   },
   {
     day: 7,
     id: "post_07",
-    title: "Sua única dúvida é por que não assinou antes",
-    category: "Conversão",
-    feedImage: "/instagram/feed/07.png",
+    title: "Sua Única Dúvida É Por Que Não Assinou Antes",
+    category: "🎯 Conversão",
+    feedImage: "/instagram_posts/07.png",
     storyImage: "/instagram/stories/07.png",
-    caption: `🎯 A ÚNICA PERGUNTA QUE NOSSOS CLIENTES FAZEM É: "POR QUE NÃO CONHECI ISSO ANTES?"
+    caption: `🎯 Você tem duas opções hoje:
 
-Enquanto você lê este post, milhares de pessoas estão economizando dinheiro de verdade assistindo a todos os canais e streamings em 4K.
+1️⃣ Continuar pagando faturas caras todo mês para ter poucos canais...
+2️⃣ Assinar o DezPila por R$ 10,00 e ter mais de 60.000 conteúdos liberados na sua casa.
 
-Aproveite o preço promocional fixado em apenas R$ 10,00/mês.
+A escolha é sua! Liberação automática no PIX em menos de 2 minutos.
 
-👉 Clique no link da Bio e venha fazer parte!
+💬 Comente "TV" aqui embaixo e receba o link de acesso no seu Direct! 📲
 
-#dezpila #conversao #economize #oferta #iptv4k #streamings`,
+#dezpila #escolhainteligente #economiadomestica #smarttv #tvbox #streamings`,
   },
   {
     day: 8,
     id: "post_08",
-    title: "+60.000 Conteúdos na Palma da sua Mão",
-    category: "Catálogo",
-    feedImage: "/instagram/feed/08.png",
+    title: "+60.000 Conteúdos na Palma da Sua Mão",
+    category: "📱 Catálogo Completo",
+    feedImage: "/instagram_posts/08.png",
     storyImage: "/instagram/stories/08.png",
-    caption: `📚 UM UNIVERSO INFINITO DE ENTRETENIMENTO!
+    caption: `📱 Todos os seus canais, filmes e séries reunidos em um único app moderno e super rápido.
 
-No DezPila você encontra:
-🎬 +60.000 Filmes e Séries atualizados
-⚽ Todos os canais de Esportes ao vivo
-📰 Jornalismo, Documentários e Reality Shows
-👶 Desenhos animados e conteúdos infantis 24h
+✅ Canais Abertos e Fechados em 4K
+✅ Filmes e Séries atualizados diariamente
+✅ Desenhos e animes para as crianças
+✅ Novelas completas e documentários
 
-Tudo reunido em um aplicativo leve e intuitivo.
+Tudo isso por apenas R$ 10,00 por mês!
 
-👉 Clique na nossa Bio e garanta seu acesso por R$ 10!
+💬 Comente "TV" nos comentários para receber o catálogo completo no Direct! 🚀
 
-#catalogocompleto #filmes #series #novelas #dezpila #entretenimento`,
+#catalogo #filmeseseries #smarttv #dezpila #tvdigital #streaming4k`,
   },
   {
     day: 9,
     id: "post_09",
-    title: "O que nossos clientes dizem sobre o DezPila",
-    category: "Prova Social",
-    feedImage: "/instagram/feed/09.png",
+    title: "O Que Nossos Clientes Dizem Sobre o DezPila",
+    category: "⭐ Avaliações Reais",
+    feedImage: "/instagram_posts/09.png",
     storyImage: "/instagram/stories/09.png",
-    caption: `⭐ NOTA 5/5 DE NOSSOS ASSINANTES!
+    caption: `⭐ Mais de 10.000 clientes satisfeitos em todo o Brasil!
 
-"Pegou direto na minha TV Samsung em menos de 2 minutos. Cancelei minha TV a cabo no mesmo dia! Sensacional!" — Cliente DezPila
+"Melhor custo-benefício que já encontrei. Imagem perfeita e não trava nem em dia de clássico de futebol."
 
-A satisfação dos nossos usuários é o nosso maior orgulho.
+Venha você também fazer parte da comunidade que mais cresce no Brasil.
 
-👉 Venha você também para o melhor serviço de streaming do Brasil por apenas R$ 10,00/mês!
+💬 Comente "TV" nos comentários para receber o link no Direct! 💬
 
-#provasocial #clientesatisfeito #dezpila #recomendacao #qualidade`,
+#depoimentos #clientesatisfeito #dezpila #avaliacoes #smarttv #economia`,
   },
   {
     day: 10,
     id: "post_10",
     title: "Pronto para a Maratona do Final de Semana?",
-    category: "Engajamento",
-    feedImage: "/instagram/feed/10.png",
+    category: "🛋️ Fim de Semana",
+    feedImage: "/instagram_posts/10.png",
     storyImage: "/instagram/stories/10.png",
-    caption: `🍿 SABADOU COM MARATONA LIBERADA!
+    caption: `🛋️ Sextou com maratona garantida!
 
-O fim de semana chegou e nada melhor do que marotandar aquela série novinha ou assistir ao jogo do seu time com imagem perfeita em 4K.
+Não sabe o que assistir hoje à noite? No DezPila você encontra milhares de opções separadas por categorias, com busca rápida e sem propagandas chatas.
 
-Ative sua assinatura agora e aproveite o fim de semana ao máximo por apenas R$ 10!
+🍿 Escolha seu filme favorito e aproveite!
 
-👉 Acesse a Bio e ative seu PIX em segundos!
+💬 Comente "TV" para liberar seu acesso para o final de semana no Direct! 🍿
 
-#maratona #fimdesemana #dezpila #series4k #pipoca`,
+#sextou #maratona #filmeseseries #dezpila #cinemaemcasa #netflixbrasil`,
   },
   {
     day: 11,
     id: "post_11",
     title: "Diversão Garantida Para Toda a Família",
-    category: "Família / Infantil",
-    feedImage: "/instagram/feed/11.png",
+    category: "👨‍👩‍👧‍👦 Família & Crianças",
+    feedImage: "/instagram_posts/11.png",
     storyImage: "/instagram/stories/11.png",
-    caption: `👨‍👩‍👧‍👦 ENTRETENIMENTO PARA TODAS AS IDADES!
+    caption: `👨‍👩‍👧‍👦 Um serviço pensado para todas as idades da sua casa!
 
-Desenhos animados para a criançada, séries em alta para você e todos os canais de esportes e filmes.
+👶 Para as crianças: Desenhos educativos, animações e canais infantis 24h
+⚽ Para quem ama esporte: Todos os canais esportivos ao vivo
+🍿 Para quem ama cinema: Milhares de filmes e séries
 
-Com controle parental e senha PIN para você gerenciar os conteúdos infantis com total tranquilidade!
+Tudo em um só lugar por apenas R$ 10,00 mensais.
 
-👉 Assine por R$ 10,00/mês no link da nossa Bio!
+💬 Comente "TV" nos comentários e receba seu acesso familiar no Direct! 🚀
 
-#familiamaisunida #desenhosinfantis #dezpila #controleparental #smarttv`,
+#familia #desenhoseanimes #cinemaemcasa #dezpila #smarttv #entretenimento`,
   },
   {
     day: 12,
     id: "post_12",
     title: "Qualidade 4K Ultra HD Crisp",
-    category: "Tecnologia / Qualidade",
-    feedImage: "/instagram/feed/12.png",
+    category: "📺 Tecnologia & Resolução",
+    feedImage: "/instagram_posts/12.png",
     storyImage: "/instagram/stories/12.png",
-    caption: `✨ SINTA A DIFERENÇA DO 4K ULTRA HD!
+    caption: `📺 Veja cada detalhe como se estivesse dentro da cena!
 
-No DezPila, não fazemos compressão de sinal de baixa qualidade. Você assiste a seus filmes e jogos com resolução cristalina, cores vivas e áudio imersivo!
+Nossas transmissões contam com imagem cristalina em 4K Ultra HD e som envolvente para você extrair o máximo potencial da sua Smart TV.
 
-Compatível com Smart TVs 4K Samsung, LG, TCL e dispositivos Android TV.
+✅ Cores vivas e contraste perfeito
+✅ Fluidez de 60 quadros por segundo
+✅ Sem perda de resolução
 
-👉 Link na Bio para testar agora por apenas R$ 10!
+💬 Comente "TV" para ver a qualidade 4K na sua TV pelo Direct! ⚡
 
-#4kultrahd #imagemcristalina #dezpila #tecnologiadetela #qualidade`,
+#qualidade4k #smarttv4k #dezpila #ultrahd #tecnologia #filmes4k`,
   },
   {
     day: 13,
     id: "post_13",
     title: "Apenas R$ 0,33 por Dia!",
-    category: "Custo Benefício / Economia",
-    feedImage: "/instagram/feed/13.png",
+    category: "💰 Economia Diária",
+    feedImage: "/instagram_posts/13.png",
     storyImage: "/instagram/stories/13.png",
-    caption: `🪙 CUSTA MENOS QUE UM CAFÉZINHO POR DIA!
+    caption: `💰 Já parou para calcular quanto custa o DezPila por dia?
 
-Fazendo a conta rápida: R$ 10,00 por mês equivale a apenas R$ 0,33 por dia!
+R$ 10,00 divididos por 30 dias = APENAS R$ 0,33 POR DIA! 😱
 
-Por trinta centavos ao dia, você tem acesso ilimitado a todos os canais fechados, filmes de bilheteria e futebol 4K sem sair de casa.
+Mais barato que um cafezinho na padaria, e você tem entretenimento ilimitado para toda a família o mês inteiro.
 
-👉 Clique no link da Bio e aproveite este valor promocional!
+💬 Comente "TV" nos comentários e garanta seu acesso no Direct! 💸
 
-#economiadiaria #dezpila #precoinacreditavel #streamingbarato #oferta`,
+#economiadomestica #custobeneficio #dezpila #financas #streamingbarato`,
   },
   {
     day: 14,
     id: "post_14",
-    title: "Hoje tem jogão! Você já garantiu sua tela?",
-    category: "Esportes / Matchday",
-    feedImage: "/instagram/feed/14.png",
+    title: "Hoje Tem Jogão! Você Já Garantiu Sua Tela?",
+    category: "⚽ Matchday",
+    feedImage: "/instagram_posts/14.png",
     storyImage: "/instagram/stories/14.png",
-    caption: `🏆 HOJE É DIA DE CLÁSSICO E DECISÃO!
+    caption: `⚽ Hoje a bola vai rolar e você não pode ficar de fora!
 
-Já garantiu o seu lugar no melhor camarote da sua sala?
-No DezPila, você acompanha a transmissão ao vivo em 4K, sem quedas e sem delay!
+Assista ao jogo do seu time com transmissão 4K 60fps sem delay e sem pagar pay-per-view caríssimo.
 
-⚡ Ativação automática via PIX em menos de 2 minutos!
+✅ Ativação imediata no PIX em 2 minutos
+✅ Assista no celular ou na Smart TV
 
-👉 Clique no link da Bio antes do apito inicial!
+💬 Comente "TV" para receber o sinal do jogo no seu Direct agora! 🔥
 
-#hojetemjogo #brasileirao #dezpila #futebolaovivo #campeonato`,
+#hojetemjogo #futebolaovivo #brasileirao #dezpila #timedocoração`,
   },
   {
     day: 15,
     id: "post_15",
     title: "Funciona em Qualquer Tela Que Você Tiver",
-    category: "Compatibilidade",
-    feedImage: "/instagram/feed/15.png",
+    category: "📱 Multi-Aparelhos",
+    feedImage: "/instagram_posts/15.png",
     storyImage: "/instagram/stories/15.png",
-    caption: `📱📺💻 ONDE VOCÊ ESTIVER, O DEZPILA VAI COM VOCÊ!
+    caption: `📱💻📺 Compatibilidade total com seus aparelhos:
 
-Nossa plataforma é 100% compatível com:
-• Smart TVs (Samsung, LG, TCL, Android TV)
-• Smartphones (Android e iPhone/iOS)
-• Computadores e Notebooks
-• TV Box, Fire TV Stick e Chromecast
+• Smart TV (Samsung, LG, TCL, Philco, Android TV)
+• Celular e Tablet (Android e iPhone)
+• TV Box, Fire Stick e Chromecast
+• Computador e Notebook
 
-Baixou, conectou, assistiu!
+Instalação descomplicada com suporte passo a passo!
 
-👉 Clique no link da Bio e escolha seu plano!
+💬 Comente "TV" nos comentários e receba o guia de instalação no Direct! 📲
 
-#compatibilidade #smarttv #firestick #dezpila #multiplastelas`,
+#smarttvsamsung #smarttvlg #firestick #tvbox #dezpila #dispositivos`,
   },
   {
     day: 16,
     id: "post_16",
     title: "Como Ativar Seu DezPila em 3 Passos Fáceis",
-    category: "Tutorial / Passo a Passo",
-    feedImage: "/instagram/feed/16.png",
+    category: "⚡ Tutorial Simples",
+    feedImage: "/instagram_posts/16.png",
     storyImage: "/instagram/stories/16.png",
-    caption: `⚡ ATIVAÇÃO SIMPLES EM MENOS DE 2 MINUTOS:
+    caption: `⚡ Ativar o seu DezPila é mais fácil do que você imagina:
 
-1️⃣ Acesse o link oficial na nossa Bio
-2️⃣ Escolha seu plano ideal (Apenas R$ 10,00/mês)
-3️⃣ Pague no PIX e receba seus dados de acesso na hora!
+1️⃣ Baixe o aplicativo recomendado na sua TV ou Celular
+2️⃣ Faça o pagamento seguro de R$ 10 no PIX automático
+3️⃣ Insira os dados recebidos e pronto: tudo liberado!
 
-Sem burocracia, sem técnicos e sem contratos extensos.
+Tudo pronto em menos de 2 minutos!
 
-👉 Clique na Bio e comece agora mesmo!
+💬 Comente "TV" para receber o passo a passo completo no seu Direct! 🚀
 
-#passoapasso #facilidade #dezpila #pixinstantaneo #ativacao`,
+#tutorial #passoapasso #smarttv #dezpila #ativacaorapida #iptvbrasil`,
   },
   {
     day: 17,
     id: "post_17",
     title: "Pagamento no PIX: Liberação em Segundos",
-    category: "Segurança / Checkout",
-    feedImage: "/instagram/feed/17.png",
+    category: "💳 Pagamento Seguro",
+    feedImage: "/instagram_posts/17.png",
     storyImage: "/instagram/stories/17.png",
-    caption: `🔒 CHECKOUT NATIVO & 100% SEGURO DIRETO NO SITE!
+    caption: `💳 Sem burocracia e com total segurança!
 
-Pague com total praticidade pelo PIX através de QR Code ou Copia-e-Cola. Nosso sistema identifica a confirmação bancária instantaneamente e gera seu acesso no mesmo segundo!
+Nosso checkout aceita PIX com confirmação automática imediata. Pagou, o sistema gera seus dados e envia direto para você.
 
-Zero espera, zero complicação.
+✅ Sem mensalidades surpresa no cartão de crédito
+✅ Total controle dos seus gastos
 
-👉 Link na Bio para gerar seu PIX agora por R$ 10!
+💬 Comente "TV" para receber o link seguro de ativação no Direct! ⚡
 
-#pix #checkoutseguro #dezpila #liberacaorapida #tecnologia`,
+#pagamentopix #segurancadigital #dezpila #checkoutfacil #streamingbrasil`,
   },
   {
     day: 18,
     id: "post_18",
     title: "Sem Contrato de Fidelidade: Cancele Quando Quiser",
-    category: "Liberdade",
-    feedImage: "/instagram/feed/18.png",
+    category: "🕊️ Liberdade Total",
+    feedImage: "/instagram_posts/18.png",
     storyImage: "/instagram/stories/18.png",
-    caption: `🚫 DICA: NUNCA MAIS SE PRENDA A CONTRATOS ABUSIVOS DE 12 MESES!
+    caption: `🕊️ Aqui você é livre de verdade!
 
-No DezPila, acreditamos que você deve permanecer porque AMA nosso serviço, não porque é obrigado por uma multa rescisória!
+Nada de contratos de 12 meses, multas abusivas ou atendentes tentando te convencer a ficar. Você usa quando quiser e renova se gostar.
 
-Assine mês a mês com total controle sobre o seu orçamento.
+✅ Sem pegadinhas contratuais
+✅ R$ 10,00 por mês simples e direto
 
-👉 Experimente no link da Bio por apenas R$ 10,00!
+💬 Comente "TV" para testar sem compromisso direto pelo Direct! 💬
 
-#semfidelidade #liberdadedeescolha #dezpila #respeitoaoconsumidor`,
+#liberdade #semfidelidade #dezpila #respeitoaocliente #tvdigital`,
   },
   {
     day: 19,
     id: "post_19",
     title: "Precisa de Ajuda? Suporte Via WhatsApp",
-    category: "Suporte ao Cliente",
-    feedImage: "/instagram/feed/19.png",
+    category: "🤝 Suporte Humanizado",
+    feedImage: "/instagram_posts/19.png",
     storyImage: "/instagram/stories/19.png",
-    caption: `💬 VOCÊ NUNCA FICA NA MÃO!
+    caption: `🤝 Você nunca fica na mão!
 
-Teve alguma dúvida durante a instalação na sua Smart TV ou aplicativo? Nossa equipe de suporte especializado está de prontidão no WhatsApp para te ajudar passo a passo!
+Nossa equipe de suporte está pronta para te ajudar a configurar em qualquer aparelho e tirar todas as suas dúvidas rapidamente pelo WhatsApp.
 
-Atendimento humano, rápido e atencioso.
+✅ Atendimento rápido e descomplicado
+✅ Ajuda passo a passo para idosos e iniciantes
 
-👉 Link na Bio para falar conosco ou assinar seu plano!
+💬 Comente "TV" nos comentários para falar com o suporte no Direct! 📲
 
-#suporte #whatsapp #atendimentohumano #dezpila #posvendas`,
+#suporteviawhatsapp #atendimentohumanizado #dezpila #ajudatv #smarttv`,
   },
   {
     day: 20,
     id: "post_20",
     title: "Guia de Programação EPG: Nunca Perca Um Horário",
-    category: "Recursos do App",
-    feedImage: "/instagram/feed/20.png",
+    category: "📺 Recursos do App",
+    feedImage: "/instagram_posts/20.png",
     storyImage: "/instagram/stories/20.png",
-    caption: `🕒 GRADE DE PROGRAMAÇÃO COMPLETA (EPG) NA SUA TELA!
+    caption: `📺 Navegue pelos seus canais favoritos com o Guia de Programação Completo (EPG).
 
-Saiba exatamente a hora do jogo do seu time, os horários dos filmes e a sinopse das séries com a nossa interface inteligente estilo TV a cabo premium!
+Saiba exatamente o que está passando agora e o que vai passar a seguir com a sinopse completa de cada programa, filme ou partida de futebol.
 
-Navegue facilmente com o próprio controle remoto da sua Smart TV.
+💬 Comente "TV" nos comentários para receber o acesso ao app no Direct! 🚀
 
-👉 Clique na Bio e garanta seu acesso por R$ 10!
-
-#epg #guiadeprogramacao #dezpila #smarttv #interfacemoderna`,
+#guiadeprogramacao #epg #smarttv #dezpila #tecnologia #tvporassinatura`,
   },
   {
     day: 21,
     id: "post_21",
     title: "As 3 Perguntas Que Todo Mundo Faz",
-    category: "FAQ / Dúvidas Frequentes",
-    feedImage: "/instagram/feed/21.png",
+    category: "❓ FAQ Rápido",
+    feedImage: "/instagram_posts/21.png",
     storyImage: "/instagram/stories/21.png",
-    caption: `❓ AS 3 DÚVIDAS MAIS COMUNS SOBRE O DEZPILA:
+    caption: `❓ Tirando suas dúvidas em 1 minuto:
 
-1️⃣ Precisa de internet super rápida? Não! Com apenas 10 Mega você já assiste em HD/4K liso!
-2️⃣ Posso assistir no celular fora de casa? Sim! O acesso funciona em 3G/4G/5G/Wi-Fi!
-3️⃣ Quanto custa? Apenas R$ 10,00 por mês sem taxas surpresas!
+1️⃣ Precisa de antena? ➔ Não! Funciona 100% pela internet.
+2️⃣ Trava se minha internet for fraca? ➔ Roda liso a partir de 10 Mega.
+3️⃣ Funciona em mais de um aparelho? ➔ Sim, você pode adicionar telas extras por apenas R$ 5,90!
 
-👉 Tirou suas dúvidas? Acesse o link da Bio e venha ser cliente!
+💬 Comente "TV" nos comentários e tire qualquer outra dúvida no Direct! 💬
 
-#duvidas #faq #resposta #dezpila #tudoexplicado`,
+#duvidasfrequentes #faq #dezpila #smarttv #comofunciona #streaming`,
   },
   {
     day: 22,
     id: "post_22",
     title: "Plano Pro Semestral: 3 Telas por R$ 29,90",
-    category: "Ofertas / Planos",
-    feedImage: "/instagram/feed/22.png",
+    category: "👑 Oferta Especial",
+    feedImage: "/instagram_posts/22.png",
     storyImage: "/instagram/stories/22.png",
-    caption: `🔥 CONHEÇA O CAMPEÃO DE VENDAS DO SITE: PLANO PRO SEMESTRAL!
+    caption: `👑 Conheça o Campeão de Vendas do DezPila!
 
-Por apenas R$ 29,90 no semestre (menos de R$ 5,00 por mês!), você garante:
-• 6 meses inteiros de acesso ininterrupto
-• 3 Conexões simultâneas (TV da Sala, Quarto e Celular)
-• +60.000 conteúdos em 4K liberados
+Com o Plano Pro Semestral, você garante 6 meses completos com 3 telas simultâneas por apenas R$ 29,90 em pagamento único!
 
-👉 Aproveite essa oferta limitada no link da Bio!
+Isso dá menos de R$ 5,00 por mês para toda a família curtir em aparelhos diferentes ao mesmo tempo.
 
-#planopro #semestral #oferta #dezpila #maiseconomia`,
+💬 Comente "TV" para garantir essa condição exclusiva no Direct! 🚀
+
+#planopro #promocaotv #dezpila #descontoespecial #multitelas`,
   },
   {
     day: 23,
     id: "post_23",
     title: "Plano VIP Anual: 4 Telas por R$ 47,90",
-    category: "Oferta Premium",
-    feedImage: "/instagram/feed/23.png",
+    category: "💎 Máxima Economia",
+    feedImage: "/instagram_posts/23.png",
     storyImage: "/instagram/stories/23.png",
-    caption: `👑 PLANO VIP ANUAL COM 71% DE DESCONTO REAL!
+    caption: `💎 O maior desconto do ano: 71% OFF!
 
-O combo definitivo para toda a família:
-• 12 Meses completos de acesso VIP sem preocupações
-• 4 Conexões simultâneas ativas
-• Economia de mais de R$ 3.000 no ano comparado a assinaturas individuais!
+12 meses de acesso ilimitado com 4 telas simultâneas em 4K por apenas R$ 47,90 (pagamento único no PIX).
 
-Apenas R$ 47,90 pelo ano inteiro!
+✅ 1 ano inteiro sem se preocupar com fatura de TV
+✅ 4 conexões simultâneas para a casa toda
 
-👉 Garanta o Plano VIP agora no link da Bio!
+💬 Comente "TV" para receber o link promocional VIP no Direct! 💎
 
-#planovip #anual #desconto71 #dezpila #comboanual`,
+#planovip #superdesconto #dezpila #economiareal #streaming1ano`,
   },
   {
     day: 24,
     id: "post_24",
     title: "Telas Extras Adicionais: Sem Briga Pelo Controle",
-    category: "Combo Família",
-    feedImage: "/instagram/feed/24.png",
+    category: "👨‍👩‍👧‍👦 Família em Paz",
+    feedImage: "/instagram_posts/24.png",
     storyImage: "/instagram/stories/24.png",
-    caption: `📺 ACABE COM A BRIGA PELO CONTROLE REMOTO NA SUA CASA!
+    caption: `👨‍👩‍👧‍👦 Chega de briga pelo controle remoto na sala!
 
-No DezPila, você pode adicionar telas extras adicionais por apenas R$ 5,90 cada!
-Assim, enquanto a esposa maratona a série novinha, as crianças assistem aos desenhos e você curte o futebol ao vivo em 4K.
+Enquanto um assiste futebol na TV, o outro maratona séries no quarto e as crianças assistem desenhos no tablet.
 
-Todo mundo feliz!
+Adicione telas extras por apenas R$ 5,90 cada!
 
-👉 Monte seu combo no checkout pelo link da Bio!
+💬 Comente "TV" nos comentários e receba seu pacote de telas no Direct! 📲
 
-#telasextras #combofamilia #dezpila #sembriga #conforto`,
+#telasextras #paznafamilia #dezpila #smarttv #entretenimento`,
   },
   {
     day: 25,
     id: "post_25",
     title: "Pacote Adulto Opcional: Proteção com Senha PIN",
-    category: "Recursos Opcionais",
-    feedImage: "/instagram/feed/25.png",
+    category: "🔒 Privacidade & Controle",
+    feedImage: "/instagram_posts/25.png",
     storyImage: "/instagram/stories/25.png",
-    caption: `🔒 TOTAL PRIVACIDADE E DISCREÇÃO!
+    caption: `🔒 Controle parental e discrição total!
 
-Oferecemos opcionalmente a ativação do pacote de conteúdo adulto premium com vazados do Privacy/OnlyFans, sempre protegido por senha PIN e controle parental estrito.
+O pacote de conteúdos adultos é 100% opcional e protegido por senha PIN de 4 dígitos. Seus filhos só têm acesso aos canais e desenhos seguros.
 
-Ativação opcional com total sigilo na hora do checkout.
+✅ Privacidade para os adultos
+✅ Segurança total para as crianças
 
-👉 Link na Bio para conhecer e assinar!
+💬 Comente "TV" para receber o teste seguro no Direct! 🔒
 
-#privacidade #sigilo #controleparental #dezpila #opcional`,
+#controleparental #segurancafamiliar #dezpila #privacidade`,
   },
   {
     day: 26,
     id: "post_26",
     title: "Últimas Vagas Com Preço Fixado em R$ 10",
-    category: "Escassez / Urgência",
-    feedImage: "/instagram/feed/26.png",
+    category: "⏳ Escassez Real",
+    feedImage: "/instagram_posts/26.png",
     storyImage: "/instagram/stories/26.png",
-    caption: `⚠️ ALERTA: LOTE PROMOCIONAL PRESTES A ENCERRAR!
+    caption: `⏳ Para manter a qualidade e velocidade máxima sem travamentos, limitamos a quantidade de novos clientes por servidor.
 
-Para manter a qualidade 100% liso e sem travamentos, limitamos a quantidade de novos acessos por servidor.
+Garanta sua vaga hoje mesmo com o valor congelado em R$ 10,00 mensais!
 
-Garanta sua vaga e trave seu valor promocional de R$ 10,00/mês antes da virada do lote!
+💬 Comente "TV" nos comentários e reserve sua vaga no Direct antes que esgote! ⚡
 
-👉 Clique na Bio e garanta sua vaga imediatamente!
-
-#ultimasvagas #urgencia #dezpila #promocao #garantija`,
+#ultimasvagas #preçofixado #dezpila #oportunidade #streamingbrasil`,
   },
   {
     day: 27,
     id: "post_27",
     title: "1 Pizza VS 1 Mês de DezPila: O Que Vale Mais?",
-    category: "Comparação de Valor",
-    feedImage: "/instagram/feed/27.png",
+    category: "🍕 Comparativo de Valor",
+    feedImage: "/instagram_posts/27.png",
     storyImage: "/instagram/stories/27.png",
-    caption: `🍕 1 Pizza Grande = R$ 60,00 (Dura 30 minutos na mesa)
-📺 1 Mês de DezPila = R$ 10,00 (Dura 30 dias inteiros de diversão em 4K)
+    caption: `🍕 1 Pizza no sábado à noite = R$ 80,00 (dura 30 minutos)
+📺 1 Mês de DezPila = R$ 10,00 (dura 30 dias com +60.000 conteúdos)
 
-A matemática não mente! Por uma fração do valor de um lanche, você garante um mês inteiro de filmes, séries e futebol para sua família.
+Onde você prefere investir seu dinheiro? Troque contas abusivas por entretenimento de primeira linha.
 
-👉 Escolha inteligente: Link na Bio!
+💬 Comente "TV" para receber o link no Direct agora! 💸
 
-#comparacao #matematica #dezpila #decisaocerta #economia`,
+#pizzavsstreaming #custobeneficio #dezpila #financasinteligentes`,
   },
   {
     day: 28,
     id: "post_28",
     title: "Pagou, Gerou, Assistiu: Simples e Direto",
-    category: "Velocidade / Praticidade",
-    feedImage: "/instagram/feed/28.png",
+    category: "⚡ Agilidade",
+    feedImage: "/instagram_posts/28.png",
     storyImage: "/instagram/stories/28.png",
-    caption: `⚡ SEM FORMULÁRIOS EXTENSOS E SEM COMPLICAÇÃO!
+    caption: `⚡ Experiência 100% digital e sem atrito!
 
-1️⃣ Entrou no site oficial DezPila
-2️⃣ Escaneou o QR Code PIX ou gerou o cartão
-3️⃣ Seu acesso aparece instantaneamente na tela!
+Em apenas 3 toques na tela você faz seu cadastro, gera o PIX nativo e recebe seus dados com as instruções de instalação.
 
-Prático, seguro e instantâneo.
+Sem perda de tempo!
 
-👉 Clique na Bio e comece a assistir em menos de 2 minutos!
+💬 Comente "TV" nos comentários e receba seu acesso no Direct em 2 minutos! 🚀
 
-#pagougerouassistiu #praticidade #dezpila #rapidez #streaming`,
+#agilidade #semespera #dezpila #tecnologia #smarttv`,
   },
   {
     day: 29,
     id: "post_29",
     title: "Seu Fim de Semana Merece O Melhor Do Streaming",
-    category: "Engajamento Weekend",
-    feedImage: "/instagram/feed/29.png",
+    category: "🍿 Fim de Semana",
+    feedImage: "/instagram_posts/29.png",
     storyImage: "/instagram/stories/29.png",
-    caption: `🍿 O FIM DE SEMANA CHEGOU COM TUDO!
+    caption: `🍿 O que não falta no DezPila é conteúdo bom para o seu descanso!
 
-Seu sábado e domingo merecem transmissões em 4K sem quedas, com os filmes de bilheteria mais recentes e as rodadas decisivas do futebol.
+Reúna a família, prepare o lanche e escolha entre os lançamentos mais assistidos da semana em 4K.
 
-Não fique sem sinal no momento principal do jogo!
+💬 Comente "TV" nos comentários para liberar seu acesso no Direct! 🎬
 
-👉 Ative sua assinatura agora no link da Bio por R$ 10!
-
-#fimdesemana #sabadou #dezpila #futebol4k #maratona4k`,
+#fimdesemana #descanso #cinemaemcasa #dezpila #filmes4k`,
   },
   {
     day: 30,
     id: "post_30",
     title: "Chega De Pagar Caro. O Futuro da TV É DezPila.",
-    category: "Manifesto / Fechamento",
-    feedImage: "/instagram/feed/30.png",
+    category: "🚀 Manifesto",
+    feedImage: "/instagram_posts/30.png",
     storyImage: "/instagram/stories/30.png",
-    caption: `🔥 O MANIFESTO DO STREAMING INTELIGENTE NO BRASIL!
+    caption: `🚀 Chega de faturas abusivas de R$ 300,00 e atendimento ruim.
 
-Chega de ser refém de mensalidades abusivas de TV a cabo e pacotes picados de streaming que juntos custam uma fortuna.
+A televisão mudou e o DezPila é a escolha inteligente de milhares de brasileiros que querem entretenimento completo por um preço justo.
 
-O DezPila é a revolução do entretenimento acessível: +60.000 conteúdos, futebol em 4K e sinal ultraestável por apenas R$ 10,00 por mês!
+✅ +60.000 conteúdos em 4K
+✅ R$ 10,00 por mês
+✅ Sem fidelidade
 
-Junte-se a milhares de brasileiros satisfeitos.
+💬 Comente "TV" aqui embaixo e faça sua ativação pelo Direct hoje mesmo! 🔥
 
-👉 CLIQUE NO LINK DA BIO E ASSINE AGORA MESMO!
-
-#manifesto #futurodatv #dezpila #revolucaodostreaming #sejaDezPila`,
+#futurodatv #dezpila #revolucaodostreaming #smarttv #tvdigital`,
   },
 ];
-
-
-
