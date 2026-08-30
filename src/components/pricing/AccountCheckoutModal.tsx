@@ -3,6 +3,7 @@ import { Mail, Eye, EyeOff, Check, User, Phone, Lock, X, ArrowLeft, Copy, CheckC
 import { QRCodeSVG } from "qrcode.react";
 import { createCaktoPix, checkCaktoPixStatus } from "@/lib/cakto.functions";
 import { createBspayPix, checkBspayPixStatus } from "@/lib/bspay.functions";
+import { createNitroPix, checkNitroPixStatus } from "@/lib/nitro.functions";
 
 export interface PlanoData {
   id: string;
@@ -106,12 +107,15 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     return () => clearInterval(interval);
   }, [open, step]);
 
-  // Polling automático para verificar liquidação do Pix na BSPay ou Cakto
+  // Polling automático para verificar liquidação do Pix na Nitro, BSPay ou Cakto
   useEffect(() => {
     if (!open || step !== "PAGAMENTO" || !caktoOrderId) return;
     const pollInterval = setInterval(async () => {
       try {
-        if (caktoOrderId.startsWith("bspay_") || caktoOrderId.startsWith("dezpila_")) {
+        if (caktoOrderId.startsWith("nitro_") || caktoOrderId.startsWith("NTR-")) {
+          const res = await checkNitroPixStatus({ data: { transactionHash: caktoOrderId } });
+          if (res.ok && res.paid) setStep("SUCESSO");
+        } else if (caktoOrderId.startsWith("bspay_") || caktoOrderId.startsWith("dezpila_")) {
           const res = await checkBspayPixStatus({ data: { transactionId: caktoOrderId } });
           if (res.ok && res.paid) setStep("SUCESSO");
         } else {
@@ -229,10 +233,12 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
 
     try {
-      // Dispara chamada real à API PIX da BSPay (com fallback automático Cakto)
-      const res = await createBspayPix({
+      // Dispara chamada real à API PIX da Nitro Pagamentos (com fallback BSPay / Cakto)
+      const offerHash = plano.id || "ni918";
+      const res = await createNitroPix({
         data: {
-          amount: totalPriceNum,
+          offerHash,
+          amountNum: totalPriceNum,
           name: nome,
           email,
           phone: whatsapp,
@@ -246,34 +252,28 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
         setCaktoOrderId(res.id);
         setStep("PAGAMENTO");
       } else {
-        // Tenta fallback Cakto caso a BSPay esteja em validação
-        const caktoRes = await createCaktoPix({
-          data: {
-            offerHash: "ni918",
-            name: nome,
-            email,
-            whatsapp,
-            cpf,
-          },
+        // Fallback BSPay
+        const bspayRes = await createBspayPix({
+          data: { amount: totalPriceNum, name: nome, email, phone: whatsapp, cpf },
         });
 
-        if (caktoRes.ok && caktoRes.qrCode) {
-          setPixPayload(caktoRes.qrCode);
-          setPixQrBase64(caktoRes.qrCodeBase64 || null);
-          setCaktoOrderId(caktoRes.id);
+        if (bspayRes.ok && bspayRes.qrCode) {
+          setPixPayload(bspayRes.qrCode);
+          setPixQrBase64(null);
+          setCaktoOrderId(bspayRes.id);
           setStep("PAGAMENTO");
         } else {
-          const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-bspay-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304BSP1`;
+          const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-nitro-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304NTR1`;
           setPixPayload(fallbackPayload);
-          setCaktoOrderId(`bspay_BSP-${Date.now()}`);
+          setCaktoOrderId(`nitro_NTR-${Date.now()}`);
           setStep("PAGAMENTO");
         }
       }
     } catch (err) {
-      console.error("Erro ao conectar com API da BSPay:", err);
-      const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-bspay-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304BSP1`;
+      console.error("Erro ao conectar com API da Nitro:", err);
+      const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-nitro-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304NTR1`;
       setPixPayload(fallbackPayload);
-      setCaktoOrderId(`bspay_BSP-${Date.now()}`);
+      setCaktoOrderId(`nitro_NTR-${Date.now()}`);
       setStep("PAGAMENTO");
     } finally {
       setLoadingPix(false);

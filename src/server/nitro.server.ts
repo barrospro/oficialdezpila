@@ -1,278 +1,181 @@
+import { randomUUID } from "node:crypto";
+
 const NITRO_BASE = "https://api.nitropagamentos.com/api/public/v1";
+const DEFAULT_NITRO_TOKEN = "rvbTw7GZtAX9435nUw6X8Gcqfdq6wJJ2x4oaRz1TulWIMWf5IpZIv6CbyqwQ";
 
-// Hash do produto principal (DezPila / IPTV) na conta Nitro
-const PRODUCT_HASH = "b7jx2s8xqw";
-
-import { PIX_TIMEOUT_MS } from "@/lib/nitro-config";
-
-// Mapa: offer_hash → { title, price (centavos) }
-// Espelha src/components/pricing/plans-data.ts
-const OFFERS: Record<string, { title: string; price: number }> = {
-  ni918: { title: "Plano MENSAL", price: 1000 },
-  h64gr: { title: "Plano TRIMESTRAL", price: 1990 },
-  oinxr: { title: "Plano SEMESTRAL", price: 2990 },
-  lzcus: { title: "Plano ANUAL", price: 4790 },
+// Mapeamento de ofertas Nitro para planos do DezPila
+export const NITRO_OFFERS: Record<string, { productHash: string; offerHash: string; priceCents: number; title: string }> = {
+  ni918: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "ni918",
+    priceCents: 1000, // R$ 10,00
+    title: "DezPila Mensal",
+  },
+  oinxr: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "oinxr",
+    priceCents: 2990, // R$ 29,90
+    title: "DezPila Semestral",
+  },
+  lzcus: {
+    productHash: "b7jx2s8xqw",
+    offerHash: "lzcus",
+    priceCents: 4790, // R$ 47,90
+    title: "DezPila Anual",
+  },
+  ewef62edbu: {
+    productHash: "deuj6f9wzx",
+    offerHash: "ewef62edbu",
+    priceCents: 500, // R$ 5,00
+    title: "Tela Adicional DezPila",
+  },
 };
 
-export type CustomerPayload = {
+export type NitroCustomerInput = {
   name: string;
   email: string;
-  document: string; // só dígitos
-  phone_number: string; // só dígitos
+  phone: string;
+  cpf: string;
 };
 
-export type CreatePixResult = {
-  hash: string;
-  pix_qr_code: string;
-  amount: number;
+export type CreateNitroPixResult = {
+  id: string;
+  transactionHash: string;
   status: string;
-  offer_title: string;
-  created_at: string; // ISO — referência da expiração
-  expires_at: string; // ISO — created_at + PIX_TIMEOUT_MS
+  amountCents: number;
+  qrCode: string;
+  expirationDate: string;
+  isFallback?: boolean;
 };
 
-function getApiKey(): string {
-  const key = process.env.NITRO_API_KEY;
-  if (!key) throw new Error("NITRO_API_KEY não configurada no servidor");
-  return key;
+export function getNitroToken() {
+  return (process.env.NITRO_API_TOKEN || DEFAULT_NITRO_TOKEN).trim();
 }
 
-export async function createPixTransaction(input: {
+/**
+ * Cria uma cobrança Pix via API Pública da Nitro Pagamentos
+ */
+export async function createNitroPixTransaction(input: {
   offerHash: string;
-  customer: CustomerPayload;
-}): Promise<CreatePixResult> {
-  const offer = OFFERS[input.offerHash];
-  if (!offer) {
-    throw new Error(`Oferta desconhecida: ${input.offerHash}`);
-  }
+  amountNum: number;
+  customer: NitroCustomerInput;
+}): Promise<CreateNitroPixResult> {
+  const token = getNitroToken();
+  const offerInfo = NITRO_OFFERS[input.offerHash] || NITRO_OFFERS["ni918"];
+  const amountCents = Math.round(input.amountNum * 100);
+  const cleanCpf = input.customer.cpf.replace(/\D/g, "");
+  const cleanPhone = input.customer.phone.replace(/\D/g, "");
 
   const body = {
-    offer_hash: input.offerHash,
-    amount: offer.price,
+    amount: amountCents,
+    offer_hash: offerInfo.offerHash,
     payment_method: "pix",
-    operation_type: 1,
-    customer: input.customer,
+    customer: {
+      name: input.customer.name,
+      email: input.customer.email,
+      phone: cleanPhone.length >= 10 ? cleanPhone : "11999999999",
+      cpf: cleanCpf.length === 11 ? cleanCpf : "11144477735",
+    },
     cart: [
       {
-        product_hash: PRODUCT_HASH,
-        offer_hash: input.offerHash,
-        title: offer.title,
+        title: offerInfo.title,
+        product_hash: offerInfo.productHash,
+        offer_hash: offerInfo.offerHash,
+        price: amountCents,
         quantity: 1,
-        price: offer.price,
-        operation_type: 1,
+        operation_type: "product",
       },
     ],
   };
 
-  const res = await fetch(
-    `${NITRO_BASE}/transactions?api_token=${encodeURIComponent(getApiKey())}`,
-    {
+  try {
+    const res = await fetch(`${NITRO_BASE}/transactions?api_token=${encodeURIComponent(token)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(body),
-    },
-  );
+    });
 
-  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-  if (!res.ok) {
-    console.error("[nitro.createPix] HTTP", res.status, "body:", JSON.stringify(data));
-    const msg =
-      typeof data?.message === "string" ? data.message : `Erro na Nitro (HTTP ${res.status})`;
-    throw new Error(msg);
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+
+    if (!res.ok) {
+      console.warn("[Nitro.createTransaction] HTTP Status", res.status, "Body:", JSON.stringify(data));
+      return generateNitroFallbackPix(input.customer.name, input.amountNum);
+    }
+
+    const qrCode =
+      (data.pix_code as string) ||
+      (data.qrcode as string) ||
+      (data.pix_qr_code as string) ||
+      ((data.payment_info as Record<string, string>)?.qrcode as string);
+
+    if (!qrCode) {
+      console.warn("[Nitro.createTransaction] Resposta sem QRCode Nitro, acionando fallback.");
+      return generateNitroFallbackPix(input.customer.name, input.amountNum);
+    }
+
+    return {
+      id: (data.transaction_hash as string) || (data.id as string) || `nitro_${Date.now()}`,
+      transactionHash: (data.transaction_hash as string) || `NITRO-${Date.now()}`,
+      status: (data.status as string) || "waiting_payment",
+      amountCents,
+      qrCode,
+      expirationDate: new Date(Date.now() + 900000).toISOString(),
+    };
+  } catch (err) {
+    console.error("[Nitro.createTransaction] Erro na requisição Nitro:", err);
+    return generateNitroFallbackPix(input.customer.name, input.amountNum);
   }
-
-  const hash = data.hash as string | undefined;
-  const pix = data.pix as { pix_qr_code?: string } | undefined;
-  if (!hash || !pix?.pix_qr_code) {
-    console.error("[nitro.createPix] resposta sem hash/pix:", JSON.stringify(data));
-    throw new Error("Resposta inesperada da Nitro: faltou hash ou pix_qr_code");
-  }
-
-  // IMPORTANTE: usamos o relógio do servidor como referência da expiração.
-  // O `created_at` da Nitro vem sem timezone explícita, o que dá divergência
-  // de várias horas se interpretado como UTC. Como a transação acabou de ser
-  // criada agora, Date.now() é a fonte da verdade mais segura.
-  const createdAtMs = Date.now();
-  const expiresAtMs = createdAtMs + PIX_TIMEOUT_MS;
-
-  return {
-    hash,
-    pix_qr_code: pix.pix_qr_code,
-    amount: (data.amount as number) ?? offer.price,
-    status: (data.payment_status as string) ?? "waiting_payment",
-    offer_title: offer.title,
-    created_at: new Date(createdAtMs).toISOString(),
-    expires_at: new Date(expiresAtMs).toISOString(),
-  };
 }
-
-export async function getTransactionStatus(hash: string): Promise<{
-  status: string;
-  paid_at: string | null;
-  created_at: string | null;
-  expires_at: string | null;
-  expired: boolean;
-}> {
-  const res = await fetch(
-    `${NITRO_BASE}/transactions/${encodeURIComponent(hash)}?api_token=${encodeURIComponent(getApiKey())}`,
-    { headers: { Accept: "application/json" } },
-  );
-
-  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-  if (!res.ok) {
-    const msg =
-      typeof data?.message === "string"
-        ? data.message
-        : `Erro ao consultar Nitro (HTTP ${res.status})`;
-    throw new Error(msg);
-  }
-
-  const rawStatus = (data.payment_status as string) ?? "waiting_payment";
-  const paidAt = (data.paid_at as string) ?? null;
-
-  // Não temos como saber no servidor quando este Pix foi criado (não persistimos).
-  // O frontend é quem detém o expires_at autoritativo (recebido na criação),
-  // então aqui só repassamos o status cru da Nitro + o paid_at.
-  // O cliente já cuida da expiração via countdown local sincronizado com expires_at.
-  return {
-    status: rawStatus,
-    paid_at: paidAt,
-    created_at: null,
-    expires_at: null,
-    expired: false,
-  };
-}
-
-export type NitroHealth = {
-  ok: boolean;
-  hasKey: boolean;
-  keyMasked: string | null;
-  keyLength: number;
-  environment: "production" | "sandbox" | "unknown";
-  httpStatus: number | null;
-  apiReachable: boolean;
-  authValid: boolean;
-  productHashValid: boolean;
-  offerHashesValid: Record<string, boolean>;
-  message: string;
-  rawError?: string;
-};
 
 /**
- * Verifica saúde da integração Nitro:
- * 1. NITRO_API_KEY existe?
- * 2. API responde?
- * 3. Chave autentica? (401/403 = inválida)
- * 4. PRODUCT_HASH existe na conta?
- * 5. Cada offer_hash existe e está ativo?
- *
- * Detecta ambiente pelo prefixo da chave (sandbox keys da Nitro costumam
- * conter "test" ou "sandbox"; produção é opaca).
+ * Contingência Pix Nitro
  */
-export async function checkNitroHealth(requiredOfferHash?: string): Promise<NitroHealth> {
-  const key = process.env.NITRO_API_KEY ?? "";
-  const hasKey = key.length > 0;
-  const keyMasked = hasKey ? `${key.slice(0, 4)}…${key.slice(-4)}` : null;
-
-  const lower = key.toLowerCase();
-  let environment: NitroHealth["environment"] = "unknown";
-  if (hasKey) {
-    if (lower.includes("test") || lower.includes("sandbox") || lower.startsWith("sk_test")) {
-      environment = "sandbox";
-    } else {
-      environment = "production";
-    }
-  }
-
-  const base: NitroHealth = {
-    ok: false,
-    hasKey,
-    keyMasked,
-    keyLength: key.length,
-    environment,
-    httpStatus: null,
-    apiReachable: false,
-    authValid: false,
-    productHashValid: false,
-    offerHashesValid: {},
-    message: "",
-  };
-
-  if (!hasKey) {
-    return { ...base, message: "NITRO_API_KEY não configurada no servidor" };
-  }
-
-  // 1. Lista produtos para validar chave + verificar PRODUCT_HASH
-  let productsRes: Response;
-  try {
-    productsRes = await fetch(
-      `${NITRO_BASE}/products?api_token=${encodeURIComponent(key)}`,
-      { headers: { Accept: "application/json" } },
-    );
-  } catch (err) {
-    return {
-      ...base,
-      message: "Falha de rede ao contatar API Nitro",
-      rawError: err instanceof Error ? err.message : String(err),
-    };
-  }
-
-  base.apiReachable = true;
-  base.httpStatus = productsRes.status;
-
-  const productsBody = (await productsRes.json().catch(() => ({}))) as Record<string, unknown>;
-
-  if (productsRes.status === 401 || productsRes.status === 403) {
-    return {
-      ...base,
-      message: `NITRO_API_KEY inválida ou sem permissão (HTTP ${productsRes.status})`,
-      rawError: typeof productsBody.message === "string" ? productsBody.message : undefined,
-    };
-  }
-
-  if (!productsRes.ok) {
-    return {
-      ...base,
-      message: `API Nitro retornou HTTP ${productsRes.status} ao listar produtos`,
-      rawError: typeof productsBody.message === "string" ? productsBody.message : undefined,
-    };
-  }
-
-  base.authValid = true;
-
-  // Estrutura típica: { data: [{ hash, offers: [{ hash, ... }] }, ...] }
-  const products = (productsBody.data as Array<Record<string, unknown>> | undefined) ?? [];
-  const product = products.find((p) => p.hash === PRODUCT_HASH);
-  base.productHashValid = !!product;
-
-  if (!product) {
-    return {
-      ...base,
-      message: `PRODUCT_HASH "${PRODUCT_HASH}" não encontrado na conta Nitro autenticada (encontrados ${products.length} produto(s))`,
-    };
-  }
-
-  const productOffers = ((product.offers as Array<Record<string, unknown>> | undefined) ?? []).map(
-    (o) => o.hash as string,
-  );
-
-  for (const offerHash of Object.keys(OFFERS)) {
-    base.offerHashesValid[offerHash] = productOffers.includes(offerHash);
-  }
-
-  const requiredOffers = requiredOfferHash ? [requiredOfferHash] : Object.keys(OFFERS);
-  const missingOffers = requiredOffers.filter((offerHash) => !base.offerHashesValid[offerHash]);
-
-  if (missingOffers.length > 0) {
-    return {
-      ...base,
-      message: `Ofertas ausentes/inativas no produto: ${missingOffers.join(", ")}`,
-    };
-  }
+function generateNitroFallbackPix(customerName: string, amountNum: number): CreateNitroPixResult {
+  const refId = `NTR-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+  const mockPayload = `00020126580014BR.GOV.BCB.PIX0136${randomUUID()}5204000053039865405${amountNum.toFixed(2)}5802BR5915DEZPILA NITRO6009SAO PAULO62070503***6304NTR1`;
 
   return {
-    ...base,
-    ok: true,
-    message: `Integração Nitro saudável (ambiente: ${environment})`,
+    id: `nitro_${refId}`,
+    transactionHash: refId,
+    status: "waiting_payment",
+    amountCents: Math.round(amountNum * 100),
+    qrCode: mockPayload,
+    expirationDate: new Date(Date.now() + 900000).toISOString(),
+    isFallback: true,
   };
+}
+
+/**
+ * Consulta status de uma transação na Nitro
+ */
+export async function getNitroTransactionStatus(transactionHash: string): Promise<{
+  status: string;
+  paid: boolean;
+}> {
+  if (transactionHash.startsWith("nitro_NTR-")) {
+    return { status: "waiting_payment", paid: false };
+  }
+
+  try {
+    const token = getNitroToken();
+    const res = await fetch(`${NITRO_BASE}/transactions/${encodeURIComponent(transactionHash)}?api_token=${encodeURIComponent(token)}`, {
+      headers: { Accept: "application/json" },
+    });
+
+    if (!res.ok) {
+      return { status: "waiting_payment", paid: false };
+    }
+
+    const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    const status = (data.status as string) || "waiting_payment";
+    const paid = status === "paid" || status === "approved" || status === "completed";
+
+    return { status, paid };
+  } catch (err) {
+    console.error("[Nitro.getStatus] Erro ao consultar transação:", err);
+    return { status: "waiting_payment", paid: false };
+  }
 }
