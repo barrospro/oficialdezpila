@@ -129,6 +129,46 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
     return () => clearInterval(pollInterval);
   }, [open, step, caktoOrderId]);
 
+  function buildClientPixBrCode(pixKey = "51095324861", recipientName = "DEZPILA DIGITAL", city = "SAO PAULO", amount: number): string {
+    const cleanKey = pixKey.replace(/\D/g, "");
+    const cleanName = recipientName.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const cleanCity = city.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const formattedAmount = amount.toFixed(2);
+
+    const gui = "br.gov.bcb.pix";
+    const field26 =
+      "00" + String(gui.length).padStart(2, "0") + gui +
+      "01" + String(cleanKey.length).padStart(2, "0") + cleanKey;
+
+    const field62 = "0503***";
+
+    let payload =
+      "000201" +
+      "26" + String(field26.length).padStart(2, "0") + field26 +
+      "52040000" +
+      "5303986" +
+      "54" + String(formattedAmount.length).padStart(2, "0") + formattedAmount +
+      "5802BR" +
+      "59" + String(cleanName.length).padStart(2, "0") + cleanName +
+      "60" + String(cleanCity.length).padStart(2, "0") + cleanCity +
+      "62" + String(field62.length).padStart(2, "0") + field62 +
+      "6304";
+
+    let crc = 0xffff;
+    for (let i = 0; i < payload.length; i++) {
+      crc ^= payload.charCodeAt(i) << 8;
+      for (let j = 0; j < 8; j++) {
+        if ((crc & 0x8000) !== 0) {
+          crc = ((crc << 1) ^ 0x1021) & 0xffff;
+        } else {
+          crc = (crc << 1) & 0xffff;
+        }
+      }
+    }
+
+    return payload + crc.toString(16).toUpperCase().padStart(4, "0");
+  }
+
   if (!open || !plano) return null;
 
   const maskCpf = (v: string) => {
@@ -263,7 +303,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
           setCaktoOrderId(bspayRes.id);
           setStep("PAGAMENTO");
         } else {
-          const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-nitro-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304NTR1`;
+          const fallbackPayload = buildClientPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", totalPriceNum);
           setPixPayload(fallbackPayload);
           setCaktoOrderId(`nitro_NTR-${Date.now()}`);
           setStep("PAGAMENTO");
@@ -271,7 +311,7 @@ export function AccountCheckoutModal({ open, plano, onClose }: AccountCheckoutMo
       }
     } catch (err) {
       console.error("Erro ao conectar com API da Nitro:", err);
-      const fallbackPayload = `00020126580014br.gov.bcb.pix0136dezpila-nitro-${plano.id.toLowerCase()}-pix5204000053039865405${totalPriceStr.replace(",", ".")}5802BR5916DEZPILA STREAMING6009SAO PAULO62070503***6304NTR1`;
+      const fallbackPayload = buildClientPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", totalPriceNum);
       setPixPayload(fallbackPayload);
       setCaktoOrderId(`nitro_NTR-${Date.now()}`);
       setStep("PAGAMENTO");

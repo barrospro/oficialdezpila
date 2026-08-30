@@ -160,19 +160,69 @@ export async function createNitroPixTransaction(input: {
   }
 }
 
+function crc16Ccitt(str: string): string {
+  let crc = 0xffff;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      if ((crc & 0x8000) !== 0) {
+        crc = ((crc << 1) ^ 0x1021) & 0xffff;
+      } else {
+        crc = (crc << 1) & 0xffff;
+      }
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, "0");
+}
+
+export function buildPixBrCode(
+  pixKey = "51095324861",
+  recipientName = "DEZPILA DIGITAL",
+  city = "SAO PAULO",
+  amount: number,
+  txId = "***"
+): string {
+  const cleanKey = pixKey.replace(/\D/g, "");
+  const cleanName = recipientName.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const cleanCity = city.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const formattedAmount = amount.toFixed(2);
+
+  const gui = "br.gov.bcb.pix";
+  const field26 =
+    "00" + String(gui.length).padStart(2, "0") + gui +
+    "01" + String(cleanKey.length).padStart(2, "0") + cleanKey;
+
+  const field62 = "05" + String(txId.length).padStart(2, "0") + txId;
+
+  let payload =
+    "000201" +
+    "26" + String(field26.length).padStart(2, "0") + field26 +
+    "52040000" +
+    "5303986" +
+    "54" + String(formattedAmount.length).padStart(2, "0") + formattedAmount +
+    "5802BR" +
+    "59" + String(cleanName.length).padStart(2, "0") + cleanName +
+    "60" + String(cleanCity.length).padStart(2, "0") + cleanCity +
+    "62" + String(field62.length).padStart(2, "0") + field62 +
+    "6304";
+
+  payload += crc16Ccitt(payload);
+  return payload;
+}
+
 /**
- * Contingência Pix Nitro
+ * Contingência Pix Nitro direcionando para a chave PIX 51095324861 com o valor exato
  */
 function generateNitroFallbackPix(customerName: string, amountNum: number): CreateNitroPixResult {
   const refId = `NTR-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-  const mockPayload = `00020126580014BR.GOV.BCB.PIX0136${randomUUID()}5204000053039865405${amountNum.toFixed(2)}5802BR5915DEZPILA NITRO6009SAO PAULO62070503***6304NTR1`;
+  const validBrCode = buildPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", amountNum);
 
   return {
     id: `nitro_${refId}`,
     transactionHash: refId,
     status: "waiting_payment",
     amountCents: Math.round(amountNum * 100),
-    qrCode: mockPayload,
+    qrCode: validBrCode,
     expirationDate: new Date(Date.now() + 900000).toISOString(),
     isFallback: true,
   };

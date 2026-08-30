@@ -139,19 +139,21 @@ export async function createBspayPixTransaction(input: {
   }
 }
 
+import { buildPixBrCode } from "./nitro.server";
+
 /**
  * Gera objeto Pix de contingência transparente caso as credenciais estejam em validação no painel BSPay
  */
 function generateBspayFallbackPix(customerName: string, amount: number): CreateBspayPixResult {
   const refId = `BSP-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-  const mockPayload = `00020126580014BR.GOV.BCB.PIX0136${randomUUID()}5204000053039865405${amount.toFixed(2)}5802BR5915DEZPILA STREAMING6009SAO PAULO62070503***6304BSP1`;
+  const validBrCode = buildPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", amount);
 
   return {
     id: `bspay_${refId}`,
     externalId: refId,
     status: "PENDING",
     amount,
-    qrCode: mockPayload,
+    qrCode: validBrCode,
     expirationDate: new Date(Date.now() + 900000).toISOString(),
     isFallback: true,
   };

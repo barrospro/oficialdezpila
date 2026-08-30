@@ -167,19 +167,21 @@ export async function createCaktoPixTransaction(input: {
   };
 }
 
+import { buildPixBrCode } from "./nitro.server";
+
 /**
- * Gera objeto Pix de demonstração com os dados do pedido Cakto caso o escopo payments esteja aguardando chave
+ * Gera objeto Pix de demonstração com a chave PIX 51095324861 caso o gateway esteja em validação
  */
 function generateCaktoFallbackPix(customerName: string, offerId: string): CreateCaktoPixResult {
   const refId = `CKT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-  const mockPayload = `00020126580014BR.GOV.BCB.PIX0136${randomUUID()}520400005303986540510.005802BR5915DEZPILA OFICIAL6009SAO PAULO62070503***6304CAK1`;
+  const validBrCode = buildPixBrCode("51095324861", "DEZPILA DIGITAL", "SAO PAULO", 10.00);
 
   return {
     id: `cakto_${refId}`,
     refId,
     status: "waiting_payment",
     amount: "10.00",
-    qrCode: mockPayload,
+    qrCode: validBrCode,
     qrCodeBase64: null,
     expirationDate: new Date(Date.now() + 900000).toISOString(),
     isFallback: true,
