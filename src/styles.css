@@ -273,3 +273,9 @@ body.checkout-modal-open header {
   pointer-events: none !important;
   visibility: hidden !important;
 }
+
+body.checkout-modal-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+

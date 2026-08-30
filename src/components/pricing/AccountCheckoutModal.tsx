@@ -88,9 +88,10 @@ export function AccountCheckoutModal({
   const [caktoOrderId, setCaktoOrderId] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Trava a rolagem da página inteira no fundo e oculta a navbar quando o modal estiver aberto
+  // Trava a rolagem da página inteira no fundo, rola a viewport pro topo e oculta a navbar quando o modal estiver aberto
   useEffect(() => {
     if (open) {
+      window.scrollTo({ top: 0, behavior: "instant" });
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
       document.body.classList.add("checkout-modal-open");
@@ -357,8 +358,8 @@ export function AccountCheckoutModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[999999] flex flex-col items-center justify-end sm:justify-center bg-black/85 backdrop-blur-md p-0 sm:p-4 overscroll-contain">
-      <div className="relative w-full max-w-lg h-[95dvh] sm:h-auto sm:max-h-[90vh] flex flex-col rounded-t-[28px] sm:rounded-3xl border-t sm:border border-white/10 bg-gradient-to-b from-[#14161f] to-[#0e0f17] shadow-[0_-10px_40px_rgba(0,0,0,0.9)] sm:shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden">
+    <div className="fixed inset-0 top-0 left-0 right-0 bottom-0 w-screen h-[100dvh] min-h-screen z-[9999999] flex items-center justify-center bg-black/90 backdrop-blur-md p-3 sm:p-4 overscroll-contain">
+      <div className="relative w-full max-w-lg max-h-[88dvh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/15 bg-gradient-to-b from-[#14161f] to-[#0e0f17] shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden my-auto">
         {/* Header Fixo do Modal */}
         <div className="shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-white/10 bg-[#14161f]/80 backdrop-blur-md z-10">
           <div className="flex items-center gap-3">
