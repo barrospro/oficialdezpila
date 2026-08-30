@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   Mail,
   Eye,
@@ -88,10 +89,15 @@ export function AccountCheckoutModal({
   const [caktoOrderId, setCaktoOrderId] = useState<string | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Trava a rolagem da página inteira no fundo, rola a viewport pro topo e oculta a navbar quando o modal estiver aberto
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Trava a rolagem da página inteira no fundo e oculta a navbar quando o modal estiver aberto
   useEffect(() => {
     if (open) {
-      window.scrollTo({ top: 0, behavior: "instant" });
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
       document.body.classList.add("checkout-modal-open");
@@ -168,7 +174,7 @@ export function AccountCheckoutModal({
     return () => clearInterval(pollInterval);
   }, [open, step, caktoOrderId]);
 
-  if (!open || !plano) return null;
+  if (!open || !plano || !mounted) return null;
 
   const maskCpf = (v: string) => {
     const d = v.replace(/\D/g, "").slice(0, 11);
@@ -357,7 +363,7 @@ export function AccountCheckoutModal({
     return `${m}:${s}`;
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 top-0 left-0 right-0 bottom-0 w-screen h-[100dvh] min-h-screen z-[9999999] flex items-center justify-center bg-black/90 backdrop-blur-md p-3 sm:p-4 overscroll-contain">
       <div className="relative w-full max-w-lg max-h-[88dvh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/15 bg-gradient-to-b from-[#14161f] to-[#0e0f17] shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden my-auto">
         {/* Header Fixo do Modal */}
@@ -1093,6 +1099,7 @@ export function AccountCheckoutModal({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
