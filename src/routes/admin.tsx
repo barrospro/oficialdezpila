@@ -811,7 +811,12 @@ function AdminDashboard() {
                         dimensions: asset.dimensions,
                       })
                     }
-                    className="p-6 bg-black/60 flex items-center justify-center min-h-[220px] cursor-zoom-in relative group/img"
+                    className={
+                      "p-6 flex items-center justify-center min-h-[220px] cursor-zoom-in relative group/img " +
+                      (asset.id.includes("moldura")
+                        ? "bg-[linear-gradient(45deg,#181a24_25%,transparent_25%),linear-gradient(-45deg,#181a24_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#181a24_75%),linear-gradient(-45deg,transparent_75%,#181a24_75%)] [background-size:16px_16px] bg-[#0c0d15]"
+                        : "bg-black/60")
+                    }
                   >
                     <img
                       src={asset.imagePath}
@@ -1094,7 +1099,14 @@ function AdminDashboard() {
             </button>
 
             {/* Container da Imagem em Tela Cheia */}
-            <div className="relative rounded-2xl border border-white/15 bg-[#0b0c13] p-2 sm:p-4 overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.95)] max-h-[80vh] flex items-center justify-center">
+            <div
+              className={
+                "relative rounded-2xl border border-white/15 p-2 sm:p-4 overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.95)] max-h-[80vh] flex items-center justify-center " +
+                (previewModal.url.includes("moldura")
+                  ? "bg-[linear-gradient(45deg,#181a24_25%,transparent_25%),linear-gradient(-45deg,#181a24_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#181a24_75%),linear-gradient(-45deg,transparent_75%,#181a24_75%)] [background-size:20px_20px] bg-[#0c0d15]"
+                  : "bg-[#0b0c13]")
+              }
+            >
               <img
                 src={previewModal.url}
                 alt={previewModal.title}
