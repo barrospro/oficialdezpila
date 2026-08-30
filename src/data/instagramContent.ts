@@ -119,6 +119,157 @@ export const BRAND_ASSETS: BrandAsset[] = [
     description:
       "Capa oficial para o destaque 'Planos' no Instagram (Explicando a oferta de R$ 10/mês e facilidades do PIX).",
   },
+  // --- DESTAQUES: VARIAÇÕES DE CONTEÚDO (9:16) ---
+  {
+    id: "depoimentos_var1",
+    name: "Destaque: ⭐ Depoimento 01 (LG 4K)",
+    category: "⭐ Depoimentos (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/depoimentos_var1.png",
+    description:
+      "Variação de Story para o destaque Depoimentos (Feedback real de cliente na TV LG em 4K).",
+  },
+  {
+    id: "depoimentos_var2",
+    name: "Destaque: ⭐ Depoimento 02 (Futebol sem Travar)",
+    category: "⭐ Depoimentos (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/depoimentos_var2.png",
+    description:
+      "Variação de Story para o destaque Depoimentos (Cliente elogiando transmissão do jogo por R$ 10).",
+  },
+  {
+    id: "depoimentos_var3",
+    name: "Destaque: ⭐ Depoimento 03 (Celular & TV Box)",
+    category: "⭐ Depoimentos (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/depoimentos_var3.png",
+    description:
+      "Variação de Story para o destaque Depoimentos (Recomendação em múltiplos aparelhos).",
+  },
+  {
+    id: "catalogo_var1",
+    name: "Destaque: 🍿 Catálogo 01 (+60 Mil Títulos)",
+    category: "🍿 Catálogo (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/catalogo_var1.png",
+    description:
+      "Variação de Story para o destaque Catálogo (Lançamentos de cinema e volume de títulos).",
+  },
+  {
+    id: "catalogo_var2",
+    name: "Destaque: 🍿 Catálogo 02 (Plataformas Inclusas)",
+    category: "🍿 Catálogo (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/catalogo_var2.png",
+    description:
+      "Variação de Story para o destaque Catálogo (Netflix, Prime, HBO Max e Disney+ inclusos).",
+  },
+  {
+    id: "catalogo_var3",
+    name: "Destaque: 🍿 Catálogo 03 (Infantil & Família)",
+    category: "🍿 Catálogo (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/catalogo_var3.png",
+    description:
+      "Variação de Story para o destaque Catálogo (Desenhos, animes e opção do CristoFlix).",
+  },
+  {
+    id: "futebol_var1",
+    name: "Destaque: ⚽ Futebol 01 (Ligas Nacionais)",
+    category: "⚽ Futebol (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/futebol_var1.png",
+    description:
+      "Variação de Story para o destaque Futebol (Brasileirão Série A & B e Copa do Brasil).",
+  },
+  {
+    id: "futebol_var2",
+    name: "Destaque: ⚽ Futebol 02 (UEFA Champions)",
+    category: "⚽ Futebol (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/futebol_var2.png",
+    description:
+      "Variação de Story para o destaque Futebol (Champions League e Premier League em 60fps).",
+  },
+  {
+    id: "futebol_var3",
+    name: "Destaque: ⚽ Futebol 03 (UFC & Combate)",
+    category: "⚽ Futebol (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/futebol_var3.png",
+    description:
+      "Variação de Story para o destaque Futebol (UFC, Fórmula 1 e NBA).",
+  },
+  {
+    id: "duvidas_var1",
+    name: "Destaque: ❓ Dúvidas 01 (Passo a Passo TV)",
+    category: "❓ Dúvidas (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/duvidas_var1.png",
+    description:
+      "Variação de Story para o destaque Dúvidas (Guia de 3 passos simples para instalar na Smart TV).",
+  },
+  {
+    id: "duvidas_var2",
+    name: "Destaque: ❓ Dúvidas 02 (Aparelhos Aceitos)",
+    category: "❓ Dúvidas (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/duvidas_var2.png",
+    description:
+      "Variação de Story para o destaque Dúvidas (Lista de aparelhos compatíveis).",
+  },
+  {
+    id: "duvidas_var3",
+    name: "Destaque: ❓ Dúvidas 03 (Envio Rápido PIX)",
+    category: "❓ Dúvidas (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/duvidas_var3.png",
+    description:
+      "Variação de Story para o destaque Dúvidas (Como funciona o envio automático no WhatsApp).",
+  },
+  {
+    id: "planos_var1",
+    name: "Destaque: 💳 Planos 01 (Oferta R$ 10/Mês)",
+    category: "💳 Planos (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/planos_var1.png",
+    description:
+      "Variação de Story para o destaque Planos (Oferta principal do plano R$ 10/mês).",
+  },
+  {
+    id: "planos_var2",
+    name: "Destaque: 💳 Planos 02 (Benefícios Inclusos)",
+    category: "💳 Planos (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/planos_var2.png",
+    description:
+      "Variação de Story para o destaque Planos (Qualidade 4K, sinal anti-travamento e suporte).",
+  },
+  {
+    id: "planos_var3",
+    name: "Destaque: 💳 Planos 03 (Formas de Pagamento)",
+    category: "💳 Planos (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/planos_var3.png",
+    description:
+      "Variação de Story para o destaque Planos (Facilidades do PIX e Cartão em 12x).",
+  },
 ];
 
 
