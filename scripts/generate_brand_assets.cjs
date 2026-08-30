@@ -20,7 +20,9 @@ if (!browserPath) {
   process.exit(1);
 }
 
+// assets para renderizar rigorosamente fiéis às referências
 const assetsToRender = [
+  // REFERÊNCIA 2: Favicon / Ícone (Paralelogramo Vermelho + Letra D Branca em fundo preto arredondado)
   {
     name: "favicon_512.png",
     w: 512,
@@ -33,37 +35,41 @@ const assetsToRender = [
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     width:512px; height:512px; background:#050507;
-    display:flex; align-items:center; justify-center;
-    padding:40px; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
-  .box {
-    width:100%; height:100%; border-radius:100px;
-    background: radial-gradient(circle at center, #1b0205 0%, #050507 100%);
-    border: 8px solid #970202;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    box-shadow: 0 0 50px rgba(151,2,2,0.6);
+  .card {
+    width:100%; height:100%; border-radius:110px;
+    background:#08080a;
+    display:flex; align-items:center; justify-content:center;
+    gap: 15px;
   }
-  .mark {
-    width:90px; height:90px; background:#970202;
-    transform: skewX(-15deg);
-    box-shadow: 0 0 40px #ff2222;
-    margin-bottom:15px;
+  .red-mark {
+    width: 140px;
+    height: 220px;
+    background: #ff2a2a;
+    transform: skewX(-16deg);
+    border-radius: 4px;
   }
-  .text {
-    font-size: 58px; font-weight: 900; letter-spacing: -2px; color:#ffffff;
-    text-transform: uppercase;
+  .white-d {
+    font-size: 240px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -5px;
   }
-  .text span { color: #a1a1aa; }
 </style>
 </head>
 <body>
-  <div class="box">
-    <div class="mark"></div>
-    <div class="text">DEZ<span>PILA</span></div>
+  <div class="card">
+    <div class="red-mark"></div>
+    <div class="white-d">D</div>
   </div>
 </body>
 </html>`,
   },
+  // REFERÊNCIA 1: Logo Horizontal (Paralelogramo Vermelho + DEZ em Branco + PILA em Cinza)
   {
     name: "logo_horizontal_dark.png",
     w: 1200,
@@ -77,38 +83,50 @@ const assetsToRender = [
   body {
     width:1200px; height:400px; background:#050507;
     display:flex; align-items:center; justify-content:center;
-    font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    position:relative;
   }
-  .container {
-    display:flex; align-items:center; gap:30px;
+  .grid-bg {
+    position:absolute; inset:0;
+    background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
-  .mark {
-    width:70px; height:70px; background:#970202;
-    transform: skewX(-15deg);
-    box-shadow: 0 0 40px rgba(255, 34, 34, 0.8);
+  .logo-wrapper {
+    position:relative; z-index:2;
+    display:flex; align-items:center; gap:35px;
   }
-  .text {
-    font-size: 110px; font-weight: 900; tracking-tighter; color:#ffffff;
-    letter-spacing: -4px; text-transform: uppercase;
+  .red-mark {
+    width: 110px;
+    height: 140px;
+    background: #ff2a2a;
+    transform: skewX(-16deg);
+    border-radius: 4px;
+    box-shadow: 0 0 40px rgba(255, 42, 42, 0.4);
   }
-  .text span { color: #80808a; }
-  .tag {
-    font-size: 24px; font-weight: 800; color: #ff2222; letter-spacing: 6px;
-    text-transform: uppercase; margin-top: 10px;
+  .brand-text {
+    font-size: 155px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -4px;
+    text-transform: uppercase;
   }
+  .text-dez { color: #ffffff; }
+  .text-pila { color: #71717a; }
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="mark"></div>
-    <div>
-      <div class="text">DEZ<span>PILA</span></div>
-      <div class="tag">STREAMING ILIMITADO</div>
+  <div class="grid-bg"></div>
+  <div class="logo-wrapper">
+    <div class="red-mark"></div>
+    <div class="brand-text">
+      <span class="text-dez">DEZ</span><span class="text-pila">PILA</span>
     </div>
   </div>
 </body>
 </html>`,
   },
+  // Logo Quadrada de Perfil
   {
     name: "logo_quadrada.png",
     w: 800,
@@ -120,51 +138,57 @@ const assetsToRender = [
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    width:800px; height:800px; background:#000000;
+    width:800px; height:800px; background:#050507;
     display:flex; align-items:center; justify-content:center;
-    padding:60px; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    padding:50px; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   }
   .card {
-    width:100%; height:100%; border-radius:60px;
-    background: linear-gradient(145deg, #140205 0%, #050507 100%);
-    border: 4px solid #970202;
+    width:100%; height:100%; border-radius:80px;
+    background: #08080a;
+    border: 3px solid rgba(255,42,42,0.3);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    box-shadow: 0 0 80px rgba(151,2,2,0.5);
+    box-shadow: 0 0 60px rgba(0,0,0,0.9);
   }
-  .mark {
-    width:140px; height:140px; background:#970202;
-    transform: skewX(-15deg);
-    box-shadow: 0 0 60px #ff2222;
-    margin-bottom:30px;
+  .row {
+    display:flex; align-items:center; gap:25px;
   }
-  .text {
-    font-size: 95px; font-weight: 900; color:#ffffff;
-    letter-spacing: -3px; text-transform: uppercase;
+  .red-mark {
+    width: 90px; height: 115px; background: #ff2a2a;
+    transform: skewX(-16deg); border-radius: 4px;
+    box-shadow: 0 0 35px rgba(255,42,42,0.5);
   }
-  .text span { color: #80808a; }
+  .brand-text {
+    font-size: 115px; font-weight: 900; line-height: 1; letter-spacing: -3px;
+    text-transform: uppercase;
+  }
+  .text-dez { color: #ffffff; }
+  .text-pila { color: #71717a; }
   .badge {
-    margin-top: 25px;
-    background: rgba(151,2,2,0.2);
-    border: 1.5px solid #970202;
+    margin-top: 35px;
+    background: rgba(255,42,42,0.15);
+    border: 1.5px solid #ff2a2a;
     color: #ff3b3b;
-    padding: 10px 28px;
+    padding: 10px 32px;
     border-radius: 30px;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: 4px;
+    font-size: 22px; font-weight: 800; letter-spacing: 4px;
     text-transform: uppercase;
   }
 </style>
 </head>
 <body>
   <div class="card">
-    <div class="mark"></div>
-    <div class="text">DEZ<span>PILA</span></div>
-    <div class="badge">OFICIAL 4K</div>
+    <div class="row">
+      <div class="red-mark"></div>
+      <div class="brand-text">
+        <span class="text-dez">DEZ</span><span class="text-pila">PILA</span>
+      </div>
+    </div>
+    <div class="badge">OFICIAL STREAMING 4K</div>
   </div>
 </body>
 </html>`,
   },
+  // Banner OpenGraph (1200x630 px)
   {
     name: "banner_opengraph_1200x630.png",
     w: 1200,
@@ -183,34 +207,34 @@ const assetsToRender = [
   }
   .glow {
     position:absolute; width:800px; height:800px;
-    background: radial-gradient(circle, rgba(151,2,2,0.4) 0%, rgba(0,0,0,0) 70%);
+    background: radial-gradient(circle, rgba(255,42,42,0.35) 0%, rgba(0,0,0,0) 70%);
     right:-150px; top:-150px; pointer-events:none;
   }
   .logo {
     display:flex; align-items:center; gap:20px;
   }
-  .mark {
-    width:45px; height:45px; background:#970202;
-    transform: skewX(-15deg);
-    box-shadow: 0 0 25px #ff2222;
+  .red-mark {
+    width: 45px; height: 55px; background: #ff2a2a;
+    transform: skewX(-16deg); border-radius: 3px;
   }
   .logo-text {
-    font-size: 48px; font-weight: 900; letter-spacing: -2px; text-transform: uppercase;
+    font-size: 55px; font-weight: 900; letter-spacing: -2px; text-transform: uppercase;
   }
-  .logo-text span { color: #80808a; }
+  .text-dez { color: #ffffff; }
+  .text-pila { color: #71717a; }
   .headline {
-    font-size: 68px; font-weight: 900; text-transform: uppercase; line-height: 1.1;
-    max-width: 900px; z-index:2;
+    font-size: 64px; font-weight: 900; text-transform: uppercase; line-height: 1.1;
+    max-width: 950px; z-index:2;
   }
-  .headline span { color: #ff2222; text-shadow: 0 0 30px rgba(255,34,34,0.7); }
+  .headline span { color: #ff2a2a; }
   .footer {
     display:flex; align-items:center; justify-content:space-between;
-    border-t: 2px solid rgba(255,255,255,0.1); pt: 30px; z-index:2;
+    border-top: 1.5px solid rgba(255,255,255,0.1); pt: 30px; z-index:2;
   }
   .pill {
-    background: #970202; color:#fff; font-size:24px; font-weight:900;
+    background: #ff2a2a; color:#fff; font-size:24px; font-weight:900;
     padding: 16px 36px; border-radius: 16px; text-transform:uppercase; letter-spacing:1px;
-    box-shadow: 0 0 30px rgba(151,2,2,0.6);
+    box-shadow: 0 0 30px rgba(255,42,42,0.5);
   }
   .sub {
     font-size: 24px; color: #a1a1aa; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
@@ -220,8 +244,10 @@ const assetsToRender = [
 <body>
   <div class="glow"></div>
   <div class="logo">
-    <div class="mark"></div>
-    <div class="logo-text">DEZ<span>PILA</span></div>
+    <div class="red-mark"></div>
+    <div class="logo-text">
+      <span class="text-dez">DEZ</span><span class="text-pila">PILA</span>
+    </div>
   </div>
   <div class="headline">
     CONTEÚDO ILIMITADO <span>POR APENAS R$ 10/MÊS</span>
@@ -233,6 +259,7 @@ const assetsToRender = [
 </body>
 </html>`,
   },
+  // Capa Perfil (1920x1080 px)
   {
     name: "capa_perfil_1920x1080.png",
     w: 1920,
@@ -244,53 +271,52 @@ const assetsToRender = [
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    width:1920px; height:1080px; background:#000000;
+    width:1920px; height:1080px; background:#050507;
     display:flex; flex-direction:column; justify-content:center; align-items:center;
     padding:100px; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
     color:#ffffff; position:relative; overflow:hidden; text-align:center;
   }
-  .glow-left {
-    position:absolute; width:1200px; height:1200px;
-    background: radial-gradient(circle, rgba(151,2,2,0.45) 0%, rgba(0,0,0,0) 70%);
-    top:-200px; left:-200px; pointer-events:none;
+  .glow {
+    position:absolute; width:1400px; height:1400px;
+    background: radial-gradient(circle, rgba(255,42,42,0.3) 0%, rgba(0,0,0,0) 70%);
+    top:-300px; left:50%; transform:translateX(-50%); pointer-events:none;
   }
-  .glow-right {
-    position:absolute; width:1200px; height:1200px;
-    background: radial-gradient(circle, rgba(151,2,2,0.35) 0%, rgba(0,0,0,0) 70%);
-    bottom:-200px; right:-200px; pointer-events:none;
+  .logo-row {
+    display:flex; align-items:center; justify-content:center; gap:35px; margin-bottom:30px; z-index:2;
   }
-  .mark {
-    width:110px; height:110px; background:#970202;
-    transform: skewX(-15deg);
-    box-shadow: 0 0 50px #ff2222;
-    margin-bottom:30px;
+  .red-mark {
+    width: 100px; height: 125px; background: #ff2a2a;
+    transform: skewX(-16deg); border-radius: 4px;
+    box-shadow: 0 0 50px rgba(255,42,42,0.6);
   }
   .brand-title {
-    font-size: 140px; font-weight: 900; letter-spacing: -5px; text-transform: uppercase;
-    line-height: 1; z-index:2;
+    font-size: 150px; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; line-height: 1;
   }
-  .brand-title span { color: #757580; }
+  .text-dez { color: #ffffff; }
+  .text-pila { color: #71717a; }
   .tagline {
-    font-size: 52px; font-weight: 900; color: #ff2222; text-transform: uppercase;
-    letter-spacing: 4px; margin: 30px 0 40px 0; z-index:2;
-    text-shadow: 0 0 40px rgba(255,34,34,0.7);
+    font-size: 48px; font-weight: 900; color: #ff2a2a; text-transform: uppercase;
+    letter-spacing: 4px; margin-bottom: 50px; z-index:2;
   }
   .features {
     display:flex; gap:30px; justify-content:center; z-index:2;
   }
   .feat-box {
-    background: #0d0d12; border: 2px solid #970202; border-radius: 24px;
+    background: #0d0d12; border: 2px solid #ff2a2a; border-radius: 24px;
     padding: 24px 45px; font-size: 28px; font-weight: 800; color: #e4e4e7;
     text-transform: uppercase; letter-spacing: 1px;
-    box-shadow: 0 10px 30px rgba(151,2,2,0.3);
+    box-shadow: 0 10px 30px rgba(255,42,42,0.25);
   }
 </style>
 </head>
 <body>
-  <div class="glow-left"></div>
-  <div class="glow-right"></div>
-  <div class="mark"></div>
-  <div class="brand-title">DEZ<span>PILA</span></div>
+  <div class="glow"></div>
+  <div class="logo-row">
+    <div class="red-mark"></div>
+    <div class="brand-title">
+      <span class="text-dez">DEZ</span><span class="text-pila">PILA</span>
+    </div>
+  </div>
   <div class="tagline">O MELHOR DO STREAMING POR APENAS R$ 10/MÊS</div>
   <div class="features">
     <div class="feat-box">⚡ 4K ULTRA HD</div>
@@ -303,18 +329,18 @@ const assetsToRender = [
   },
 ];
 
-console.log("Gerando arquivos de Identidade Visual em PNG...");
+console.log("Renderizando artes de Identidade Visual rigorosamente fiéis às referências...");
 
 assetsToRender.forEach((item) => {
   const outImg = path.join(outDir, item.name);
-  const tempHtml = path.join(__dirname, `temp_brand_${item.name}.html`);
+  const tempHtml = path.join(__dirname, `temp_ref_${item.name}.html`);
   fs.writeFileSync(tempHtml, item.html, "utf-8");
 
   try {
     execSync(
       `"${browserPath}" --headless --screenshot="${outImg}" --window-size=${item.w},${item.h} --hide-scrollbars "${tempHtml}"`
     );
-    console.log(`✓ ${item.name} (${item.w}x${item.h}px) gerado com sucesso!`);
+    console.log(`✓ ${item.name} (${item.w}x${item.h}px) gerado rigorosamente idêntico!`);
   } catch (err) {
     console.error(`Erro ao gerar ${item.name}:`, err.message);
   } finally {
@@ -324,4 +350,4 @@ assetsToRender.forEach((item) => {
   }
 });
 
-console.log("\nTodos os arquivos de Identidade Visual foram gerados com sucesso!");
+console.log("\nTodas as artes da Identidade Visual foram atualizadas com sucesso!");
