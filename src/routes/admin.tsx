@@ -21,10 +21,14 @@ import {
   Trophy,
   HelpCircle,
   CreditCard,
+  X,
+  ZoomIn,
+  Video,
 } from "lucide-react";
 import {
   INSTAGRAM_CREATIVES,
   BRAND_ASSETS,
+  INSTAGRAM_REELS,
 } from "@/data/instagramContent";
 
 export const Route = createFileRoute("/admin")({
@@ -43,15 +47,23 @@ function AdminDashboard() {
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Main Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
+  // Main Tab State: 'feed' | 'stories' | 'reels' | 'todos' | 'identidade'
   const [activeTab, setActiveTab] = useState<
-    "feed" | "stories" | "todos" | "identidade"
+    "feed" | "stories" | "reels" | "todos" | "identidade"
   >("feed");
 
   // Sub-Tab State inside 'identidade'
   const [brandSubTab, setBrandSubTab] = useState<
     "todos" | "logotipos" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
   >("todos");
+
+  // Modal de visualização de imagem em tela cheia (Fullscreen Preview Modal)
+  const [previewModal, setPreviewModal] = useState<{
+    url: string;
+    title: string;
+    category?: string;
+    dimensions?: string;
+  } | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -63,6 +75,17 @@ function AdminDashboard() {
     if (isAuth === "true") {
       setAuthenticated(true);
     }
+  }, []);
+
+  // Fechar modal com a tecla ESC
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setPreviewModal(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -111,6 +134,17 @@ function AdminDashboard() {
     if (!q) return true;
     return (
       item.day.toString().includes(q) ||
+      item.title.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q) ||
+      item.caption.toLowerCase().includes(q)
+    );
+  });
+
+  // Filtragem dos Reels por busca
+  const filteredReels = INSTAGRAM_REELS.filter((item) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
       item.title.toLowerCase().includes(q) ||
       item.category.toLowerCase().includes(q) ||
       item.caption.toLowerCase().includes(q)
@@ -282,15 +316,15 @@ function AdminDashboard() {
               Acervo de Criativos & Marca Liberado
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white font-heading mb-2">
-              CENTRAL DE CRIATIVOS E IDENTIDADE VISUAL
+              CENTRAL DE CRIATIVOS, REELS E MARCA
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as artes dos posts (Feed e Story) em alta resolução (4K), copie as legendas formatadas e navegue pelas capas e variações de destaques do Instagram na aba Identidade Visual.
+              Baixe as artes dos posts (Feed e Story), roteiros/vídeos de Reels (9:16) e navegue pela Identidade Visual. Clique em qualquer imagem para abrir a visualização em tela cheia!
             </p>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
+        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / REELS / TODAS / IDENTIDADE VISUAL) */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar gap-4">
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -317,6 +351,19 @@ function AdminDashboard() {
             >
               <Tv className="h-4 w-4" />
               <span>Imagem Story (9:16)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("reels")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
+                activeTab === "reels"
+                  ? "bg-[#970202] text-white shadow-[0_0_20px_rgba(151,2,2,0.6)]"
+                  : "bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <Video className="h-4 w-4 text-rose-400" />
+              <span>Vídeos / Reels (9:16)</span>
             </button>
 
             <button
@@ -351,6 +398,10 @@ function AdminDashboard() {
               <>
                 Exibindo: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> de {BRAND_ASSETS.length} ativos
               </>
+            ) : activeTab === "reels" ? (
+              <>
+                Total: <strong className="text-white font-bold">{filteredReels.length}</strong> vídeos/reels
+              </>
             ) : (
               <>
                 Total: <strong className="text-white font-bold">{filteredCreatives.length}</strong> publicações
@@ -359,7 +410,7 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* SUB-ABAS DE IDENTIDADE VISUAL (SEPARANDO LOGOTIPOS E CADA TIPO DE DESTAQUE) */}
+        {/* SUB-ABAS DE IDENTIDADE VISUAL */}
         {activeTab === "identidade" && (
           <div className="mb-8">
             <div className="p-2 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-2 overflow-x-auto no-scrollbar">
@@ -460,7 +511,6 @@ function AdminDashboard() {
         {/* ABA IDENTIDADE VISUAL — GRID DE ATIVOS */}
         {activeTab === "identidade" && (
           <div className="space-y-6">
-            {/* Banner de cabeçalho explicativo caso uma sub-aba de destaque específica esteja ativa */}
             {brandSubTab !== "todos" && brandSubTab !== "logotipos" && (
               <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
                 <div>
@@ -472,7 +522,7 @@ function AdminDashboard() {
                     {brandSubTab === "planos" && "💳 DESTAQUE: PLANOS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
                   </h2>
                   <p className="text-xs text-slate-400 font-body mt-0.5">
-                    1080 x 1920 pixels (Proporção 9:16) com logomarca oficial DezPila e zero referências a URLs de site.
+                    Clique na imagem para abrir em tela cheia! 1080 x 1920 pixels com logomarca oficial DezPila.
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-[#970202]/20 border border-[#970202]/40 text-[#ff4d4d] text-xs font-bold font-code shrink-0">
@@ -502,14 +552,28 @@ function AdminDashboard() {
                     </span>
                   </div>
 
-                  {/* Prévia Visual do Ativo de Marca */}
-                  <div className="p-6 bg-black/60 flex items-center justify-center min-h-[220px]">
+                  {/* Prévia Visual Clicável para Abrir Modal Tela Cheia */}
+                  <div
+                    onClick={() =>
+                      setPreviewModal({
+                        url: asset.imagePath,
+                        title: asset.name,
+                        category: asset.category,
+                        dimensions: asset.dimensions,
+                      })
+                    }
+                    className="p-6 bg-black/60 flex items-center justify-center min-h-[220px] cursor-zoom-in relative group/img"
+                  >
                     <img
                       src={asset.imagePath}
                       alt={asset.name}
-                      className="max-h-[200px] w-auto max-w-full object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300"
+                      className="max-h-[200px] w-auto max-w-full object-contain rounded-xl shadow-md group-hover/img:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold font-heading text-white">
+                      <ZoomIn className="h-5 w-5 text-emerald-400" />
+                      <span>Ver em Tela Cheia</span>
+                    </div>
                   </div>
 
                   {/* Título & Detalhes */}
@@ -541,8 +605,145 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* GRID DE CRIATIVOS (POSTS / STORIES) */}
-        {activeTab !== "identidade" && (
+        {/* ABA VÍDEOS / REELS (9:16) */}
+        {activeTab === "reels" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
+            {filteredReels.map((reel) => {
+              const isCaptionExpanded = expandedId === reel.id;
+
+              return (
+                <div
+                  key={reel.id}
+                  className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
+                >
+                  {/* Header do Card */}
+                  <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/40 text-rose-400 text-[10.5px] font-bold font-code uppercase tracking-wider flex items-center gap-1">
+                        <Video className="h-3 w-3" />
+                        REELS 9:16
+                      </span>
+                      <span className="text-[11px] font-code text-slate-400">
+                        {reel.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Prévia da Imagem/Vídeo do Reel Clicável */}
+                  <div
+                    onClick={() =>
+                      setPreviewModal({
+                        url: reel.videoImage,
+                        title: reel.title,
+                        category: reel.category,
+                        dimensions: reel.dimensions,
+                      })
+                    }
+                    className="p-4 bg-black/60 flex items-center justify-center min-h-[220px] cursor-zoom-in relative group/reel"
+                  >
+                    <img
+                      src={reel.videoImage}
+                      alt={reel.title}
+                      className="w-36 h-[200px] object-cover rounded-xl border border-white/15 shadow-md group-hover/reel:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/reel:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold font-heading text-white">
+                      <ZoomIn className="h-5 w-5 text-rose-400" />
+                      <span>Ver em Tela Cheia</span>
+                    </div>
+                  </div>
+
+                  {/* Título & Legenda com Expansor */}
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div>
+                      <h3 className="text-xs font-bold uppercase text-white font-heading leading-tight mb-2">
+                        {reel.title}
+                      </h3>
+
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300 font-body relative">
+                        <div
+                          className={
+                            "whitespace-pre-line overflow-hidden font-body text-[11.5px] leading-relaxed transition-all " +
+                            (isCaptionExpanded
+                              ? "max-h-none"
+                              : "max-h-24 line-clamp-4")
+                          }
+                        >
+                          {reel.caption}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedId(
+                              isCaptionExpanded ? null : reel.id
+                            )
+                          }
+                          className="mt-2 text-[10.5px] font-bold text-[#ff4d4d] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          {isCaptionExpanded ? (
+                            <>
+                              <span>Recolher legenda</span>
+                              <ChevronUp className="h-3 w-3" />
+                            </>
+                          ) : (
+                            <>
+                              <span>Ver legenda completa</span>
+                              <ChevronDown className="h-3 w-3" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Ações do Reel (Baixar Imagem/Vídeo & Copiar Legenda) */}
+                    <div className="space-y-2 pt-1 border-t border-white/10">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleDownload(
+                            reel.videoImage,
+                            `${reel.id}.png`
+                          )
+                        }
+                        className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>Baixar Imagem Reels (9:16)</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleCopyCaption(reel.id, reel.caption)}
+                        className={
+                          "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
+                          (copiedId === reel.id
+                            ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                            : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
+                        }
+                      >
+                        {copiedId === reel.id ? (
+                          <>
+                            <Check className="h-4 w-4" />
+                            <span>✓ Legenda Copiada!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-4 w-4" />
+                            <span>Copiar Legenda do Reels</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* GRID DE CRIATIVOS DE FEED E STORY (POSTS) */}
+        {activeTab !== "identidade" && activeTab !== "reels" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCreatives.map((creative) => {
               const showFeed = activeTab === "feed" || activeTab === "todos";
@@ -566,33 +767,63 @@ function AdminDashboard() {
                     </div>
                   </div>
 
-                  {/* Prévia Visual da Imagem */}
+                  {/* Prévia Visual da Imagem (Clicável para Tela Cheia) */}
                   <div className="p-4 bg-black/40 flex items-center justify-center gap-3">
                     {showFeed && (
-                      <div className="relative flex flex-col items-center">
+                      <div
+                        onClick={() =>
+                          setPreviewModal({
+                            url: creative.feedImage,
+                            title: `${creative.title} (Feed - Dia ${creative.day})`,
+                            category: creative.category,
+                            dimensions: "Feed 4:5",
+                          })
+                        }
+                        className="relative flex flex-col items-center cursor-zoom-in group/feed"
+                      >
                         <span className="text-[10px] font-code text-slate-400 mb-1">
                           Feed (4:5)
                         </span>
-                        <img
-                          src={creative.feedImage}
-                          alt={`Feed Dia ${creative.day}`}
-                          className="w-36 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
-                          loading="lazy"
-                        />
+                        <div className="relative overflow-hidden rounded-xl border border-white/15 shadow-md">
+                          <img
+                            src={creative.feedImage}
+                            alt={`Feed Dia ${creative.day}`}
+                            className="w-36 h-[180px] object-cover group-hover/feed:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/feed:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <ZoomIn className="h-5 w-5 text-white" />
+                          </div>
+                        </div>
                       </div>
                     )}
 
                     {showStories && (
-                      <div className="relative flex flex-col items-center">
+                      <div
+                        onClick={() =>
+                          setPreviewModal({
+                            url: creative.storyImage,
+                            title: `${creative.title} (Story - Dia ${creative.day})`,
+                            category: creative.category,
+                            dimensions: "Story 9:16",
+                          })
+                        }
+                        className="relative flex flex-col items-center cursor-zoom-in group/story"
+                      >
                         <span className="text-[10px] font-code text-slate-400 mb-1">
                           Story (9:16)
                         </span>
-                        <img
-                          src={creative.storyImage}
-                          alt={`Story Dia ${creative.day}`}
-                          className="w-24 h-[180px] object-cover rounded-xl border border-white/15 shadow-md group-hover:scale-[1.02] transition-transform duration-300"
-                          loading="lazy"
-                        />
+                        <div className="relative overflow-hidden rounded-xl border border-white/15 shadow-md">
+                          <img
+                            src={creative.storyImage}
+                            alt={`Story Dia ${creative.day}`}
+                            className="w-24 h-[180px] object-cover group-hover/story:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/story:opacity-100 transition-opacity flex items-center justify-center text-white">
+                            <ZoomIn className="h-5 w-5 text-white" />
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -729,6 +960,73 @@ function AdminDashboard() {
           </div>
         )}
       </main>
+
+      {/* MODAL DE VISUALIZAÇÃO DE IMAGEM EM TELA CHEIA (FULLSCREEN PREVIEW MODAL) */}
+      {previewModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200"
+          onClick={() => setPreviewModal(null)}
+        >
+          <div
+            className="relative max-w-4xl max-h-[92vh] w-full flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botão de Fechar no topo */}
+            <button
+              type="button"
+              onClick={() => setPreviewModal(null)}
+              className="absolute -top-12 right-0 sm:top-2 sm:right-2 p-2.5 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all cursor-pointer z-50 backdrop-blur-md shadow-lg"
+              title="Fechar (Esc)"
+            >
+              <X className="h-6 w-6" />
+            </button>
+
+            {/* Container da Imagem em Tela Cheia */}
+            <div className="relative rounded-2xl border border-white/15 bg-[#0b0c13] p-2 sm:p-4 overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.95)] max-h-[80vh] flex items-center justify-center">
+              <img
+                src={previewModal.url}
+                alt={previewModal.title}
+                className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
+              />
+            </div>
+
+            {/* Rodapé Informativo do Modal com Ações */}
+            <div className="mt-4 w-full max-w-xl flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#11131f]/90 border border-white/10 p-3.5 rounded-2xl backdrop-blur-md">
+              <div className="text-center sm:text-left">
+                <h3 className="text-xs font-bold uppercase text-white font-heading tracking-wide">
+                  {previewModal.title}
+                </h3>
+                <div className="flex items-center justify-center sm:justify-start gap-2 mt-0.5">
+                  {previewModal.category && (
+                    <span className="text-[10px] font-code text-slate-400">
+                      {previewModal.category}
+                    </span>
+                  )}
+                  {previewModal.dimensions && (
+                    <span className="text-[10px] font-code text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                      {previewModal.dimensions}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  handleDownload(
+                    previewModal.url,
+                    `${previewModal.title.replace(/\s+/g, "_")}.png`
+                  )
+                }
+                className="px-4 py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center gap-2 cursor-pointer font-heading shrink-0"
+              >
+                <Download className="h-4 w-4" />
+                <span>Baixar Imagem PNG</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

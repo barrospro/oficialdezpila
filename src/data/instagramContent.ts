@@ -18,6 +18,16 @@ export interface BrandAsset {
   description: string;
 }
 
+export interface InstagramReels {
+  id: string;
+  title: string;
+  category: string;
+  dimensions: string;
+  videoImage: string;
+  videoPath: string;
+  caption: string;
+}
+
 export const BRAND_ASSETS: BrandAsset[] = [
   {
     id: "brand_favicon",
@@ -823,3 +833,52 @@ Junte-se a milhares de brasileiros satisfeitos.
 #manifesto #futurodatv #dezpila #revolucaodostreaming #sejaDezPila`,
   },
 ];
+
+export const INSTAGRAM_REELS: InstagramReels[] = [
+  {
+    id: "reels_01",
+    title: "Demonstração da Qualidade 4K Ultra HD",
+    category: "🎬 Reels Promo 01",
+    dimensions: "720 x 1280 px (9:16)",
+    videoImage: "/instagram/videos/reels_01_demo_4k.png",
+    videoPath: "/instagram/videos/reels_01_demo_4k.png",
+    caption: `🍿 TUDO O QUE VOCÊ PRECISA PARA MARATONAR!
+
+Sinal 4K Ultra HD sem travamentos, com todos os lançamentos de cinema e campeonatos de futebol inclusos.
+
+👉 Assine agora em 2 minutos por apenas R$ 10/mês no link da bio!
+
+#DezPila #Streaming4K #FilmesESeries #Futebol4K #ReelsPromo`,
+  },
+  {
+    id: "reels_02",
+    title: "Futebol ao Vivo em 60fps sem Travamentos",
+    category: "⚽ Reels Esportes 02",
+    dimensions: "720 x 1280 px (9:16)",
+    videoImage: "/instagram/videos/reels_02_futebol_60fps.png",
+    videoPath: "/instagram/videos/reels_02_futebol_60fps.png",
+    caption: `⚽ NUNCA MAIS PERCA UM GOL POR TRAVAMENTOS!
+
+Assista ao Brasileirão, UEFA Champions League e Libertadores com transmissão fluida em 60fps e baixíssima latência.
+
+👉 Ative seu sinal agora por R$ 10 no link da Bio!
+
+#FutebolAoVivo #DezPila #Champions #Brasileirao #ReelsFutebol`,
+  },
+  {
+    id: "reels_03",
+    title: "Como Instalar em 2 Minutos na Smart TV",
+    category: "📲 Reels Tutorial 03",
+    dimensions: "720 x 1280 px (9:16)",
+    videoImage: "/instagram/videos/reels_03_tutorial_instala.png",
+    videoPath: "/instagram/videos/reels_03_tutorial_instala.png",
+    caption: `📲 PASSO A PASSO SUPER SIMPLES!
+
+Aprenda a instalar o DezPila na sua Smart TV (Samsung, LG, Android TV), Celular ou TV Box em menos de 2 minutos.
+
+👉 Assine agora no link da Bio e receba seu login no WhatsApp!
+
+#Tutorial #SmartTV #DezPila #TVBox #ReelsTutorial`,
+  },
+];
+
