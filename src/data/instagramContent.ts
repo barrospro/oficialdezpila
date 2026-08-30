@@ -69,6 +69,56 @@ export const BRAND_ASSETS: BrandAsset[] = [
     description:
       "Banner principal em resolução 1080p Full HD para fundos de canais, capas de grupos e apresentações institucionais.",
   },
+  {
+    id: "destaque_depoimentos",
+    name: "Capa Destaque: ⭐ Depoimentos",
+    category: "Instagram Destaque (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/destaque_depoimentos.png",
+    description:
+      "Capa oficial para o destaque 'Depoimentos' no Instagram (Prints de clientes satisfeitos e validações reais).",
+  },
+  {
+    id: "destaque_catalogo",
+    name: "Capa Destaque: 🍿 Catálogo",
+    category: "Instagram Destaque (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/destaque_catalogo.png",
+    description:
+      "Capa oficial para o destaque 'Catálogo' no Instagram (Fotos dos lançamentos de filmes e séries 4K).",
+  },
+  {
+    id: "destaque_futebol",
+    name: "Capa Destaque: ⚽ Futebol",
+    category: "Instagram Destaque (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/destaque_futebol.png",
+    description:
+      "Capa oficial para o destaque 'Futebol' no Instagram (Programação dos jogos e campeonatos da semana).",
+  },
+  {
+    id: "destaque_duvidas",
+    name: "Capa Destaque: ❓ Dúvidas",
+    category: "Instagram Destaque (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/destaque_duvidas.png",
+    description:
+      "Capa oficial para o destaque 'Dúvidas' no Instagram (Perguntas frequentes e passo a passo de instalação).",
+  },
+  {
+    id: "destaque_planos",
+    name: "Capa Destaque: 💳 Planos",
+    category: "Instagram Destaque (9:16)",
+    dimensions: "1080 x 1920 px",
+    format: "PNG Vertical",
+    imagePath: "/brand/destaques/destaque_planos.png",
+    description:
+      "Capa oficial para o destaque 'Planos' no Instagram (Explicando a oferta de R$ 10/mês e facilidades do PIX).",
+  },
 ];
 
 
