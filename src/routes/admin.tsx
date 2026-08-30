@@ -23,12 +23,10 @@ import {
   CreditCard,
   X,
   ZoomIn,
-  Video,
 } from "lucide-react";
 import {
   INSTAGRAM_CREATIVES,
   BRAND_ASSETS,
-  INSTAGRAM_REELS,
 } from "@/data/instagramContent";
 
 export const Route = createFileRoute("/admin")({
@@ -47,9 +45,9 @@ function AdminDashboard() {
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Main Tab State: 'feed' | 'stories' | 'reels' | 'todos' | 'identidade'
+  // Main Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
   const [activeTab, setActiveTab] = useState<
-    "feed" | "stories" | "reels" | "todos" | "identidade"
+    "feed" | "stories" | "todos" | "identidade"
   >("feed");
 
   // Sub-Tab State inside 'identidade'
@@ -57,14 +55,12 @@ function AdminDashboard() {
     "todos" | "logotipos" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
   >("todos");
 
-  // Modal de visualização de imagem/vídeo em tela cheia (Fullscreen Preview Modal)
+  // Modal de visualização de imagem em tela cheia (Fullscreen Preview Modal)
   const [previewModal, setPreviewModal] = useState<{
     url: string;
     title: string;
     category?: string;
     dimensions?: string;
-    isVideo?: boolean;
-    videoUrl?: string;
   } | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -136,17 +132,6 @@ function AdminDashboard() {
     if (!q) return true;
     return (
       item.day.toString().includes(q) ||
-      item.title.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q) ||
-      item.caption.toLowerCase().includes(q)
-    );
-  });
-
-  // Filtragem dos Reels por busca
-  const filteredReels = INSTAGRAM_REELS.filter((item) => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return true;
-    return (
       item.title.toLowerCase().includes(q) ||
       item.category.toLowerCase().includes(q) ||
       item.caption.toLowerCase().includes(q)
@@ -318,15 +303,15 @@ function AdminDashboard() {
               Acervo de Criativos & Marca Liberado
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-white font-heading mb-2">
-              CENTRAL DE CRIATIVOS, REELS E MARCA
+              CENTRAL DE CRIATIVOS E IDENTIDADE VISUAL
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as artes dos posts (Feed e Story), roteiros/vídeos de Reels (9:16) e navegue pela Identidade Visual. Clique em qualquer imagem para abrir a visualização em tela cheia!
+              Baixe as artes dos posts (Feed e Story) em alta resolução (4K), copie as legendas formatadas e navegue pelas capas e variações de destaques na aba Identidade Visual. Clique em qualquer imagem para abrir a visualização em tela cheia!
             </p>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / REELS / TODAS / IDENTIDADE VISUAL) */}
+        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar gap-4">
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -353,19 +338,6 @@ function AdminDashboard() {
             >
               <Tv className="h-4 w-4" />
               <span>Imagem Story (9:16)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("reels")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
-                activeTab === "reels"
-                  ? "bg-[#970202] text-white shadow-[0_0_20px_rgba(151,2,2,0.6)]"
-                  : "bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <Video className="h-4 w-4 text-rose-400" />
-              <span>Vídeos / Reels (9:16)</span>
             </button>
 
             <button
@@ -399,10 +371,6 @@ function AdminDashboard() {
             {activeTab === "identidade" ? (
               <>
                 Exibindo: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> de {BRAND_ASSETS.length} ativos
-              </>
-            ) : activeTab === "reels" ? (
-              <>
-                Total: <strong className="text-white font-bold">{filteredReels.length}</strong> vídeos/reels
               </>
             ) : (
               <>
@@ -607,165 +575,8 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* ABA VÍDEOS / REELS (9:16) */}
-        {activeTab === "reels" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
-            {filteredReels.map((reel) => {
-              const isCaptionExpanded = expandedId === reel.id;
-
-              return (
-                <div
-                  key={reel.id}
-                  className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
-                >
-                  {/* Header do Card */}
-                  <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-md bg-rose-500/20 border border-rose-500/40 text-rose-400 text-[10.5px] font-bold font-code uppercase tracking-wider flex items-center gap-1">
-                        <Video className="h-3 w-3" />
-                        REELS 9:16
-                      </span>
-                      <span className="text-[11px] font-code text-slate-400">
-                        {reel.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Prévia da Imagem/Vídeo do Reel Clicável */}
-                  <div
-                    onClick={() =>
-                      setPreviewModal({
-                        url: reel.videoImage,
-                        title: reel.title,
-                        category: reel.category,
-                        dimensions: reel.dimensions,
-                        isVideo: true,
-                        videoUrl: reel.videoPath,
-                      })
-                    }
-                    className="p-4 bg-black/60 flex items-center justify-center min-h-[220px] cursor-zoom-in relative group/reel"
-                  >
-                    <video
-                      src={reel.videoPath}
-                      poster={reel.videoImage}
-                      controls
-                      loop
-                      muted
-                      playsInline
-                      className="w-36 h-[200px] object-cover rounded-xl border border-white/15 shadow-md group-hover/reel:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/reel:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold font-heading text-white pointer-events-none">
-                      <ZoomIn className="h-5 w-5 text-rose-400" />
-                      <span>Ver Vídeo em Tela Cheia</span>
-                    </div>
-                  </div>
-
-                  {/* Título & Legenda com Expansor */}
-                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                    <div>
-                      <h3 className="text-xs font-bold uppercase text-white font-heading leading-tight mb-2">
-                        {reel.title}
-                      </h3>
-
-                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300 font-body relative">
-                        <div
-                          className={
-                            "whitespace-pre-line overflow-hidden font-body text-[11.5px] leading-relaxed transition-all " +
-                            (isCaptionExpanded
-                              ? "max-h-none"
-                              : "max-h-24 line-clamp-4")
-                          }
-                        >
-                          {reel.caption}
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setExpandedId(
-                              isCaptionExpanded ? null : reel.id
-                            )
-                          }
-                          className="mt-2 text-[10.5px] font-bold text-[#ff4d4d] hover:underline flex items-center gap-1 cursor-pointer"
-                        >
-                          {isCaptionExpanded ? (
-                            <>
-                              <span>Recolher legenda</span>
-                              <ChevronUp className="h-3 w-3" />
-                            </>
-                          ) : (
-                            <>
-                              <span>Ver legenda completa</span>
-                              <ChevronDown className="h-3 w-3" />
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Ações do Reel (Baixar Vídeo MP4, Baixar Capa PNG & Copiar Legenda) */}
-                    <div className="space-y-2 pt-1 border-t border-white/10">
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDownload(
-                              reel.videoPath,
-                              `${reel.id}.mp4`
-                            )
-                          }
-                          className="w-full py-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-rose-600 hover:bg-rose-700 text-white shadow-[0_4px_12px_rgba(225,29,72,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
-                        >
-                          <Video className="h-3.5 w-3.5" />
-                          <span>Baixar MP4</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDownload(
-                              reel.videoImage,
-                              `${reel.id}.png`
-                            )
-                          }
-                          className="w-full py-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_4px_12px_rgba(151,2,2,0.4)] transition-all flex items-center justify-center gap-1.5 cursor-pointer font-heading"
-                        >
-                          <Download className="h-3.5 w-3.5" />
-                          <span>Baixar PNG</span>
-                        </button>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => handleCopyCaption(reel.id, reel.caption)}
-                        className={
-                          "w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer font-heading " +
-                          (copiedId === reel.id
-                            ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]"
-                            : "bg-white/10 hover:bg-white/20 text-white border border-white/10")
-                        }
-                      >
-                        {copiedId === reel.id ? (
-                          <>
-                            <Check className="h-4 w-4" />
-                            <span>✓ Legenda Copiada!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="h-4 w-4" />
-                            <span>Copiar Legenda do Reels</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
         {/* GRID DE CRIATIVOS DE FEED E STORY (POSTS) */}
-        {activeTab !== "identidade" && activeTab !== "reels" && (
+        {activeTab !== "identidade" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCreatives.map((creative) => {
               const showFeed = activeTab === "feed" || activeTab === "todos";
@@ -1003,25 +814,13 @@ function AdminDashboard() {
               <X className="h-6 w-6" />
             </button>
 
-            {/* Container da Imagem ou Vídeo em Tela Cheia */}
+            {/* Container da Imagem em Tela Cheia */}
             <div className="relative rounded-2xl border border-white/15 bg-[#0b0c13] p-2 sm:p-4 overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.95)] max-h-[80vh] flex items-center justify-center">
-              {previewModal.isVideo ? (
-                <video
-                  src={previewModal.videoUrl || previewModal.url}
-                  poster={previewModal.url}
-                  controls
-                  autoPlay
-                  loop
-                  playsInline
-                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
-                />
-              ) : (
-                <img
-                  src={previewModal.url}
-                  alt={previewModal.title}
-                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
-                />
-              )}
+              <img
+                src={previewModal.url}
+                alt={previewModal.title}
+                className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl"
+              />
             </div>
 
             {/* Rodapé Informativo do Modal com Ações */}
@@ -1048,24 +847,14 @@ function AdminDashboard() {
                 type="button"
                 onClick={() =>
                   handleDownload(
-                    previewModal.isVideo && previewModal.videoUrl
-                      ? previewModal.videoUrl
-                      : previewModal.url,
-                    `${previewModal.title.replace(/\s+/g, "_")}.${
-                      previewModal.isVideo ? "mp4" : "png"
-                    }`
+                    previewModal.url,
+                    `${previewModal.title.replace(/\s+/g, "_")}.png`
                   )
                 }
                 className="px-4 py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center gap-2 cursor-pointer font-heading shrink-0"
               >
-                {previewModal.isVideo ? (
-                  <Video className="h-4 w-4" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-                <span>
-                  Baixar {previewModal.isVideo ? "Vídeo MP4" : "Imagem PNG"}
-                </span>
+                <Download className="h-4 w-4" />
+                <span>Baixar Imagem PNG</span>
               </button>
             </div>
           </div>
