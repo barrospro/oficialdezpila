@@ -259,3 +259,12 @@
 #lovable-badge {
   display: none !important;
 }
+
+/* Oculta a navbar quando o modal de checkout estiver aberto */
+body.checkout-modal-open nav,
+body.checkout-modal-open header {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
