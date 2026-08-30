@@ -15,6 +15,12 @@ import {
   ChevronDown,
   ChevronUp,
   Palette,
+  FolderOpen,
+  Star,
+  Film,
+  Trophy,
+  HelpCircle,
+  CreditCard,
 } from "lucide-react";
 import {
   INSTAGRAM_CREATIVES,
@@ -37,10 +43,16 @@ function AdminDashboard() {
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
+  // Main Tab State: 'feed' | 'stories' | 'todos' | 'identidade'
   const [activeTab, setActiveTab] = useState<
     "feed" | "stories" | "todos" | "identidade"
   >("feed");
+
+  // Sub-Tab State inside 'identidade'
+  const [brandSubTab, setBrandSubTab] = useState<
+    "todos" | "logotipos" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
+  >("todos");
+
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -105,15 +117,28 @@ function AdminDashboard() {
     );
   });
 
-  // Filtragem dos ativos de marca por busca
+  // Filtragem dos ativos de marca por busca e sub-aba
   const filteredBrandAssets = BRAND_ASSETS.filter((item) => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return true;
-    return (
+    const matchesSearch =
+      !q ||
       item.name.toLowerCase().includes(q) ||
       item.category.toLowerCase().includes(q) ||
-      item.description.toLowerCase().includes(q)
-    );
+      item.description.toLowerCase().includes(q);
+
+    if (!matchesSearch) return false;
+
+    // Filtragem por sub-aba
+    if (brandSubTab === "todos") return true;
+    if (brandSubTab === "logotipos") return item.id.startsWith("brand_");
+    if (brandSubTab === "depoimentos")
+      return item.id.includes("depoimento");
+    if (brandSubTab === "catalogo") return item.id.includes("catalogo");
+    if (brandSubTab === "futebol") return item.id.includes("futebol");
+    if (brandSubTab === "duvidas") return item.id.includes("duvidas");
+    if (brandSubTab === "planos") return item.id.includes("planos");
+
+    return true;
   });
 
   // TELA DE LOGIN ADMIN (Caso não esteja autenticado)
@@ -227,7 +252,7 @@ function AdminDashboard() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por nome, dia, filtro..."
+                placeholder="Buscar por nome, filtro..."
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-1.5 px-3 pl-9 text-xs text-white outline-none focus:border-[#970202] transition-all"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
@@ -260,13 +285,13 @@ function AdminDashboard() {
               CENTRAL DE CRIATIVOS E IDENTIDADE VISUAL
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed">
-              Baixe as artes dos posts (Feed e Story) em alta resolução (4K), copie as legendas formatadas e faça o download da identidade visual completa da marca DezPila.
+              Baixe as artes dos posts (Feed e Story) em alta resolução (4K), copie as legendas formatadas e navegue pelas capas e variações de destaques do Instagram na aba Identidade Visual.
             </p>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO POR ABAS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-8 overflow-x-auto no-scrollbar gap-4">
+        {/* NAVEGAÇÃO POR ABAS PRINCIPAIS (FEED / STORY / TODAS / IDENTIDADE VISUAL) */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar gap-4">
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
@@ -324,7 +349,7 @@ function AdminDashboard() {
           <div className="text-xs font-code text-slate-400 shrink-0">
             {activeTab === "identidade" ? (
               <>
-                Total: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> arquivos de marca
+                Exibindo: <strong className="text-white font-bold">{filteredBrandAssets.length}</strong> de {BRAND_ASSETS.length} ativos
               </>
             ) : (
               <>
@@ -334,64 +359,185 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* ABA IDENTIDADE VISUAL */}
+        {/* SUB-ABAS DE IDENTIDADE VISUAL (SEPARANDO LOGOTIPOS E CADA TIPO DE DESTAQUE) */}
         {activeTab === "identidade" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
-            {filteredBrandAssets.map((asset) => (
-              <div
-                key={asset.id}
-                className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
+          <div className="mb-8">
+            <div className="p-2 rounded-2xl border border-white/10 bg-[#0d0e17] flex items-center gap-2 overflow-x-auto no-scrollbar">
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("todos")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "todos"
+                    ? "bg-white/15 text-white border border-white/20 shadow-md"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
               >
-                {/* Header do Card */}
-                <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10.5px] font-bold font-code uppercase tracking-wider">
-                      {asset.format}
-                    </span>
-                    <span className="text-[11px] font-code text-slate-400">
-                      {asset.category}
-                    </span>
-                  </div>
-                  <span className="text-[10.5px] font-code text-slate-400">
-                    {asset.dimensions}
-                  </span>
-                </div>
+                <FolderOpen className="h-3.5 w-3.5" />
+                <span>Todos os Ativos ({BRAND_ASSETS.length})</span>
+              </button>
 
-                {/* Prévia Visual do Ativo de Marca */}
-                <div className="p-6 bg-black/60 flex items-center justify-center min-h-[220px]">
-                  <img
-                    src={asset.imagePath}
-                    alt={asset.name}
-                    className="max-h-[170px] w-auto max-w-full object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                </div>
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("logotipos")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "logotipos"
+                    ? "bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Palette className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Logotipos & Favicons</span>
+              </button>
 
-                {/* Título & Detalhes */}
-                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                  <div>
-                    <h3 className="text-sm font-bold uppercase text-white font-heading leading-tight mb-1">
-                      {asset.name}
-                    </h3>
-                    <p className="text-xs text-slate-300 font-body leading-relaxed">
-                      {asset.description}
-                    </p>
-                  </div>
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("depoimentos")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "depoimentos"
+                    ? "bg-amber-600 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Star className="h-3.5 w-3.5 text-amber-400" />
+                <span>⭐ Depoimentos</span>
+              </button>
 
-                  {/* BOTÃO BAIXAR IMAGEM MARCA */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleDownload(asset.imagePath, `${asset.id}.png`)
-                    }
-                    className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Baixar Imagem PNG ({asset.dimensions})</span>
-                  </button>
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("catalogo")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "catalogo"
+                    ? "bg-red-700 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Film className="h-3.5 w-3.5 text-red-400" />
+                <span>🍿 Catálogo</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("futebol")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "futebol"
+                    ? "bg-emerald-700 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Trophy className="h-3.5 w-3.5 text-emerald-400" />
+                <span>⚽ Futebol</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("duvidas")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "duvidas"
+                    ? "bg-cyan-700 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <HelpCircle className="h-3.5 w-3.5 text-cyan-400" />
+                <span>❓ Dúvidas</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setBrandSubTab("planos")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "planos"
+                    ? "bg-purple-700 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <CreditCard className="h-3.5 w-3.5 text-purple-400" />
+                <span>💳 Planos</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ABA IDENTIDADE VISUAL — GRID DE ATIVOS */}
+        {activeTab === "identidade" && (
+          <div className="space-y-6">
+            {/* Banner de cabeçalho explicativo caso uma sub-aba de destaque específica esteja ativa */}
+            {brandSubTab !== "todos" && brandSubTab !== "logotipos" && (
+              <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-white font-heading">
+                    {brandSubTab === "depoimentos" && "⭐ DESTAQUE: DEPOIMENTOS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
+                    {brandSubTab === "catalogo" && "🍿 DESTAQUE: CATÁLOGO (1 CAPA + 3 STORIES DE CONTEÚDO)"}
+                    {brandSubTab === "futebol" && "⚽ DESTAQUE: FUTEBOL (1 CAPA + 3 STORIES DE CONTEÚDO)"}
+                    {brandSubTab === "duvidas" && "❓ DESTAQUE: DÚVIDAS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
+                    {brandSubTab === "planos" && "💳 DESTAQUE: PLANOS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
+                  </h2>
+                  <p className="text-xs text-slate-400 font-body mt-0.5">
+                    1080 x 1920 pixels (Proporção 9:16) com logomarca oficial DezPila e zero referências a URLs de site.
+                  </p>
                 </div>
+                <span className="px-3 py-1 rounded-full bg-[#970202]/20 border border-[#970202]/40 text-[#ff4d4d] text-xs font-bold font-code shrink-0">
+                  {filteredBrandAssets.length} ARQUIVOS
+                </span>
               </div>
-            ))}
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-200">
+              {filteredBrandAssets.map((asset) => (
+                <div
+                  key={asset.id}
+                  className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0d0e15] overflow-hidden hover:border-[#970202]/60 transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(151,2,2,0.25)]"
+                >
+                  {/* Header do Card */}
+                  <div className="p-4 border-b border-white/10 bg-[#12141f] flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10.5px] font-bold font-code uppercase tracking-wider">
+                        {asset.format}
+                      </span>
+                      <span className="text-[11px] font-code text-slate-400 truncate max-w-[140px]">
+                        {asset.category}
+                      </span>
+                    </div>
+                    <span className="text-[10.5px] font-code text-slate-400">
+                      {asset.dimensions}
+                    </span>
+                  </div>
+
+                  {/* Prévia Visual do Ativo de Marca */}
+                  <div className="p-6 bg-black/60 flex items-center justify-center min-h-[220px]">
+                    <img
+                      src={asset.imagePath}
+                      alt={asset.name}
+                      className="max-h-[200px] w-auto max-w-full object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Título & Detalhes */}
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div>
+                      <h3 className="text-sm font-bold uppercase text-white font-heading leading-tight mb-1">
+                        {asset.name}
+                      </h3>
+                      <p className="text-xs text-slate-300 font-body leading-relaxed">
+                        {asset.description}
+                      </p>
+                    </div>
+
+                    {/* BOTÃO BAIXAR IMAGEM MARCA */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDownload(asset.imagePath, `${asset.id}.png`)
+                      }
+                      className="w-full py-2.5 rounded-xl font-bold uppercase text-xs tracking-wider bg-[#970202] hover:bg-[#b80303] text-white shadow-[0_6px_16px_rgba(151,2,2,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer font-heading"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>Baixar Imagem PNG ({asset.dimensions})</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
