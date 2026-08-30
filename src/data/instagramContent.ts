@@ -69,7 +69,27 @@ export const BRAND_ASSETS: BrandAsset[] = [
     format: "PNG Full HD",
     imagePath: "/brand/capa_perfil_1920x1080.png",
     description:
-      "Banner principal em resolução 1080p Full HD para fundos de canais, capas de grupos e apresentações institucionais.",
+      "Banner de cabeçalho para perfis sociais (YouTube, Facebook, Twitter) com estética dark premium e slogan oficial.",
+  },
+  {
+    id: "brand_moldura_reels_cta",
+    name: "Moldura Reels / Story Transparente (Com CTA Comente TV)",
+    category: "Moldura Vídeo PNG Alpha",
+    dimensions: "1080 x 1920 px (9:16)",
+    format: "PNG Transparente",
+    imagePath: "/brand/moldura_reels_transparente.png",
+    description:
+      "Moldura em alta resolução HD/4K com logomarca superior e centro 100% transparente para sobrepor qualquer vídeo no CapCut, InShot, Premiere ou Canva + CTA 'Comente TV' no rodapé.",
+  },
+  {
+    id: "brand_moldura_reels_clean",
+    name: "Moldura Reels / Story Transparente Clean (Oferta R$ 10)",
+    category: "Moldura Vídeo PNG Alpha",
+    dimensions: "1080 x 1920 px (9:16)",
+    format: "PNG Transparente",
+    imagePath: "/brand/moldura_reels_clean.png",
+    description:
+      "Moldura minimalista clean com topo da marca e rodapé 'Assine por R$ 10,00/mês'. Centro transparente ideal para Reels de futebol, filmes e demonstrações de TV.",
   },
   {
     id: "destaque_depoimentos",

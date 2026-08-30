@@ -52,7 +52,7 @@ function AdminDashboard() {
 
   // Sub-Tab State inside 'identidade'
   const [brandSubTab, setBrandSubTab] = useState<
-    "todos" | "logotipos" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
+    "todos" | "logotipos" | "molduras" | "depoimentos" | "catalogo" | "futebol" | "duvidas" | "planos"
   >("todos");
 
   // Modal de visualização de imagem em tela cheia (Fullscreen Preview Modal)
@@ -151,7 +151,8 @@ function AdminDashboard() {
 
     // Filtragem por sub-aba
     if (brandSubTab === "todos") return true;
-    if (brandSubTab === "logotipos") return item.id.startsWith("brand_");
+    if (brandSubTab === "logotipos") return item.id.startsWith("brand_") && !item.id.includes("moldura");
+    if (brandSubTab === "molduras") return item.id.includes("moldura");
     if (brandSubTab === "depoimentos")
       return item.id.includes("depoimento");
     if (brandSubTab === "catalogo") return item.id.includes("catalogo");
@@ -412,6 +413,19 @@ function AdminDashboard() {
 
               <button
                 type="button"
+                onClick={() => setBrandSubTab("molduras")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                  brandSubTab === "molduras"
+                    ? "bg-rose-600 text-white shadow-[0_0_15px_rgba(225,29,72,0.4)]"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Tv className="h-3.5 w-3.5 text-rose-400" />
+                <span>🎬 Molduras Reels (PNG Alpha)</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setBrandSubTab("depoimentos")}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                   brandSubTab === "depoimentos"
@@ -485,6 +499,7 @@ function AdminDashboard() {
               <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-sm font-bold uppercase tracking-wider text-white font-heading">
+                    {brandSubTab === "molduras" && "🎬 MOLDURAS TRANSPARENTES PARA REELS & STORIES (PNG ALPHA 1080x1920 9:16)"}
                     {brandSubTab === "depoimentos" && "⭐ DESTAQUE: DEPOIMENTOS (1 CAPA + 3 STORIES DE CONTEÚDO)"}
                     {brandSubTab === "catalogo" && "🍿 DESTAQUE: CATÁLOGO (1 CAPA + 3 STORIES DE CONTEÚDO)"}
                     {brandSubTab === "futebol" && "⚽ DESTAQUE: FUTEBOL (1 CAPA + 3 STORIES DE CONTEÚDO)"}
