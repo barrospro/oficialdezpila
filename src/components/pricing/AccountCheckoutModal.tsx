@@ -20,6 +20,7 @@ import {
   Plus,
   Minus,
   Loader2,
+  BookOpen,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import {
@@ -69,6 +70,10 @@ export function AccountCheckoutModal({
   // 2. Conteúdo Adulto Premium - R$ 12,90 fixo
   const [pacoteAdulto, setPacoteAdulto] = useState(false);
   const pacoteAdultoPrice = 12.9;
+
+  // 3. CristoFlix Infantil (Entretenimento Bíblico) - R$ 7,90 fixo
+  const [pacoteCristoFlix, setPacoteCristoFlix] = useState(false);
+  const pacoteCristoFlixPrice = 7.9;
 
   // Payment Method State: 'pix' | 'cartao' (Boleto removido)
   const [paymentMethod, setPaymentMethod] = useState<"pix" | "cartao">("pix");
@@ -131,6 +136,7 @@ export function AccountCheckoutModal({
       setStep("CADASTRO");
       setTelasExtras(0);
       setPacoteAdulto(false);
+      setPacoteCristoFlix(false);
       setTimerSeconds(900);
       setLoadingPix(false);
       setPixPayload("");
@@ -202,7 +208,9 @@ export function AccountCheckoutModal({
   const basePrice = parsePrice(plano.preco);
   const telasPriceTotal = telasExtras * telaExtraUnit;
   const adultoPriceTotal = pacoteAdulto ? pacoteAdultoPrice : 0;
-  const totalPriceNum = basePrice + telasPriceTotal + adultoPriceTotal;
+  const cristoFlixPriceTotal = pacoteCristoFlix ? pacoteCristoFlixPrice : 0;
+  const totalPriceNum =
+    basePrice + telasPriceTotal + adultoPriceTotal + cristoFlixPriceTotal;
   const totalPriceStr = formatPrice(totalPriceNum);
 
   const maskCardNumber = (v: string) => {
@@ -687,6 +695,45 @@ export function AccountCheckoutModal({
                 </div>
               </div>
 
+              {/* ORDER BUMP 3: CristoFlix Infantil (Entretenimento Bíblico Edificante) */}
+              <div
+                className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-3 cursor-pointer ${
+                  pacoteCristoFlix
+                    ? "bg-[#10B981]/10 border-[#10B981] shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                    : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                }`}
+                onClick={() => setPacoteCristoFlix(!pacoteCristoFlix)}
+              >
+                <div className="flex items-start gap-2.5">
+                  <div className="mt-0.5">
+                    <span
+                      className={
+                        "flex h-4 w-4 items-center justify-center rounded-md border-[1.5px] transition-colors " +
+                        (pacoteCristoFlix
+                          ? "border-[#10B981] bg-[#10B981] text-white"
+                          : "border-white/30 bg-white/5 text-transparent")
+                      }
+                    >
+                      <Check className="h-3 w-3" strokeWidth={3} />
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1">
+                        <BookOpen className="h-3.5 w-3.5 text-cyan-400" />
+                        CristoFlix Infantil (Bíblico & Educativo)
+                      </span>
+                      <span className="text-[11px] font-bold font-code text-cyan-400 bg-cyan-400/10 px-1.5 py-0.5 rounded shrink-0">
+                        + R$ 7,90
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-300 font-body leading-relaxed">
+                      Desenhos animados, histórias bíblicas e valores cristãos edificantes para proteger e ensinar suas crianças.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* SELEÇÃO DA FORMA DE PAGAMENTO (PIX OU CARTÃO) */}
               <div className="mb-3">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 font-heading block mb-1.5">
@@ -865,6 +912,12 @@ export function AccountCheckoutModal({
                       <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
                         <span>Conteúdo Adulto:</span>
                         <span>+ R$ 12,90</span>
+                      </div>
+                    )}
+                    {pacoteCristoFlix && (
+                      <div className="flex justify-between items-center text-xs text-cyan-400 font-code mb-1 animate-in fade-in duration-200">
+                        <span>CristoFlix Infantil:</span>
+                        <span>+ R$ 7,90</span>
                       </div>
                     )}
                     <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-white font-heading pt-1.5 border-t border-white/10 mt-1">
