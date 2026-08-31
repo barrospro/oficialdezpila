@@ -1,3 +1,5 @@
+import { Instagram, Facebook } from "lucide-react";
+
 function PaymentBadge({ method }: { method: string }) {
   switch (method) {
     case "Visa":
@@ -123,6 +125,30 @@ export function Footer() {
             </span>
           </div>
 
+          {/* Redes Sociais Rápidas */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.instagram.com/soudezpila"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#14141c] hover:bg-[#1f1f2c] border border-white/10 hover:border-[#E1306C]/60 text-white px-3.5 py-1.5 rounded-lg font-code text-xs font-bold transition-all shadow-sm group hover:shadow-[0_0_15px_rgba(225,48,108,0.3)]"
+              title="Instagram Oficial @soudezpila"
+            >
+              <Instagram className="h-4 w-4 text-[#E1306C] group-hover:scale-110 transition-transform" />
+              <span>@soudezpila</span>
+            </a>
+            <a
+              href="https://www.facebook.com/soudezpila"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#14141c] hover:bg-[#1f1f2c] border border-white/10 hover:border-[#1877F2]/60 text-white px-3.5 py-1.5 rounded-lg font-code text-xs font-bold transition-all shadow-sm group hover:shadow-[0_0_15px_rgba(24,119,242,0.3)]"
+              title="Facebook Oficial /soudezpila"
+            >
+              <Facebook className="h-4 w-4 text-[#1877F2] group-hover:scale-110 transition-transform" />
+              <span>/soudezpila</span>
+            </a>
+          </div>
+
           <div className="font-code text-xs text-muted-foreground text-center">
             CRIPTOGRAFIA: AES-256 // CONEXÃO: SEGURA //{" "}
             <span className="text-brand font-bold">SISTEMA ATIVO</span>
@@ -130,7 +156,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-border/40">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             <div>
               <p className="font-heading font-extrabold text-xs mb-3.5 uppercase tracking-widest text-brand flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand" />
@@ -154,6 +180,33 @@ export function Footer() {
                 <SecurityBadge seal="Google Site Seguro" />
                 <SecurityBadge seal="🔒 SSL" />
                 <SecurityBadge seal="🛡️ BLINDADO" />
+              </div>
+            </div>
+
+            <div>
+              <p className="font-heading font-extrabold text-xs mb-3.5 uppercase tracking-widest text-brand flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+                Redes Oficiais
+              </p>
+              <div className="flex flex-wrap gap-2.5 items-center">
+                <a
+                  href="https://www.instagram.com/soudezpila"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-[#14141c] hover:bg-[#1f1f2c] border border-white/10 hover:border-[#E1306C]/60 text-white px-3 py-1.5 rounded-md font-code text-xs font-bold transition-all shadow-sm group hover:shadow-[0_0_15px_rgba(225,48,108,0.3)]"
+                >
+                  <Instagram className="h-3.5 w-3.5 text-[#E1306C] group-hover:scale-110 transition-transform" />
+                  <span>Instagram</span>
+                </a>
+                <a
+                  href="https://www.facebook.com/soudezpila"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-[#14141c] hover:bg-[#1f1f2c] border border-white/10 hover:border-[#1877F2]/60 text-white px-3 py-1.5 rounded-md font-code text-xs font-bold transition-all shadow-sm group hover:shadow-[0_0_15px_rgba(24,119,242,0.3)]"
+                >
+                  <Facebook className="h-3.5 w-3.5 text-[#1877F2] group-hover:scale-110 transition-transform" />
+                  <span>Facebook</span>
+                </a>
               </div>
             </div>
           </div>
