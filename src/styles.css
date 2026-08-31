@@ -279,3 +279,20 @@ body.checkout-modal-open {
   touch-action: none;
 }
 
+/* Proteção Anti-Cópia e Anti-Arrasto de Imagens */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Proteção de seleção em botões, cards e títulos */
+.btn-brand, .card-surface, .section-title, nav, footer {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
