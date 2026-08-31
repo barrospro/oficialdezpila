@@ -1,13 +1,54 @@
-import { useState, useEffect } from "react";
-import { ShieldAlert, Lock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ShieldAlert, Lock, Play, Pause } from "lucide-react";
 
 export function VideoShowcase() {
   const [showToast, setShowToast] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleProtectedAction = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setShowToast(true);
   };
+
+  const togglePlayPause = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!iframeRef.current || !iframeRef.current.contentWindow) return;
+
+    const nextPlayState = !isPlaying;
+    iframeRef.current.contentWindow.postMessage(
+      JSON.stringify({ method: nextPlayState ? "play" : "pause" }),
+      "*"
+    );
+    setIsPlaying(nextPlayState);
+    setHasStarted(true);
+  };
+
+  // Sincroniza estado de play/pause quando controlado pela barra inferior
+  useEffect(() => {
+    const handleVimeoMessage = (event: MessageEvent) => {
+      try {
+        const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+        if (data && typeof data === "object") {
+          if (data.event === "play") {
+            setIsPlaying(true);
+            setHasStarted(true);
+          } else if (data.event === "pause" || data.event === "finish" || data.event === "ended") {
+            setIsPlaying(false);
+          }
+        }
+      } catch {
+        // Ignora mensagens de outros plugins
+      }
+    };
+
+    window.addEventListener("message", handleVimeoMessage);
+    return () => window.removeEventListener("message", handleVimeoMessage);
+  }, []);
 
   useEffect(() => {
     if (showToast) {
@@ -17,7 +58,11 @@ export function VideoShowcase() {
   }, [showToast]);
 
   return (
-    <section id="demonstrativo" className="py-20 px-6 lg:px-12 relative z-10 border-t border-border/40 bg-[#000000]">
+    <section
+      id="demonstrativo"
+      className="py-20 px-6 lg:px-12 relative z-10 border-t border-border/40 bg-[#000000]"
+      onContextMenu={handleProtectedAction}
+    >
       {/* Ambient Red Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-brand/10 rounded-full blur-[140px] pointer-events-none" />
 
@@ -37,31 +82,47 @@ export function VideoShowcase() {
           </p>
         </div>
 
-        {/* Frame do Vídeo com Camada de Proteção */}
+        {/* Frame do Vídeo com Camada de Proteção Total Anti-Clique Direito */}
         <div className="max-w-5xl mx-auto">
           <div className="relative p-2 sm:p-3 rounded-[24px] bg-[#0c0c10] border border-brand/40 shadow-[0_0_60px_rgba(151,2,2,0.3)] backdrop-blur-xl">
             <div
-              className="relative w-full aspect-video rounded-[18px] overflow-hidden bg-black shadow-2xl border border-white/10 select-none"
+              className="group/player relative w-full aspect-video rounded-[18px] overflow-hidden bg-black shadow-2xl border border-white/10 select-none"
               onContextMenu={handleProtectedAction}
             >
-              {/* Iframe Vimeo com parâmetros otimizados para ocultar branding, título e dados de autor */}
+              {/* Iframe Vimeo */}
               <iframe
-                src="https://player.vimeo.com/video/1169361385?title=0&byline=0&portrait=0&badge=0&like=0&watchlater=0&share=0&embed=0&autopause=0&color=970202&dnt=1&playsinline=1"
+                ref={iframeRef}
+                src="https://player.vimeo.com/video/1169361385?api=1&player_id=vimeo_player&title=0&byline=0&portrait=0&badge=0&like=0&watchlater=0&share=0&embed=0&autopause=0&color=970202&dnt=1&playsinline=1"
                 title="Demonstrativo da plataforma DezPila Streaming 4K"
-                className="absolute top-0 left-0 w-full h-full border-0 select-none"
+                className="absolute top-0 left-0 w-full h-full border-0 pointer-events-auto"
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                 allowFullScreen
                 loading="lazy"
               />
 
-              {/* Escudo Superior e Lateral Direito: Bloqueia e oculta botões de curtir, assistir mais tarde, compartilhar e incorporar */}
+              {/* ESCUDO TOTAL SUPERFICIAL: Bloqueia 100% o menu de botão direito do Vimeo e gerencia o clique de Play/Pause */}
               <div
-                className="absolute top-0 right-0 w-20 h-64 z-20 cursor-default bg-gradient-to-l from-black/80 via-black/40 to-transparent flex flex-col items-end p-2 pointer-events-auto"
+                className="absolute inset-0 bottom-12 z-20 cursor-pointer select-none flex items-center justify-center"
+                onContextMenu={handleProtectedAction}
+                onClick={togglePlayPause}
+                title={isPlaying ? "Pausar vídeo" : "Assistir vídeo"}
+              >
+                {/* Botão de Play central se ainda não começou ou se estiver pausado */}
+                {(!hasStarted || !isPlaying) && (
+                  <div className="flex items-center justify-center size-20 rounded-full bg-[#970202]/90 hover:bg-[#b80303] text-white shadow-[0_0_40px_rgba(151,2,2,0.9)] border border-white/20 transition-transform duration-300 hover:scale-110 pointer-events-none">
+                    <Play className="w-8 h-8 fill-white ml-1" />
+                  </div>
+                )}
+              </div>
+
+              {/* Escudo Lateral Direito: Bloqueia e oculta botões de curtir, assistir mais tarde, compartilhar e incorporar */}
+              <div
+                className="absolute top-0 right-0 w-20 h-64 z-25 cursor-default bg-gradient-to-l from-black/90 via-black/50 to-transparent flex flex-col items-end p-2.5 pointer-events-auto"
                 onContextMenu={handleProtectedAction}
                 onClick={handleProtectedAction}
                 title="Reprodução Protegida"
               >
-                <div className="flex items-center gap-1 bg-black/80 backdrop-blur-md px-2 py-1 rounded border border-white/10 text-[9px] font-code text-white/90 shadow-md">
+                <div className="flex items-center gap-1 bg-[#140003]/90 border border-brand/40 px-2 py-1 rounded-md text-[9px] font-code text-white shadow-lg backdrop-blur-md">
                   <Lock className="w-2.5 h-2.5 text-brand" />
                   <span className="text-[8px] font-bold text-brand uppercase">4K VIP</span>
                 </div>
@@ -69,11 +130,11 @@ export function VideoShowcase() {
 
               {/* Escudo Superior Esquerdo: Bloqueia foto de perfil e título */}
               <div
-                className="absolute top-0 left-0 w-48 h-16 z-20 cursor-default bg-gradient-to-r from-black/60 to-transparent pointer-events-auto flex items-center pl-3"
+                className="absolute top-0 left-0 w-52 h-16 z-25 cursor-default bg-gradient-to-r from-black/80 via-black/40 to-transparent pointer-events-auto flex items-center pl-3"
                 onContextMenu={handleProtectedAction}
                 onClick={handleProtectedAction}
               >
-                <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-code text-white/90">
+                <div className="flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-code text-white/90 shadow-md">
                   <Lock className="w-3 h-3 text-brand" />
                   <span>Vídeo Oficial • DezPila</span>
                 </div>
@@ -81,7 +142,7 @@ export function VideoShowcase() {
 
               {/* Toast de Proteção contra cópia/download */}
               {showToast && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center gap-2 bg-[#140003]/95 border border-brand text-white px-5 py-3 rounded-xl shadow-[0_0_30px_rgba(151,2,2,0.8)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center gap-2.5 bg-[#140003]/95 border border-brand text-white px-5 py-3.5 rounded-xl shadow-[0_0_35px_rgba(151,2,2,0.85)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
                   <ShieldAlert className="w-5 h-5 text-brand shrink-0" />
                   <div className="text-left">
                     <p className="font-heading font-bold text-xs uppercase text-white tracking-wide">
