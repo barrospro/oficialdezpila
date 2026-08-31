@@ -56,6 +56,15 @@ export const Route = createRootRoute({
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-YRXRHV5EZC",
+        async: true,
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-YRXRHV5EZC');`,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
