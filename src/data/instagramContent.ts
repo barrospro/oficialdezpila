@@ -19,8 +19,35 @@ export interface BrandAsset {
   caption?: string;
 }
 
-// 8 ARTES PROMOCIONAIS PREMIUM (GERADAS EM ALTA RESOLUÇÃO 3:4) COM LEGENDA E CTA "COMENTE TV"
+// ARTES PROMOCIONAIS PREMIUM & SORTEIOS COM LEGENDA E CTA
 export const PROMOTIONAL_ARTWORKS: BrandAsset[] = [
+  {
+    id: "arte_sorteio_oficial_semestral",
+    name: "🏆 Foto Oficial: Sorteio 6 Meses Grátis (Meta 1.000 Seguidores)",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/sorteio_oficial_semestral.jpg",
+    description:
+      "Arte oficial 3D ultra-moderna de sorteio com Cartão VIP Pass Dourado e Ônix valendo 6 Meses de Assinatura DezPila liberados na meta de 1.000 seguidores.",
+    caption: `🔥 FOTO OFICIAL • SORTEIO DEZPILA VIP 🔥
+
+Quer ganhar 6 MESES de Streaming Ilimitado com +2.000 canais, filmes do cinema, séries completas e futebol ao vivo em 4K totalmente GRÁTIS? 🍿📺
+
+O sorteio será realizado assim que nosso perfil bater a META DE 1.000 SEGUIDORES! 🎯
+
+👇 REGRAS PARA PARTICIPAR:
+1️⃣ Curtir esta publicação oficial.
+2️⃣ Seguir o nosso perfil @oficialdezpila.
+3️⃣ Marcar 2 amigos nos comentários (não vale perfis fakes, lojas ou famosos).
+4️⃣ Compartilhar este post nos seus Stories e marcar o nosso perfil.
+
+⚡ DICA DE OURO: Quanto mais amigos você marcar (em comentários diferentes), maiores serão as suas chances de ganhar! 🚀
+
+Boa sorte a todos! 🍀
+
+#sorteio #sorteiooficial #dezpila #streaming #filmeseseries #futebolaoivo #smarttv #sorteiosbrasil`,
+  },
   {
     id: "arte_cinema_em_familia",
     name: "Arte 01: 🎬 Cinema em Família (R$ 10/Mês)",
