@@ -46,7 +46,7 @@ export function VideoShowcase() {
             >
               {/* Iframe Vimeo com parâmetros otimizados para ocultar branding, título e dados de autor */}
               <iframe
-                src="https://player.vimeo.com/video/1169361385?title=0&byline=0&portrait=0&badge=0&autopause=0&color=970202&dnt=1&playsinline=1"
+                src="https://player.vimeo.com/video/1169361385?title=0&byline=0&portrait=0&badge=0&like=0&watchlater=0&share=0&embed=0&autopause=0&color=970202&dnt=1&playsinline=1"
                 title="Demonstrativo da plataforma DezPila Streaming 4K"
                 className="absolute top-0 left-0 w-full h-full border-0 select-none"
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
@@ -54,18 +54,28 @@ export function VideoShowcase() {
                 loading="lazy"
               />
 
-              {/* Escudo Superior: Bloqueia cliques no botão de compartilhar, incorporar, relógio e logo superior */}
+              {/* Escudo Superior e Lateral Direito: Bloqueia e oculta botões de curtir, assistir mais tarde, compartilhar e incorporar */}
               <div
-                className="absolute top-0 left-0 right-0 h-16 z-20 cursor-default bg-gradient-to-b from-black/40 via-transparent to-transparent"
+                className="absolute top-0 right-0 w-20 h-64 z-20 cursor-default bg-gradient-to-l from-black/80 via-black/40 to-transparent flex flex-col items-end p-2 pointer-events-auto"
                 onContextMenu={handleProtectedAction}
                 onClick={handleProtectedAction}
                 title="Reprodução Protegida"
               >
-                <div className="flex items-center justify-between px-4 py-2 opacity-80 hover:opacity-100 transition-opacity">
-                  <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-code text-white/90">
-                    <Lock className="w-3 h-3 text-brand" />
-                    <span>Vídeo Oficial • DezPila</span>
-                  </div>
+                <div className="flex items-center gap-1 bg-black/80 backdrop-blur-md px-2 py-1 rounded border border-white/10 text-[9px] font-code text-white/90 shadow-md">
+                  <Lock className="w-2.5 h-2.5 text-brand" />
+                  <span className="text-[8px] font-bold text-brand uppercase">4K VIP</span>
+                </div>
+              </div>
+
+              {/* Escudo Superior Esquerdo: Bloqueia foto de perfil e título */}
+              <div
+                className="absolute top-0 left-0 w-48 h-16 z-20 cursor-default bg-gradient-to-r from-black/60 to-transparent pointer-events-auto flex items-center pl-3"
+                onContextMenu={handleProtectedAction}
+                onClick={handleProtectedAction}
+              >
+                <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-code text-white/90">
+                  <Lock className="w-3 h-3 text-brand" />
+                  <span>Vídeo Oficial • DezPila</span>
                 </div>
               </div>
 
