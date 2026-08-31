@@ -1050,8 +1050,7 @@ export function AccountCheckoutModal({
               </div>
 
               <span className="text-[10.5px] font-code text-slate-400 flex items-center gap-1.5">
-                <Lock className="h-3 w-3 text-[#10B981]" /> Processado via Nova
-                API Nitro Pagamentos 100% Criptografado
+                <Lock className="h-3 w-3 text-[#10B981]" /> PIX oficial processado pelo Banco Central • 100% Criptografado
               </span>
             </div>
           )}
