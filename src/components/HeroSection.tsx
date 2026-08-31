@@ -60,11 +60,11 @@ export function HeroSection() {
           </div>
 
           <h1 className="text-5xl lg:text-7xl font-bold uppercase leading-[0.85] tracking-tighter text-balance drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            Conteúdo Ilimitado{" "}
+            Streaming Ilimitado{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-orange-500">
-              Pelo Preço
+              Por R$10/Mês
             </span>{" "}
-            Que Você Merece.
+            e +2.000 Canais 4K.
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-[45ch] font-medium text-pretty leading-relaxed">
@@ -96,9 +96,11 @@ export function HeroSection() {
             <div className="relative bg-background overflow-hidden aspect-video group">
               <img
                 src={devicesMockup}
-                alt="DezPila em múltiplos dispositivos"
+                alt="DezPila Streaming 4K em múltiplos dispositivos Smart TV, Celular e TV Box"
                 width={1024}
                 height={576}
+                loading="eager"
+                decoding="async"
                 className="w-full h-full object-cover opacity-90"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent pointer-events-none" />
