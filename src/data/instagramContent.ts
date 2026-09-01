@@ -22,6 +22,57 @@ export interface BrandAsset {
 // ARTES PROMOCIONAIS PREMIUM & SORTEIOS COM LEGENDA E CTA
 export const PROMOTIONAL_ARTWORKS: BrandAsset[] = [
   {
+    id: "arte_modelo_morena_liberacao",
+    name: "👑 Modelo Morena: Liberação Imediata 4K (R$ 10,00/Mês)",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_modelo_morena.jpg",
+    description:
+      "Arte ultra-moderna de alta conversão com modelo morena sofisticada, controle da Smart TV e VIP Pass 'Liberação Imediata' com sinal 100% anti-travamento.",
+    caption: `✨ A sua Smart TV merece a melhor programação sem travamentos! 📺🍿
+
+Chega de pagar caro em várias assinaturas todo mês. Com o DezPila, você tem acesso instantâneo aos melhores canais, filmes e séries em 4K real:
+
+💎 O QUE VOCÊ TEM DIREITO:
+✅ +2.000 Canais Ao Vivo em Alta Definição
+✅ +60.000 Filmes do Cinema & Séries Completas
+✅ Campeonatos de Futebol sem atraso (60fps)
+✅ Servidores dedicados com tecnologia Anti-Trava
+✅ Liberação no seu WhatsApp em menos de 2 minutos
+
+💰 Tudo isso por apenas R$ 10,00/mês (sem carência e sem fidelidade)!
+
+💬 Comente "QUERO" para receber o link com seu teste exclusivo no Direct!
+🔗 Ou clique no link da Bio: @oficialdezpila 🚀
+
+#dezpila #smarttv #cinemaemcasa #streaming #filmeseseries #futebolaoivo #qualidade4k #iptvbrasil`,
+  },
+  {
+    id: "arte_modelo_ruiva_experiencia4k",
+    name: "🌹 Modelo Ruiva: Experiência 4K Real (R$ 10,00/Mês)",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_modelo_ruiva.jpg",
+    description:
+      "Arte sofisticada com modelo ruiva charmosa destacando 'Experiência 4K Real', futebol ao vivo em 60fps e catálogo completo ilimitado por R$ 10,00/mês.",
+    caption: `🔥 Você já experimentou assistir ao seu time favorito em 4K e 60fps de verdade? ⚽⚡
+
+Com o DezPila, sua sala vira uma arquibancada e um cinema ao mesmo tempo:
+
+🍿 +60.000 títulos liberados para maratonar
+📺 Grade completa com mais de 2.000 canais
+🚀 Instalação simplificada na Smart TV, TV Box ou Celular
+💳 Ativação imediata via PIX com suporte dedicado 24/7
+
+💸 Por um valor que cabe no bolso: APENAS R$ 10,00/mês!
+
+👉 Clique no link da Bio @oficialdezpila e garanta seu acesso hoje mesmo!
+
+#dezpila #futebol60fps #filmes4k #smarttvbrasil #streamingilimitado #cinemaemcasa #iptv4k`,
+  },
+  {
     id: "arte_oferta_urgencia_relampago",
     name: "⚡ Oferta Relâmpago: Últimas Vagas (R$ 10,00/Mês)",
     category: "🔥 Artes Promocionais (3:4)",
