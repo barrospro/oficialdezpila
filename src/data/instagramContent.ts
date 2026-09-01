@@ -22,6 +22,41 @@ export interface BrandAsset {
 // ARTES PROMOCIONAIS PREMIUM & SORTEIOS COM LEGENDA E CTA
 export const PROMOTIONAL_ARTWORKS: BrandAsset[] = [
   {
+    id: "arte_oferta_urgencia_relampago",
+    name: "⚡ Oferta Relâmpago: Últimas Vagas (R$ 10,00/Mês)",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/oferta_urgencia_dezpila.jpg",
+    description:
+      "Arte ultra-moderna 3D de alta conversão com VIP Access Pass e cronômetro de urgência 'Encerra Hoje' destacando os +2.000 canais e liberação instantânea via PIX.",
+    caption: `🚨 ÚLTIMAS 17 VAGAS DO LOTE PROMOCIONAL (ENCERRA HOJE) 🚨
+
+Você ainda paga quase R$ 600,00 por mês somando TV a cabo e streamings separados? 💸
+
+Pare de queimar dinheiro agora mesmo! Com o DezPila, você tem acesso completo na sua Smart TV, Celular ou TV Box com qualidade 4K real:
+
+🔥 O QUE ESTÁ LIBERADO NO SEU ACESSO:
+📺 +2.000 Canais Ao Vivo (Abertos, Fechados e Internacionais)
+⚽ Futebol Ao Vivo em 60fps sem delay (Brasileirão, Champions, Libertadores e Pay-per-view)
+🍿 +60.000 Filmes de Cinema e Séries Atualizadas Diariamente
+⚡ Servidor Ultra Rápido com Sistema Anti-Travamento
+🔒 Sem Fidelidade e Sem Contrato de Carência (cancele quando quiser)
+
+💰 DE R$ 589,30/mês
+👉 POR APENAS R$ 10,00/MÊS (Menos de 33 centavos por dia!)
+
+⏳ OFERTA POR TEMPO LIMITADO:
+O lote promocional encerra assim que as vagas restantes forem preenchidas.
+
+👇 COMO LIBERAR SEU ACESSO EM 2 MINUTOS:
+1️⃣ Comente "DEZPILA" aqui embaixo para receber o link direto no seu Direct!
+OU
+2️⃣ Clique no link da nossa Bio: @oficialdezpila e ative instantaneamente via PIX! 🚀
+
+#dezpila #promocao #streaming #smarttv #cinemaemcasa #futebolaoivo #filmeseseries #economia #oferta #iptvbrasil #iptv4k`,
+  },
+  {
     id: "arte_sorteio_oficial_semestral",
     name: "🏆 Foto Oficial: Sorteio 6 Meses Grátis (Meta 1.000 Seguidores)",
     category: "🔥 Artes Promocionais (3:4)",
