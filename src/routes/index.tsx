@@ -13,7 +13,6 @@ import { SocialProofToasts } from "@/components/SocialProofToasts";
 import { Reveal } from "@/components/Reveal";
 import { DeviceCompatibility } from "@/components/DeviceCompatibility";
 import { StickyBottomBar } from "@/components/StickyBottomBar";
-import { ExitIntentModal } from "@/components/ExitIntentModal";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -151,7 +150,6 @@ function Index() {
       <Footer />
       <SocialProofToasts />
       <StickyBottomBar />
-      <ExitIntentModal />
     </div>
   );
 }
