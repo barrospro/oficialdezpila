@@ -22,6 +22,272 @@ export interface BrandAsset {
 // ARTES PROMOCIONAIS PREMIUM & SORTEIOS COM LEGENDA E CTA
 export const PROMOTIONAL_ARTWORKS: BrandAsset[] = [
   {
+    id: "arte_01_loira_cinema",
+    name: "🎬 Arte 01: Loira VIP — Cinema em Casa (R$ 10,00/Mês)",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_01_loira_cinema.jpg",
+    description:
+      "Arte sofisticada com modelo loira elegante, pipoca, controle de TV e VIP Pass 'Cinema em Casa' com +60.000 filmes e séries.",
+    caption: `🍿 A sua noite de cinema favorita começa hoje na sua sala de estar! 🎬✨
+
+Por que continuar pagando caro em 4 streamings diferentes se você pode ter tudo em um só aplicativo?
+
+💎 O QUE VOCÊ VAI TER NO SEU ACESSO:
+✅ +60.000 Filmes do Cinema & Séries Completas em 4K
+✅ +2.000 Canais Ao Vivo sem travamentos
+✅ Lançamentos semanais dublados e legendados
+✅ Instalação simples na Smart TV em 2 minutos
+
+💸 Por apenas R$ 10,00/mês (sem carência e sem fidelidade)!
+
+💬 Comente "CINEMA" aqui embaixo para receber seu teste liberado no Direct!
+🔗 Ou acesse o link na Bio: @oficialdezpila 🚀
+
+#dezpila #cinemaemcasa #smarttv #filmeseseries #streaming #lancamentos4k #iptvbrasil`,
+  },
+  {
+    id: "arte_02_comparativo_faturas",
+    name: "📉 Arte 02: Duelo das Faturas — R$ 589 vs R$ 10 (Economia Real)",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_02_comparativo_faturas.jpg",
+    description:
+      "Arte de alto contraste comparando a fatura rasgada de R$ 589,30/mês contra o Cartão Dourado DezPila 4K por R$ 10,00/mês.",
+    caption: `🚨 VOCÊ AINDA JOGA QUASE R$ 600 NO LIXO TODO MÊS? 💸❌
+
+Faça as contas de quanto você gasta somando TV a cabo, operadora e múltiplos streamings. Agora compare:
+
+❌ OPERADORAS TRADICIONAIS:
+• R$ 589,30/mês
+• Contratos com 12 meses de fidelidade
+• Multas abusivas de cancelamento
+• Poucos canais em 4K real
+
+✅ DEZPILA VIP STREAMING:
+• APENAS R$ 10,00/mês (98% de economia)
+• +2.000 Canais Ao Vivo em 4K
+• +60.000 Filmes & Séries Ilimitados
+• Cancele a qualquer momento sem taxas!
+
+⚡ Liberação imediata via PIX em menos de 2 minutos!
+
+👉 Clique no link da Bio: @oficialdezpila e comece a economizar hoje!
+
+#dezpila #economiadomês #streamingbarato #smarttv #tvbox #semfidelidade #futebolaovivo #iptv4k`,
+  },
+  {
+    id: "arte_03_futebol_60fps",
+    name: "⚽ Arte 03: Futebol 60fps — Brasileirão & Champions Sem Delay",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_03_futebol_60fps.jpg",
+    description:
+      "Arte dinâmica e esportiva de futebol com bola de fogo, lasers vermelhos e destaque para jogos em 60fps com zero delay e servidores dedicados.",
+    caption: `⚽ NUNCA MAIS OUÇA O VIZINHO GRITAR GOL ANTES DE VOCÊ! ⚡🔥
+
+Com o DezPila, você assiste a todos os jogos do seu time do coração com tecnologia de transmissão a 60fps e zero delay:
+
+🏆 TODAS AS COMPETIÇÕES LIBERADAS:
+🔥 Brasileirão Série A e Série B completos
+🔥 Champions League & Libertadores da América
+🔥 Premier League, La Liga e campeonatos europeus
+🔥 Todos os canais Pay-per-view e Premiere liberados
+
+⚡ Servidor dedicado exclusivo com tecnologia Anti-Trava para suportar horários de pico!
+
+💰 Menos de 33 centavos por dia: APENAS R$ 10,00/mês!
+
+💬 Comente "FUTEBOL" para receber o teste agora mesmo!
+🔗 Link na Bio: @oficialdezpila 🚀
+
+#dezpila #futebolaovivo #brasileirao #championsleague #premiere #zerodelay #60fps #smarttv`,
+  },
+  {
+    id: "arte_04_animes_series",
+    name: "⚡ Arte 04: Modo Gamer & Anime — Catálogo Crunchyroll & Séries",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_04_animes_series.jpg",
+    description:
+      "Arte estilo cyberpunk anime com garota gamer, fones neon e VIP Pass para maratonar animes, lançamentos e séries sem anúncios.",
+    caption: `🎮 TODOS OS SEUS ANIMES E SÉRIES FAVORITOS EM UM SÓ LUGAR! ⚡🍿
+
+Seja fã de Shonen, Isekai, doramas ou lançamentos mundiais, no DezPila você maratona sem limites e sem anúncios irritantes:
+
+✨ O QUE VOCÊ ENCONTRA:
+• Animes atualizados simultaneamente com o Japão
+• Séries completas dubladas e legendadas em 4K
+• Canais de games, e-sports e cultura pop 24h
+• Assista na Smart TV, PC, Tablet ou Smartphone
+
+💸 Apenas R$ 10,00 por mês!
+
+👉 Acesse o link da Bio @oficialdezpila e ative seu acesso VIP instantaneamente!
+
+#dezpila #animesbrasil #crunchyroll #otakubrasil #gamerbrasil #series4k #streaming`,
+  },
+  {
+    id: "arte_05_diversao_familia",
+    name: "👨‍👩‍👧‍👦 Arte 05: Família & Kids — Diversão e Segurança em Casa",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_05_diversao_familia.jpg",
+    description:
+      "Arte acolhedora de cinema em família com sala moderna, Smart TV 4K gigante, controle parental e canais infantis/CristoFlix.",
+    caption: `👨‍👩‍👧‍👦 O MELHOR ENTRETENIMENTO PARA A SUA FAMÍLIA COM TOTAL SEGURANÇA! 🍿✨
+
+Reúna quem você ama na sala de estar com a melhor programação infantil, desenhos educativos, filmes para toda a família e canais cristãos/CristoFlix:
+
+🛡️ CONFORTO E PROTEÇÃO:
+✅ Sistema completo de Controle Parental por senha
+✅ Centenas de desenhos, animações e clássicos infantis
+✅ Conteúdo educativo, documentários e filmes bíblicos
+✅ Telas simultâneas para ninguém brigar pelo controle
+
+💰 Apenas R$ 10,00/mês para a família inteira!
+
+💬 Comente "FAMILIA" que enviamos o link no seu Direct!
+🔗 Link na Bio: @oficialdezpila
+
+#dezpila #diversaoemfamilia #desenhosinfantis #cristoflix #cinemaemcasa #smarttv #paisefilhos`,
+  },
+  {
+    id: "arte_06_executivo_vip",
+    name: "💼 Arte 06: Executivo Black VIP — Máxima Estabilidade 4K",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_06_executivo_vip.jpg",
+    description:
+      "Arte executiva de alto luxo em escritório corporativo com Black VIP Card e foco em estabilidade, qualidade UHD e suporte prioritário 24/7.",
+    caption: `💼 VOCÊ EXIGE ALTA PERFORMANCE? CONHEÇA O ACESSO VIP DEZPILA! 💎⚡
+
+Para quem não tem tempo a perder com servidores lentos ou travamentos. Nós investimos na infraestrutura mais robusta do mercado para entregar estabilidade cirúrgica:
+
+🌐 INFRAESTRUTURA DE NÍVEL CORPORATIVO:
+• Servidores dedicados CDN com rota direta
+• Resolução 4K Ultra HD nativa com taxa de bits otimizada
+• Suporte humanizado VIP disponível 24 horas por dia
+• Compatibilidade total com todas as marcas de Smart TV
+
+👑 Acesso VIP completo por apenas R$ 10,00/mês.
+
+👉 Clique no link da Bio: @oficialdezpila e ative sua conta agora!
+
+#dezpila #qualidadevip #blackcard #estabilidade #streaming4k #tecnologia #smarttv`,
+  },
+  {
+    id: "arte_07_direto_smart_tv",
+    name: "🔌 Arte 07: Direto na Smart TV — Instalação em 2 Minutos",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_07_direto_smart_tv.jpg",
+    description:
+      "Arte tecnológica com Smart TV 75'' OLED e conexão via smartphone demonstrando a facilidade de instalar sem aparelhos extras.",
+    caption: `🔌 NÃO PRECISA DE NENHUM APARELHO EXTRA! DIRETO NA SUA SMART TV! 📺⚡
+
+Esqueça cabos espalhados, instalações complicadas ou mensalidades de aparelhos. O DezPila funciona direto no aplicativo da sua TV:
+
+📱 COMPATÍVEL COM:
+✅ Samsung Smart TV (Tizen)
+✅ LG Smart TV (webOS)
+✅ Android TV & Google TV (Sony, TCL, Philips)
+✅ Fire TV Stick, Chromecast & TV Box
+✅ Celulares Android, iPhone e Tablets
+
+⚡ Instalação guiada passo a passo em menos de 2 minutos pelo WhatsApp!
+
+💰 Apenas R$ 10,00 por mês!
+
+💬 Comente "TV" para receber as instruções imediatas!
+🔗 Ou acesse o link na Bio: @oficialdezpila 🚀
+
+#dezpila #smarttv #samsung #lg #firetvstick #androidtv #facilidade #streaming4k`,
+  },
+  {
+    id: "arte_08_sextou_vip",
+    name: "🍷 Arte 08: Sextou com DezPila — A Noite Perfeita em Casa",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_08_sextou_vip.jpg",
+    description:
+      "Arte lifestyle de lazer com sala de estar aconchegante, taça de vinho, 65'' TV 4K e os grandes lançamentos do cinema mundial.",
+    caption: `🍷 SEXTOU! E A SUA MELHOR PROGRAMAÇÃO PARA O FIM DE SEMANA TÁ GARANTIDA! 🍿✨
+
+Depois de uma semana inteira de trabalho, tudo o que você merece é relaxar no sofá assistindo ao filme mais comentado do momento em 4K:
+
+🔥 O SEU FIM DE SEMANA COM DEZPILA:
+• Todos os lançamentos que acabaram de sair do cinema
+• Séries completas para maratonar sem parar
+• Shows ao vivo, canais de música e documentários
+• Sinal limpo, rápido e sem travar
+
+💸 Assine hoje por apenas R$ 10,00/mês e aproveite o final de semana inteiro!
+
+👉 Clique no link da Bio: @oficialdezpila 🚀
+
+#dezpila #sextou #cinemaemcasa #fimdesemana #relax #filmeseseries #smarttv #qualidade4k`,
+  },
+  {
+    id: "arte_09_noite_ufc",
+    name: "🥊 Arte 09: Noite de Luta UFC — Pay-Per-View Liberado 4K",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_09_noite_ufc.jpg",
+    description:
+      "Arte eletrizante de combate dentro do Octógono MMA com luzes vermelhas, lutador em ação e Pay-Per-View de lutas 100% liberado.",
+    caption: `🥊 TODAS AS LUTAS DO UFC E ARTES MARCIAIS LIBERADAS EM 4K! 🔥⚡
+
+Não perca mais nenhum card preliminar ou disputa de cinturão por falta de canal ou transmissões que ficam travando no meio da luta:
+
+🥋 COBERTURA COMPLETA DE COMBATE:
+🔥 Todos os eventos numerados do UFC ao vivo
+🔥 Card Principal e Card Preliminar liberados
+🔥 Boxe Internacional, Bellator e One Championship
+🔥 60fps real para acompanhar cada golpe sem delay
+
+💰 Apenas R$ 10,00/mês (menos de 33 centavos por dia)!
+
+💬 Comente "LUTA" para receber seu teste liberado!
+🔗 Link na Bio: @oficialdezpila 🚀
+
+#dezpila #ufcaovivo #mma #lutas #payperview #boxe #nocautes #smarttv4k`,
+  },
+  {
+    id: "arte_10_teste_sem_risco",
+    name: "🛡️ Arte 10: Teste Sem Risco — Garantia Total de 7 Dias",
+    category: "🔥 Artes Promocionais (3:4)",
+    dimensions: "1080 x 1080 px (1:1 / 4K UHD)",
+    format: "JPG Ultra HD",
+    imagePath: "/instagram/artes/arte_10_teste_sem_risco.jpg",
+    description:
+      "Arte com Escudo de Segurança Dourado 3D, selo de 7 dias de garantia incondicional e liberação instantânea no PIX.",
+    caption: `🛡️ EXPERIMENTE O DEZPILA COM RISCO ZERO E GARANTIA TOTAL DE 7 DIAS! 🔒✨
+
+Nós confiamos tanto na qualidade e estabilidade do nosso sinal que o risco é 100% nosso:
+
+✅ O QUE VOCÊ RECEBE:
+1️⃣ Acesso completo e irrestrito a +2.000 canais e +60.000 filmes
+2️⃣ 7 dias inteiros para testar na sua Smart TV
+3️⃣ Se não ficar 100% satisfeito, devolvemos seu dinheiro via PIX na hora!
+4️⃣ Sem perguntas, sem burocracia e sem enrolação
+
+💸 São apenas R$ 10,00/mês para transformar a sua TV em um cinema completo!
+
+👉 Clique no link da Bio: @oficialdezpila e ative com total segurança agora mesmo! 🚀
+
+#dezpila #garantiatotal #riscozero #streamingconfiavel #smarttv #qualidade4k #iptvseguro`,
+  },
+  {
     id: "arte_modelo_morena_liberacao",
     name: "👑 Modelo Morena: Liberação Imediata 4K (R$ 10,00/Mês)",
     category: "🔥 Artes Promocionais (3:4)",
