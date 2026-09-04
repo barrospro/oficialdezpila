@@ -265,9 +265,10 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Oculta a navbar quando o modal de checkout estiver aberto */
+/* Oculta a navbar e sticky bar quando o modal de checkout estiver aberto */
 body.checkout-modal-open nav,
-body.checkout-modal-open header {
+body.checkout-modal-open header,
+body.checkout-modal-open aside {
   display: none !important;
   opacity: 0 !important;
   pointer-events: none !important;

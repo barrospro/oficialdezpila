@@ -11,6 +11,9 @@ import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { SocialProofToasts } from "@/components/SocialProofToasts";
 import { Reveal } from "@/components/Reveal";
+import { DeviceCompatibility } from "@/components/DeviceCompatibility";
+import { StickyBottomBar } from "@/components/StickyBottomBar";
+import { ExitIntentModal } from "@/components/ExitIntentModal";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -127,6 +130,9 @@ function Index() {
           <VideoShowcase />
         </Reveal>
         <Reveal>
+          <DeviceCompatibility />
+        </Reveal>
+        <Reveal>
           <ContentSection />
         </Reveal>
         <Reveal>
@@ -144,6 +150,8 @@ function Index() {
       </main>
       <Footer />
       <SocialProofToasts />
+      <StickyBottomBar />
+      <ExitIntentModal />
     </div>
   );
 }

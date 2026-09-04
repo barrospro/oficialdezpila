@@ -1049,6 +1049,28 @@ export function AccountCheckoutModal({
                 </div>
               </div>
 
+              {/* Passo a Passo Rápido para Pagamento */}
+              <div className="w-full rounded-xl bg-white/[0.03] border border-white/10 p-2.5 mb-3 text-left">
+                <div className="flex items-center gap-1.5 text-[11px] font-heading font-bold text-emerald-400 uppercase mb-1.5">
+                  <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Como pagar em 3 passos:
+                </div>
+                <div className="space-y-1 text-[11px] font-code text-slate-300">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#10B981] font-bold">1.</span>
+                    <span>Clique em <strong>Copiar PIX</strong> acima</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#10B981] font-bold">2.</span>
+                    <span>Abra seu Banco e selecione <strong>PIX Copia e Cola</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#10B981] font-bold">3.</span>
+                    <span>Confirme. O sistema aprova e libera sua conta automaticamente!</span>
+                  </div>
+                </div>
+              </div>
+
               <span className="text-[10.5px] font-code text-slate-400 flex items-center gap-1.5">
                 <Lock className="h-3 w-3 text-[#10B981]" /> PIX oficial processado pelo Banco Central • 100% Criptografado
               </span>

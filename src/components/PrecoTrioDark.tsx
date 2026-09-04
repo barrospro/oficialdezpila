@@ -73,6 +73,13 @@ const ctaLabels: Record<string, string> = {
   ANUAL: "Assinar Anual",
 };
 
+const planoDailyAnchor: Record<string, string> = {
+  MENSAL: "Apenas R$ 0,33 por dia",
+  TRIMESTRAL: "Equivale a R$ 6,63/mês • 2 Telas",
+  SEMESTRAL: "Equivale a R$ 4,98/mês • Mais Vendido",
+  ANUAL: "Equivale a R$ 3,99/mês • Maior Economia",
+};
+
 export function PrecoTrioDark() {
   const [selectedPlan, setSelectedPlan] = useState<PlanoData | null>(null);
 
@@ -150,6 +157,10 @@ export function PrecoTrioDark() {
                         {p.periodo}
                       </span>
                     </div>
+                    <div className="text-[11px] font-code text-emerald-400 font-bold mb-2 flex items-center gap-1">
+                      <span>⚡</span>
+                      <span>{planoDailyAnchor[p.id]}</span>
+                    </div>
 
                     <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
                       {recursos.map((r) => (
@@ -201,6 +212,10 @@ export function PrecoTrioDark() {
                 <span className="text-xs font-code text-[#71717a]">
                   {p.periodo}
                 </span>
+              </div>
+              <div className="text-[11px] font-code text-emerald-400 font-bold mb-2 flex items-center gap-1">
+                <span>⚡</span>
+                <span>{planoDailyAnchor[p.id]}</span>
               </div>
 
               <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
