@@ -13,6 +13,7 @@ import { SocialProofToasts } from "@/components/SocialProofToasts";
 import { Reveal } from "@/components/Reveal";
 import { DeviceCompatibility } from "@/components/DeviceCompatibility";
 import { StickyBottomBar } from "@/components/StickyBottomBar";
+import { ContentSearchSimulator } from "@/components/ContentSearchSimulator";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -130,6 +131,9 @@ function Index() {
         </Reveal>
         <Reveal>
           <DeviceCompatibility />
+        </Reveal>
+        <Reveal>
+          <ContentSearchSimulator />
         </Reveal>
         <Reveal>
           <ContentSection />

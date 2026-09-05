@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import devicesMockup from "@/assets/devices-mockup.png";
+import { GeoScarcityBanner } from "@/components/GeoScarcityBanner";
 
 function CountdownTimer() {
   const [time, setTime] = useState({ h: 1, m: 14, s: 59 });
@@ -72,7 +73,9 @@ export function HeroSection() {
             anti-travamento e suporte dedicado 24/7. Tudo por R$10/mês.
           </p>
 
-          <div className="w-full max-w-md mt-4 flex flex-col gap-3">
+          <div className="w-full max-w-md mt-2 flex flex-col gap-3">
+            <GeoScarcityBanner />
+
             <div className="flex items-center justify-between px-5 py-3 bg-brand/10 border-l-4 border-brand backdrop-blur-sm">
               <span className="text-brand font-code text-xs uppercase font-bold tracking-widest">
                 Oferta Encerra Em:
