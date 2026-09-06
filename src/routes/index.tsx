@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TopBanner } from "@/components/TopBanner";
 import { NavbarGlassFixa } from "@/components/NavbarGlassFixa";
 import { HeroSection } from "@/components/HeroSection";
-import { VideoShowcase } from "@/components/VideoShowcase";
 import { ContentSection } from "@/components/ContentSection";
 import { PriceComparison } from "@/components/PriceComparison";
 import { PrecoTrioDark } from "@/components/PrecoTrioDark";
@@ -126,9 +125,6 @@ function Index() {
       </header>
       <main id="main-content" className="flex-1">
         <HeroSection />
-        <Reveal>
-          <VideoShowcase />
-        </Reveal>
         <Reveal>
           <DeviceCompatibility />
         </Reveal>

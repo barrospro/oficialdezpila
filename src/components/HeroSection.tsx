@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { GeoScarcityBanner } from "@/components/GeoScarcityBanner";
+import { ShieldAlert, Lock, Play, Zap, Tv, Film, CheckCircle2 } from "lucide-react";
 
 function CountdownTimer() {
   const [time, setTime] = useState({ h: 1, m: 14, s: 59 });
@@ -32,7 +33,60 @@ function CountdownTimer() {
 }
 
 export function HeroSection() {
+  const [showToast, setShowToast] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const handleProtectedAction = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowToast(true);
+  };
+
+  const togglePlayPause = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!iframeRef.current || !iframeRef.current.contentWindow) return;
+
+    const nextPlayState = !isPlaying;
+    iframeRef.current.contentWindow.postMessage(
+      JSON.stringify({ method: nextPlayState ? "play" : "pause" }),
+      "*"
+    );
+    setIsPlaying(nextPlayState);
+    setHasStarted(true);
+  };
+
+  // Sincroniza estado de play/pause do Vimeo
+  useEffect(() => {
+    const handleVimeoMessage = (event: MessageEvent) => {
+      try {
+        const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+        if (data && typeof data === "object") {
+          if (data.event === "play") {
+            setIsPlaying(true);
+            setHasStarted(true);
+          } else if (data.event === "pause" || data.event === "finish" || data.event === "ended") {
+            setIsPlaying(false);
+          }
+        }
+      } catch {
+        // Ignora mensagens externas
+      }
+    };
+
+    window.addEventListener("message", handleVimeoMessage);
+    return () => window.removeEventListener("message", handleVimeoMessage);
+  }, []);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
 
   return (
     <section className="min-h-[90vh] flex flex-col justify-center px-6 lg:px-12 pt-28 sm:pt-32 lg:pt-36 pb-20 relative overflow-hidden">
@@ -95,9 +149,12 @@ export function HeroSection() {
         </div>
 
         <div className="lg:col-span-6 relative">
-          <div className="relative bg-surface border border-border p-2 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] rounded-xl">
+          <div className="relative bg-surface border border-brand/40 p-2.5 sm:p-3 backdrop-blur-xl shadow-[0_0_50px_rgba(151,2,2,0.3)] rounded-2xl">
             <div className="absolute -inset-1 bg-gradient-to-tr from-brand to-transparent opacity-25 blur-xl -z-10" />
-            <div className="relative bg-background overflow-hidden aspect-video rounded-lg group shadow-2xl border border-white/10">
+            <div
+              className="group/player relative bg-black overflow-hidden aspect-video rounded-xl shadow-2xl border border-white/10 select-none"
+              onContextMenu={handleProtectedAction}
+            >
               {/* Iframe Vimeo Demonstrativo */}
               <iframe
                 ref={iframeRef}
@@ -109,8 +166,26 @@ export function HeroSection() {
                 loading="eager"
               />
 
-              {/* Badges Flutuantes sobre o Vídeo */}
-              <div className="absolute top-3 left-3 z-20 flex items-center gap-2 bg-background/80 border border-border px-3 py-1.5 backdrop-blur-md pointer-events-none rounded">
+              {/* ESCUDO SUPERFICIAL: Protege contra clique direito e gerencia Play/Pause */}
+              <div
+                className="absolute inset-0 bottom-12 z-20 cursor-pointer select-none flex items-center justify-center"
+                onContextMenu={handleProtectedAction}
+                onClick={togglePlayPause}
+                title={isPlaying ? "Pausar vídeo" : "Assistir demonstrativo"}
+              >
+                {(!hasStarted || !isPlaying) && (
+                  <div className="flex items-center justify-center size-16 sm:size-20 rounded-full bg-[#970202]/90 hover:bg-[#b80303] text-white shadow-[0_0_40px_rgba(151,2,2,0.9)] border border-white/20 transition-transform duration-300 hover:scale-110 pointer-events-none">
+                    <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-white ml-1" />
+                  </div>
+                )}
+              </div>
+
+              {/* Escudo Superior Esquerdo: Badge AO VIVO */}
+              <div
+                className="absolute top-3 left-3 z-25 flex items-center gap-2 bg-background/90 border border-border px-3 py-1.5 backdrop-blur-md cursor-default pointer-events-auto rounded shadow-lg"
+                onContextMenu={handleProtectedAction}
+                onClick={handleProtectedAction}
+              >
                 <span
                   className="size-2 bg-destructive rounded-full"
                   style={{ animation: "strobe 1s infinite" }}
@@ -119,9 +194,53 @@ export function HeroSection() {
                   AO VIVO
                 </span>
               </div>
-              <span className="absolute top-3 right-3 z-20 bg-brand text-brand-foreground font-code text-xs px-2 py-1 font-bold pointer-events-none rounded shadow-[0_0_10px_var(--brand-glow)]">
-                4K UHD
-              </span>
+
+              {/* Escudo Lateral Direito: Bloqueia botões do Vimeo e exibe 4K VIP */}
+              <div
+                className="absolute top-0 right-0 w-24 h-48 z-25 cursor-default bg-gradient-to-l from-black/80 via-black/30 to-transparent flex flex-col items-end p-3 pointer-events-auto"
+                onContextMenu={handleProtectedAction}
+                onClick={handleProtectedAction}
+                title="Reprodução Protegida"
+              >
+                <span className="bg-brand text-brand-foreground font-code text-xs px-2.5 py-1 font-bold rounded shadow-[0_0_15px_var(--brand-glow)] flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5" /> 4K UHD
+                </span>
+              </div>
+
+              {/* Toast de Proteção contra cópia/download */}
+              {showToast && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center gap-2.5 bg-[#140003]/95 border border-brand text-white px-5 py-3.5 rounded-xl shadow-[0_0_35px_rgba(151,2,2,0.85)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
+                  <ShieldAlert className="w-5 h-5 text-brand shrink-0" />
+                  <div className="text-left">
+                    <p className="font-heading font-bold text-xs uppercase text-white tracking-wide">
+                      Reprodução Protegida
+                    </p>
+                    <p className="font-code text-[10px] text-muted-foreground">
+                      Cópia ou download desabilitados pelo sistema DezPila.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Micro-pills de Destaque Abaixo do Vídeo no Hero */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 font-code text-[11px]">
+              <div className="flex items-center gap-1.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-slate-300">
+                <Zap className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                <span className="truncate">Troca Rápida</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-slate-300">
+                <Tv className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <span className="truncate">Ultra HD 4K</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-slate-300">
+                <Film className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                <span className="truncate">+60.000 Títulos</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-slate-300">
+                <CheckCircle2 className="h-3.5 w-3.5 text-brand shrink-0" />
+                <span className="truncate">Liberação PIX</span>
+              </div>
             </div>
           </div>
         </div>
@@ -129,4 +248,5 @@ export function HeroSection() {
     </section>
   );
 }
+
 
