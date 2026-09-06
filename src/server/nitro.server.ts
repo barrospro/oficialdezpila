@@ -75,6 +75,8 @@ export async function createNitroPixTransaction(input: {
       plan_id: input.planId,
       plan_name: input.planName,
     },
+    postback_url: process.env.POSTBACK_URL || "https://oficialdezpila.lovable.app/api/webhook",
+    postbackUrl: process.env.POSTBACK_URL || "https://oficialdezpila.lovable.app/api/webhook",
     source_url: input.sourceUrl || "https://dezpila.netlify.app/checkout",
     source_label: `DezPila - ${input.planName}`,
   };
@@ -166,6 +168,8 @@ export async function createNitroCardTransaction(input: {
       plan_id: input.planId,
       plan_name: input.planName,
     },
+    postback_url: process.env.POSTBACK_URL || "https://oficialdezpila.lovable.app/api/webhook",
+    postbackUrl: process.env.POSTBACK_URL || "https://oficialdezpila.lovable.app/api/webhook",
     source_url: input.sourceUrl || "https://dezpila.netlify.app/checkout",
     source_label: `DezPila - ${input.planName}`,
   };
