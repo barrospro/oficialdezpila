@@ -4,6 +4,11 @@ import whatsappLucas from "@/assets/proofs/whatsapp-lucas.jpg";
 import whatsappFernanda from "@/assets/proofs/whatsapp-fernanda.jpg";
 import whatsappRodrigo from "@/assets/proofs/whatsapp-rodrigo.jpg";
 import whatsappPriscila from "@/assets/proofs/whatsapp-priscila.jpg";
+import whatsappGustavo from "@/assets/proofs/whatsapp-gustavo.jpg";
+import whatsappCamila from "@/assets/proofs/whatsapp-camila.jpg";
+import whatsappDiego from "@/assets/proofs/whatsapp-diego.jpg";
+import whatsappMatheus from "@/assets/proofs/whatsapp-matheus.jpg";
+import whatsappBeatriz from "@/assets/proofs/whatsapp-beatriz.jpg";
 
 type CardDepo = {
   q: string;
@@ -28,12 +33,14 @@ const LINHA1: CardDepo[] = [
     proofTag: "Futebol 4K sem travar",
   },
   {
-    q: "Futebol em 4K ao vivo sem nenhum travamento ou delay. Impressionante.",
-    nome: "Ana Militão",
-    cargo: "Belo Horizonte, MG",
-    iniciais: "AM",
+    q: "To aqui no ônibus voltando do trampo e rodando o jogo da Champions liso no 4G!",
+    nome: "Diego Prado",
+    cargo: "Rio de Janeiro, RJ",
+    iniciais: "DP",
     stars: 5,
     plano: "ANUAL",
+    proofImg: whatsappDiego,
+    proofTag: "Champions League no 4G",
   },
   {
     q: "Instalei no Fire Stick em 2 minutos. Cancelei minha TV a cabo de R$180 e as crianças amaram!",
@@ -46,31 +53,37 @@ const LINHA1: CardDepo[] = [
     proofTag: "Cinema Disney em Família",
   },
   {
-    q: "Catálogo gigantesco de filmes e séries 4K. Atualizam lançamentos todo dia.",
-    nome: "Diego Prado",
-    cargo: "Rio de Janeiro, RJ",
-    iniciais: "DP",
+    q: "Configurei no monitor gamer e no tablet. Qualidade absurda, animes e filmes 4K!",
+    nome: "Matheus Ribeiro",
+    cargo: "Florianópolis, SC",
+    iniciais: "MR",
     stars: 5,
-    plano: "MENSAL",
+    plano: "ANUAL",
+    proofImg: whatsappMatheus,
+    proofTag: "PC Gamer & Filmes 4K",
   },
 ];
 
 const LINHA2: CardDepo[] = [
   {
-    q: "Cancelei a TV a cabo tradicional. Sinceramente? Não faz nenhuma falta.",
+    q: "Pegou de primeira! Minha mãe assistindo a novela das 9 e eu maratonando séries!",
     nome: "Camila Brito",
     cargo: "Fortaleza, CE",
     iniciais: "CB",
     stars: 5,
     plano: "ANUAL",
+    proofImg: whatsappCamila,
+    proofTag: "Novelas & Séries Globoplay",
   },
   {
-    q: "Testei vários serviços do mercado. Esse é o único que roda 100% sem travar.",
+    q: "Card do UFC no Combate rodando em 4K liso, sem delay. Sensacional!",
     nome: "Gustavo Serra",
     cargo: "Porto Alegre, RS",
     iniciais: "GS",
     stars: 5,
     plano: "SEMESTRAL",
+    proofImg: whatsappGustavo,
+    proofTag: "UFC Combate 4K Liso",
   },
   {
     q: "Paguei pelo PIX e em menos de 1 minuto já recebi os dados e ativei na Smart TV.",
@@ -92,36 +105,74 @@ const LINHA2: CardDepo[] = [
     proofImg: whatsappRodrigo,
     proofTag: "TV Box & Sinal Liso",
   },
+  {
+    q: "Cancelei a assinatura de 340 reais da operadora. Não trava nada e economizo todo mês!",
+    nome: "Beatriz Mendes",
+    cargo: "Belo Horizonte, MG",
+    iniciais: "BM",
+    stars: 5,
+    plano: "ANUAL",
+    proofImg: whatsappBeatriz,
+    proofTag: "Economia de R$ 340/mês",
+  },
 ];
 
 const PROVAS_DESTACADAS = [
   {
     nome: "Lucas Carvalho",
     cidade: "São Paulo, SP",
-    dispositivo: "Samsung Smart TV",
+    dispositivo: "Samsung 4K • Premiere",
     resumo: "Liberou em segundos após o PIX e assistiu ao jogo no Premiere em 4K liso.",
     img: whatsappLucas,
   },
   {
+    nome: "Camila Brito",
+    cidade: "Fortaleza, CE",
+    dispositivo: "Smart TV • Novelas & Séries",
+    resumo: "Mãe assistindo novelas e ela maratonando séries em altíssima definição.",
+    img: whatsappCamila,
+  },
+  {
+    nome: "Gustavo Serra",
+    cidade: "Porto Alegre, RS",
+    dispositivo: "Smart TV LG • UFC Combate",
+    resumo: "Acompanhando o card principal do UFC em 4K cristalino sem travar.",
+    img: whatsappGustavo,
+  },
+  {
+    nome: "Diego Prado",
+    cidade: "Rio de Janeiro, RJ",
+    dispositivo: "Mobile 4G • Champions League",
+    resumo: "Assistindo jogo de futebol europeu no 4G direto no transporte com estabilidade total.",
+    img: whatsappDiego,
+  },
+  {
     nome: "Fernanda Rocha",
     cidade: "Curitiba, PR",
-    dispositivo: "Amazon Fire Stick",
+    dispositivo: "Fire Stick • Disney & Kids",
     resumo: "Instalou em 2 minutos para a família e cancelou a assinatura antiga de R$ 180.",
     img: whatsappFernanda,
   },
   {
-    nome: "Rodrigo Maia",
-    cidade: "Brasília, DF",
-    dispositivo: "TV Box & Celular",
-    resumo: "Qualidade 10/10 com sistema anti-travamento mesmo no Wi-Fi comum.",
-    img: whatsappRodrigo,
+    nome: "Beatriz Mendes",
+    cidade: "Belo Horizonte, MG",
+    dispositivo: "Living Room TV • TV por Assinatura",
+    resumo: "Cancelei a fatura de R$ 340 da operadora tradicional e economizo todo mês.",
+    img: whatsappBeatriz,
   },
   {
-    nome: "Priscila Lima",
-    cidade: "Recife, PE",
-    dispositivo: "Smart TV da Sala",
-    resumo: "Liberação automática imediata após pagamento do PIX promocional.",
-    img: whatsappPriscila,
+    nome: "Matheus Ribeiro",
+    cidade: "Florianópolis, SC",
+    dispositivo: "Setup Gamer • Animes & Filmes",
+    resumo: "Configuração em monitor gamer e tablet com catálogo completo em 4K HDR.",
+    img: whatsappMatheus,
+  },
+  {
+    nome: "Rodrigo Maia",
+    cidade: "Brasília, DF",
+    dispositivo: "TV Box & Wi-Fi Comum",
+    resumo: "Qualidade 10/10 com sistema anti-travamento mesmo no Wi-Fi doméstico.",
+    img: whatsappRodrigo,
   },
 ];
 
