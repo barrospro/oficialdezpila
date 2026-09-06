@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { GeoScarcityBanner } from "@/components/GeoScarcityBanner";
-import { ShieldAlert, Lock, Play, Zap, Tv, Film, CheckCircle2 } from "lucide-react";
+import { ShieldAlert, Lock, Play, Pause, Volume2, VolumeX, Zap, Tv, Film, CheckCircle2 } from "lucide-react";
 
 function CountdownTimer() {
   const [time, setTime] = useState({ h: 1, m: 14, s: 59 });
@@ -36,7 +36,9 @@ export function HeroSection() {
   const [showToast, setShowToast] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
 
   const handleProtectedAction = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
@@ -44,22 +46,85 @@ export function HeroSection() {
     setShowToast(true);
   };
 
+  const playVideo = () => {
+    if (!iframeRef.current || !iframeRef.current.contentWindow) return;
+    iframeRef.current.contentWindow.postMessage(JSON.stringify({ method: "play" }), "*");
+    setIsPlaying(true);
+    setHasStarted(true);
+  };
+
+  const pauseVideo = () => {
+    if (!iframeRef.current || !iframeRef.current.contentWindow) return;
+    iframeRef.current.contentWindow.postMessage(JSON.stringify({ method: "pause" }), "*");
+    setIsPlaying(false);
+  };
+
   const togglePlayPause = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isPlaying) {
+      pauseVideo();
+    } else {
+      playVideo();
+      // Ao clicar para dar play, ativa o áudio se estiver mudo
+      if (isMuted && iframeRef.current && iframeRef.current.contentWindow) {
+        iframeRef.current.contentWindow.postMessage(
+          JSON.stringify({ method: "setVolume", value: 1 }),
+          "*"
+        );
+        setIsMuted(false);
+      }
+    }
+  };
+
+  const toggleSound = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (!iframeRef.current || !iframeRef.current.contentWindow) return;
 
-    const nextPlayState = !isPlaying;
+    const nextMuted = !isMuted;
     iframeRef.current.contentWindow.postMessage(
-      JSON.stringify({ method: nextPlayState ? "play" : "pause" }),
+      JSON.stringify({ method: "setVolume", value: nextMuted ? 0 : 1 }),
       "*"
     );
-    setIsPlaying(nextPlayState);
-    setHasStarted(true);
+    setIsMuted(nextMuted);
+
+    // Garante que está tocando ao desmutar
+    if (!isPlaying) {
+      playVideo();
+    }
   };
 
-  // Sincroniza estado de play/pause do Vimeo
+  // 1. Inicia automático ao rolar até o vídeo (IntersectionObserver)
+  useEffect(() => {
+    const target = videoContainerRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playVideo();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
+  // 2. Inicia ao passar o mouse por cima
+  const handleMouseEnter = () => {
+    if (!isPlaying) {
+      playVideo();
+    }
+  };
+
+  // 3. Sincroniza estado de play/pause do Vimeo
   useEffect(() => {
     const handleVimeoMessage = (event: MessageEvent) => {
       try {
@@ -149,16 +214,20 @@ export function HeroSection() {
         </div>
 
         <div className="lg:col-span-6 relative">
-          <div className="relative bg-surface border border-brand/40 p-2.5 sm:p-3 backdrop-blur-xl shadow-[0_0_50px_rgba(151,2,2,0.3)] rounded-2xl">
+          <div
+            ref={videoContainerRef}
+            onMouseEnter={handleMouseEnter}
+            className="relative bg-surface border border-brand/40 p-2.5 sm:p-3 backdrop-blur-xl shadow-[0_0_50px_rgba(151,2,2,0.3)] rounded-2xl transition-all duration-300 hover:border-brand/70"
+          >
             <div className="absolute -inset-1 bg-gradient-to-tr from-brand to-transparent opacity-25 blur-xl -z-10" />
             <div
               className="group/player relative bg-black overflow-hidden aspect-video rounded-xl shadow-2xl border border-white/10 select-none"
               onContextMenu={handleProtectedAction}
             >
-              {/* Iframe Vimeo Demonstrativo */}
+              {/* Iframe Vimeo com Autoplay e Muted ativados */}
               <iframe
                 ref={iframeRef}
-                src="https://player.vimeo.com/video/1169361385?api=1&player_id=hero_vimeo_player&title=0&byline=0&portrait=0&badge=0&like=0&watchlater=0&share=0&embed=0&autopause=0&color=970202&dnt=1&playsinline=1"
+                src="https://player.vimeo.com/video/1169361385?api=1&player_id=hero_vimeo_player&autoplay=1&muted=1&title=0&byline=0&portrait=0&badge=0&like=0&watchlater=0&share=0&embed=0&autopause=0&color=970202&dnt=1&playsinline=1"
                 title="Demonstrativo da plataforma DezPila Streaming 4K"
                 className="absolute top-0 left-0 w-full h-full border-0 pointer-events-auto"
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
@@ -168,13 +237,13 @@ export function HeroSection() {
 
               {/* ESCUDO SUPERFICIAL: Protege contra clique direito e gerencia Play/Pause */}
               <div
-                className="absolute inset-0 bottom-12 z-20 cursor-pointer select-none flex items-center justify-center"
+                className="absolute inset-0 bottom-14 z-20 cursor-pointer select-none flex items-center justify-center"
                 onContextMenu={handleProtectedAction}
                 onClick={togglePlayPause}
-                title={isPlaying ? "Pausar vídeo" : "Assistir demonstrativo"}
+                title={isPlaying ? "Clique para pausar" : "Clique para reproduzir"}
               >
-                {(!hasStarted || !isPlaying) && (
-                  <div className="flex items-center justify-center size-16 sm:size-20 rounded-full bg-[#970202]/90 hover:bg-[#b80303] text-white shadow-[0_0_40px_rgba(151,2,2,0.9)] border border-white/20 transition-transform duration-300 hover:scale-110 pointer-events-none">
+                {!isPlaying && (
+                  <div className="flex items-center justify-center size-16 sm:size-20 rounded-full bg-[#970202]/90 hover:bg-[#b80303] text-white shadow-[0_0_40px_rgba(151,2,2,0.9)] border border-white/20 transition-transform duration-300 hover:scale-110 pointer-events-none animate-pulse">
                     <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-white ml-1" />
                   </div>
                 )}
@@ -207,9 +276,29 @@ export function HeroSection() {
                 </span>
               </div>
 
+              {/* Botão Flutuante de Controle de Áudio (Mutar / Desmutar) */}
+              <button
+                type="button"
+                onClick={toggleSound}
+                className="absolute bottom-3 left-3 z-30 flex items-center gap-2 bg-black/80 hover:bg-[#970202] text-white px-3 py-1.5 rounded-lg border border-white/20 backdrop-blur-md font-code text-xs font-bold transition-all shadow-lg cursor-pointer"
+                title={isMuted ? "Clique para ativar o som" : "Desativar áudio"}
+              >
+                {isMuted ? (
+                  <>
+                    <VolumeX className="w-4 h-4 text-amber-400 animate-bounce" />
+                    <span>Ativar Som 🔊</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="w-4 h-4 text-emerald-400" />
+                    <span>Áudio Ativo</span>
+                  </>
+                )}
+              </button>
+
               {/* Toast de Proteção contra cópia/download */}
               {showToast && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center gap-2.5 bg-[#140003]/95 border border-brand text-white px-5 py-3.5 rounded-xl shadow-[0_0_35px_rgba(151,2,2,0.85)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-35 flex items-center gap-2.5 bg-[#140003]/95 border border-brand text-white px-5 py-3.5 rounded-xl shadow-[0_0_35px_rgba(151,2,2,0.85)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
                   <ShieldAlert className="w-5 h-5 text-brand shrink-0" />
                   <div className="text-left">
                     <p className="font-heading font-bold text-xs uppercase text-white tracking-wide">
@@ -248,5 +337,6 @@ export function HeroSection() {
     </section>
   );
 }
+
 
 
