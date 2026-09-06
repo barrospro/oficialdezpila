@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import devicesMockup from "@/assets/devices-mockup.png";
+import { useState, useEffect, useRef } from "react";
 import { GeoScarcityBanner } from "@/components/GeoScarcityBanner";
 
 function CountdownTimer() {
@@ -33,6 +32,8 @@ function CountdownTimer() {
 }
 
 export function HeroSection() {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   return (
     <section className="min-h-[90vh] flex flex-col justify-center px-6 lg:px-12 pt-28 sm:pt-32 lg:pt-36 pb-20 relative overflow-hidden">
       {/* Ambient glows */}
@@ -94,20 +95,22 @@ export function HeroSection() {
         </div>
 
         <div className="lg:col-span-6 relative">
-          <div className="relative bg-surface border border-border p-2 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]">
-            <div className="absolute -inset-1 bg-gradient-to-tr from-brand to-transparent opacity-20 blur-xl -z-10" />
-            <div className="relative bg-background overflow-hidden aspect-video group">
-              <img
-                src={devicesMockup}
-                alt="DezPila Streaming 4K em múltiplos dispositivos Smart TV, Celular e TV Box"
-                width={1024}
-                height={576}
+          <div className="relative bg-surface border border-border p-2 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] rounded-xl">
+            <div className="absolute -inset-1 bg-gradient-to-tr from-brand to-transparent opacity-25 blur-xl -z-10" />
+            <div className="relative bg-background overflow-hidden aspect-video rounded-lg group shadow-2xl border border-white/10">
+              {/* Iframe Vimeo Demonstrativo */}
+              <iframe
+                ref={iframeRef}
+                src="https://player.vimeo.com/video/1169361385?api=1&player_id=hero_vimeo_player&title=0&byline=0&portrait=0&badge=0&like=0&watchlater=0&share=0&embed=0&autopause=0&color=970202&dnt=1&playsinline=1"
+                title="Demonstrativo da plataforma DezPila Streaming 4K"
+                className="absolute top-0 left-0 w-full h-full border-0 pointer-events-auto"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                allowFullScreen
                 loading="eager"
-                decoding="async"
-                className="w-full h-full object-cover opacity-90"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent pointer-events-none" />
-              <div className="absolute top-3 left-3 flex items-center gap-2 bg-background/80 border border-border px-3 py-1.5 backdrop-blur-md">
+
+              {/* Badges Flutuantes sobre o Vídeo */}
+              <div className="absolute top-3 left-3 z-20 flex items-center gap-2 bg-background/80 border border-border px-3 py-1.5 backdrop-blur-md pointer-events-none rounded">
                 <span
                   className="size-2 bg-destructive rounded-full"
                   style={{ animation: "strobe 1s infinite" }}
@@ -116,7 +119,7 @@ export function HeroSection() {
                   AO VIVO
                 </span>
               </div>
-              <span className="absolute top-3 right-3 bg-brand text-brand-foreground font-code text-xs px-2 py-1 font-bold">
+              <span className="absolute top-3 right-3 z-20 bg-brand text-brand-foreground font-code text-xs px-2 py-1 font-bold pointer-events-none rounded shadow-[0_0_10px_var(--brand-glow)]">
                 4K UHD
               </span>
             </div>
@@ -126,3 +129,4 @@ export function HeroSection() {
     </section>
   );
 }
+
