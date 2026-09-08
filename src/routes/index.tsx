@@ -126,6 +126,9 @@ function Index() {
       <main id="main-content" className="flex-1">
         <HeroSection />
         <Reveal>
+          <PrecoTrioDark />
+        </Reveal>
+        <Reveal>
           <DeviceCompatibility />
         </Reveal>
         <Reveal>
@@ -136,9 +139,6 @@ function Index() {
         </Reveal>
         <Reveal>
           <PriceComparison />
-        </Reveal>
-        <Reveal>
-          <PrecoTrioDark />
         </Reveal>
         <Reveal>
           <MarqueeDepoimentos />
