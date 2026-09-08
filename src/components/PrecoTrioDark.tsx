@@ -15,23 +15,23 @@ const planos: PlanoData[] = [
     id: "TRIMESTRAL",
     nome: "Plus Trimestral",
     desc: "Assista em até 2 telas",
-    preco: "19,90",
+    preco: "29,90",
     periodo: "/trim",
     link: "https://go.nitropagamentos.com/h64gr",
   },
   {
     id: "SEMESTRAL",
     nome: "Pro Semestral",
-    desc: "Economia de 66% de desconto",
-    preco: "29,90",
+    desc: "Economia de 60% de desconto",
+    preco: "47,90",
     periodo: "/sem",
     link: "https://go.nitropagamentos.com/oinxr",
   },
   {
     id: "ANUAL",
     nome: "VIP Anual",
-    desc: "Maior economia de 71%",
-    preco: "47,90",
+    desc: "Maior economia de 69%",
+    preco: "73,90",
     periodo: "/ano",
     link: "https://go.nitropagamentos.com/lzcus",
   },
@@ -75,9 +75,9 @@ const ctaLabels: Record<string, string> = {
 
 const planoDailyAnchor: Record<string, string> = {
   MENSAL: "Apenas R$ 0,33 por dia",
-  TRIMESTRAL: "Equivale a R$ 6,63/mês • 2 Telas",
-  SEMESTRAL: "Equivale a R$ 4,98/mês • Mais Vendido",
-  ANUAL: "Equivale a R$ 3,99/mês • Maior Economia",
+  TRIMESTRAL: "Equivale a R$ 9,97/mês • 2 Telas",
+  SEMESTRAL: "Equivale a R$ 7,98/mês • Mais Vendido",
+  ANUAL: "Equivale a R$ 6,16/mês • Maior Economia",
 };
 
 export function PrecoTrioDark() {

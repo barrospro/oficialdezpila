@@ -346,38 +346,38 @@ const postsConfig = [
     num: 22,
     theme: "offer_semestral",
     tag: "🔥 MAIS VENDIDO DO SITE",
-    headline: "PLANO PRO SEMESTRAL<br><span>3 TELAS POR R$ 29,90</span>",
+    headline: "PLANO PRO SEMESTRAL<br><span>3 TELAS POR R$ 47,90</span>",
     subtext: "O campeão de vendas para quem busca o máximo de economia:",
     visualType: "plan_card",
     planTitle: "PLANO PRO SEMESTRAL",
-    planPrice: "R$ 29,90",
-    planPeriod: "6 MESES COMPLETOS (Menos de R$ 5/mês por tela)",
+    planPrice: "R$ 47,90",
+    planPeriod: "6 MESES COMPLETOS (Menos de R$ 8/mês por tela)",
     bullets: [
       "📺 3 Conexões simultâneas ativas (Sala, Quarto e Celular)",
       "🍿 +60.000 Filmes, Séries e Canais em 4K",
       "⚡ 6 Meses ininterruptos sem se preocupar com fatura",
       "💎 O melhor custo por tela do Brasil"
     ],
-    priceBadge: "GARANTA O PRO SEMESTRAL POR R$ 29,90",
+    priceBadge: "GARANTA O PRO SEMESTRAL POR R$ 47,90",
     category: "Ofertas / Planos"
   },
   {
     num: 23,
     theme: "offer_vip",
     tag: "👑 OFERTA VIP FAMÍLIA",
-    headline: "PLANO VIP ANUAL<br><span>4 TELAS POR R$ 47,90</span>",
-    subtext: "O combo definitivo para a família inteira com 71% de desconto:",
+    headline: "PLANO VIP ANUAL<br><span>4 TELAS POR R$ 73,90</span>",
+    subtext: "O combo definitivo para a família inteira com 69% de desconto:",
     visualType: "plan_card",
     planTitle: "PLANO VIP ANUAL",
-    planPrice: "R$ 47,90",
-    planPeriod: "12 MESES INTEIROS (Menos de R$ 4,00 por mês)",
+    planPrice: "R$ 73,90",
+    planPeriod: "12 MESES INTEIROS (Menos de R$ 6,20 por mês)",
     bullets: [
       "👨‍👩‍👧‍👦 4 Conexões simultâneas para toda a casa",
       "💸 Economia de mais de R$ 3.500 no ano",
       "🏆 Acesso VIP a todos os lançamentos 4K e Futebol",
       "🛡️ Suporte prioritário 365 dias do ano"
     ],
-    priceBadge: "1 ANO COMPLETO POR R$ 47,90",
+    priceBadge: "1 ANO COMPLETO POR R$ 73,90",
     category: "Oferta Premium"
   },
   {

@@ -69,7 +69,7 @@ export const Route = createRootRoute({
         "@type": "AggregateOffer",
         priceCurrency: "BRL",
         lowPrice: "10.00",
-        highPrice: "47.90",
+        highPrice: "73.90",
         offerCount: "4",
         offers: [
           {
@@ -83,14 +83,6 @@ export const Route = createRootRoute({
           {
             "@type": "Offer",
             name: "Plus Trimestral",
-            price: "19.90",
-            priceCurrency: "BRL",
-            availability: "https://schema.org/InStock",
-            url: "https://oficialdezpila.lovable.app/#planos",
-          },
-          {
-            "@type": "Offer",
-            name: "Pro Semestral",
             price: "29.90",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
@@ -98,8 +90,16 @@ export const Route = createRootRoute({
           },
           {
             "@type": "Offer",
-            name: "VIP Anual",
+            name: "Pro Semestral",
             price: "47.90",
+            priceCurrency: "BRL",
+            availability: "https://schema.org/InStock",
+            url: "https://oficialdezpila.lovable.app/#planos",
+          },
+          {
+            "@type": "Offer",
+            name: "VIP Anual",
+            price: "73.90",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
             url: "https://oficialdezpila.lovable.app/#planos",

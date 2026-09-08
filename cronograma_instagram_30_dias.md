@@ -304,14 +304,14 @@ graph TD
 
 ### 🗓️ Dia 22: Plano Semestral — Pro (O Mais Popular)
 * **Formato**: Card de Destaque de Produto (1080x1350 px)
-* **Visual**: Réplica exata do card "MAIS POPULAR" do site, com borda de energia giratória vermelha `#970202`, badge brilhante e valor `R$ 29,90/sem`.
-* **Headline na Arte**: *"PLANO PRO SEMESTRAL: 3 TELAS POR R$ 29,90"*
+* **Visual**: Réplica exata do card "MAIS POPULAR" do site, com borda de energia giratória vermelha `#970202`, badge brilhante e valor `R$ 47,90/sem`.
+* **Headline na Arte**: *"PLANO PRO SEMESTRAL: 3 TELAS POR R$ 47,90"*
 * **Legenda**:
   Quer a maior economia do ano?
   O Plano Pro Semestral é o Campeão de Vendas do DezPila:
   🔥 6 meses de acesso total
   🔥 3 conexões simultâneas (TV da sala, quarto e celular)
-  🔥 Apenas R$ 29,90 por semestre!
+  🔥 Apenas R$ 47,90 por semestre!
   Garantia de preço travado. Clique no link da bio para assinar!
 * **Hashtags**: `#PlanoPro #MaisPopular #DezPila #OfertaSemestral`
 
@@ -319,8 +319,8 @@ graph TD
 
 ### 🗓️ Dia 23: Plano VIP Anual — O Campeão da Economia
 * **Formato**: Card VIP / Gold Edition (1080x1350 px)
-* **Visual**: Fundo escuro com detalhes em vermelho e borda brilhante. Destaque para o valor `R$ 47,90/ano` (71% de desconto).
-* **Headline na Arte**: *"1 ANO DE ENTRETENIMENTO POR APENAS R$ 47,90"*
+* **Visual**: Fundo escuro com detalhes em vermelho e borda brilhante. Destaque para o valor `R$ 73,90/ano` (69% de desconto).
+* **Headline na Arte**: *"1 ANO DE ENTRETENIMENTO POR APENAS R$ 73,90"*
 * **Legenda**:
   12 meses inteiros de filmes, séries e futebol liberado pelo valor de 1 mês de TV a cabo tradicional!
   Com o Plano VIP Anual você garante 4 telas simultâneas para toda a sua família.

@@ -1919,15 +1919,15 @@ Saiba exatamente o que está passando agora e o que vai passar a seguir com a si
   {
     day: 22,
     id: "post_22",
-    title: "Plano Pro Semestral: 3 Telas por R$ 29,90",
+    title: "Plano Pro Semestral: 3 Telas por R$ 47,90",
     category: "👑 Oferta Especial",
     feedImage: "/instagram_posts/22.png",
     storyImage: "/instagram/stories/22.png",
     caption: `👑 Conheça o Campeão de Vendas do DezPila!
 
-Com o Plano Pro Semestral, você garante 6 meses completos com 3 telas simultâneas por apenas R$ 29,90 em pagamento único!
+Com o Plano Pro Semestral, você garante 6 meses completos com 3 telas simultâneas por apenas R$ 47,90 em pagamento único!
 
-Isso dá menos de R$ 5,00 por mês para toda a família curtir em aparelhos diferentes ao mesmo tempo.
+Isso dá menos de R$ 8,00 por mês para toda a família curtir em aparelhos diferentes ao mesmo tempo.
 
 💬 Comente "TV" para garantir essa condição exclusiva no Direct! 🚀
 
@@ -1936,13 +1936,13 @@ Isso dá menos de R$ 5,00 por mês para toda a família curtir em aparelhos dife
   {
     day: 23,
     id: "post_23",
-    title: "Plano VIP Anual: 4 Telas por R$ 47,90",
+    title: "Plano VIP Anual: 4 Telas por R$ 73,90",
     category: "💎 Máxima Economia",
     feedImage: "/instagram_posts/23.png",
     storyImage: "/instagram/stories/23.png",
-    caption: `💎 O maior desconto do ano: 71% OFF!
+    caption: `💎 O maior desconto do ano: 69% OFF!
 
-12 meses de acesso ilimitado com 4 telas simultâneas em 4K por apenas R$ 47,90 (pagamento único no PIX).
+12 meses de acesso ilimitado com 4 telas simultâneas em 4K por apenas R$ 73,90 (pagamento único no PIX).
 
 ✅ 1 ano inteiro sem se preocupar com fatura de TV
 ✅ 4 conexões simultâneas para a casa toda

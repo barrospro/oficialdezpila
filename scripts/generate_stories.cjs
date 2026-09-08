@@ -301,27 +301,27 @@ const postsData = [
   {
     num: 22,
     tag: "STORY PLANO PRO",
-    title: "PLANO PRO SEMESTRAL:<br><span>3 TELAS POR R$ 29,90</span>",
+    title: "PLANO PRO SEMESTRAL:<br><span>3 TELAS POR R$ 47,90</span>",
     badge: "CAMPEÃO DE VENDAS DO SITE",
     items: [
       "🔥 6 Meses de acesso total ininterrupto",
       "📺 3 Conexões simultâneas (Sala, Quarto, Celular)",
-      "💰 Menos de R$ 5 por mês para cada tela!",
+      "💰 Menos de R$ 8 por mês por tela!",
     ],
-    price: "R$ 29,90 / SEMESTRE INTEIRO",
+    price: "R$ 47,90 / SEMESTRE INTEIRO",
     footer: "GARANTA O PLANO PRO NA BIO",
   },
   {
     num: 23,
     tag: "STORY PLANO VIP",
-    title: "PLANO VIP ANUAL:<br><span>4 TELAS POR R$ 47,90</span>",
-    badge: "71% DE ECONOMIA REAL",
+    title: "PLANO VIP ANUAL:<br><span>4 TELAS POR R$ 73,90</span>",
+    badge: "69% DE ECONOMIA REAL",
     items: [
       "👑 12 Meses inteiros de acesso VIP",
       "👨‍👩‍👧‍👦 4 Telas simultâneas para toda a família",
       "💸 Economia de mais de R$ 3.000 no ano",
     ],
-    price: "1 ANO COMPLETO POR R$ 47,90",
+    price: "1 ANO COMPLETO POR R$ 73,90",
     footer: "CLIQUE NA BIO E SEJA VIP",
   },
   {
