@@ -310,9 +310,9 @@ export function AccountCheckoutModal({
 
   return createPortal(
     <div className="fixed inset-0 top-0 left-0 right-0 bottom-0 w-screen h-[100dvh] min-h-screen z-[9999999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 overscroll-contain">
-      <div className="relative w-full max-w-lg max-h-[88dvh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white shadow-[0_25px_70px_-15px_rgba(15,23,42,0.25)] overflow-hidden my-auto">
-        {/* Header Fixo do Modal — Clean Light Theme */}
-        <div className="shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 bg-slate-50/80 backdrop-blur-md z-10">
+      <div className="relative w-full max-w-lg max-h-[88dvh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-slate-200 bg-white shadow-[0_25px_70px_-15px_rgba(0,158,227,0.25)] overflow-hidden my-auto">
+        {/* Header Fixo Mercado Pago Style */}
+        <div className="shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-[#0081B7] bg-[#009EE3] text-white z-10">
           <div className="flex items-center gap-3">
             {(step === "CONFIRMACAO" ||
               step === "PAGAMENTO" ||
@@ -324,23 +324,30 @@ export function AccountCheckoutModal({
                   if (step === "PAGAMENTO") setStep("CONFIRMACAO");
                   if (step === "EXPIRADO") setStep("CADASTRO");
                 }}
-                className="p-1.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 aria-label="Voltar"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
             )}
 
-            {/* Logo DezPila */}
-            <div className="flex items-center gap-2 text-sm sm:text-base font-bold tracking-tighter uppercase text-slate-900 font-heading shrink-0">
-              <div className="size-3.5 bg-brand skew-x-[-15deg] shadow-sm" />
-              <span>
-                DEZ<span className="text-slate-400">PILA</span>
-              </span>
+            {/* Logo Mercado Pago & DezPila */}
+            <div className="flex items-center gap-2 font-bold tracking-tighter uppercase font-heading shrink-0">
+              <div className="flex items-center justify-center size-7 rounded-lg bg-white/15 text-white">
+                <Shield className="h-4 w-4" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs sm:text-sm font-extrabold tracking-tight text-white font-heading leading-none">
+                  MERCADO PAGO
+                </span>
+                <span className="text-[10px] font-medium text-cyan-100 tracking-wider font-code mt-0.5">
+                  CHECKOUT SEGURO
+                </span>
+              </div>
             </div>
 
-            <div className="border-l border-slate-200 pl-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 font-heading">
+            <div className="border-l border-white/20 pl-3">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
                 {step === "CADASTRO"
                   ? "Criar Conta"
                   : step === "CONFIRMACAO"
@@ -351,7 +358,7 @@ export function AccountCheckoutModal({
                         ? "PIX Expirado"
                         : "Pagamento Confirmado"}
               </h2>
-              <span className="text-[11.5px] font-code text-[#970202] font-bold block truncate max-w-[170px] sm:max-w-none">
+              <span className="text-[11px] font-code text-cyan-100 font-semibold block truncate max-w-[170px] sm:max-w-none">
                 Plano {plano.nome} — R$ {plano.preco}
               </span>
             </div>
@@ -360,11 +367,22 @@ export function AccountCheckoutModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <X className="h-5 w-5" />
           </button>
+        </div>
+
+        {/* Banner Mercado Pago Garantia */}
+        <div className="bg-[#EBF5FA] px-4 py-2 border-b border-[#009EE3]/20 flex items-center justify-between text-xs font-body text-[#007EA7]">
+          <span className="flex items-center gap-1.5 font-semibold">
+            <CheckCircle className="h-3.5 w-3.5 text-[#009EE3]" />
+            Processado via Mercado Pago
+          </span>
+          <span className="font-code text-[11px] font-bold text-[#009EE3]">
+            Liberação Instantânea
+          </span>
         </div>
 
         {/* Corpo com Rolagem Interna Isolada */}
@@ -381,8 +399,8 @@ export function AccountCheckoutModal({
           {step === "CADASTRO" && (
             <form onSubmit={handleCadastroSubmit}>
               <p className="mb-4 text-xs text-slate-600 font-body leading-relaxed">
-                Preencha seus dados abaixo para criar sua conta DezPila e liberar seu
-                acesso imediatamente.
+                Preencha seus dados para criar sua conta DezPila e liberar seu
+                acesso com garantia Mercado Pago.
               </p>
 
               {/* Nome Completo */}
@@ -396,7 +414,7 @@ export function AccountCheckoutModal({
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   placeholder="Seu nome completo"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/20 transition-all"
                 />
                 <User className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
@@ -412,7 +430,7 @@ export function AccountCheckoutModal({
                   value={cpf}
                   onChange={(e) => setCpf(maskCpf(e.target.value))}
                   placeholder="000.000.000-00"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/20 transition-all"
                 />
                 <Shield className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
@@ -428,7 +446,7 @@ export function AccountCheckoutModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="voce@email.com"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/20 transition-all"
                 />
                 <Mail className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
@@ -444,7 +462,7 @@ export function AccountCheckoutModal({
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                   placeholder="Crie uma senha de acesso"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/20 transition-all"
                 />
                 <button
                   type="button"
@@ -471,7 +489,7 @@ export function AccountCheckoutModal({
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(maskWhatsapp(e.target.value))}
                   placeholder="(00) 00000-0000"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/20 transition-all"
                 />
                 <Phone className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
@@ -483,7 +501,7 @@ export function AccountCheckoutModal({
                     type="checkbox"
                     checked={lembrar}
                     onChange={(e) => setLembrar(e.target.checked)}
-                    className="h-4 w-4 rounded border-slate-300 text-[#10B981] focus:ring-[#10B981]/20 accent-[#10B981]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#009EE3] focus:ring-[#009EE3]/20 accent-[#009EE3]"
                   />
                   <span>Lembrar meus dados para acesso rápido</span>
                 </label>
@@ -491,20 +509,20 @@ export function AccountCheckoutModal({
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#059669] hover:to-[#047857] py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/25 transition-all cursor-pointer font-heading flex items-center justify-center gap-2 active:scale-[0.99]"
+                className="w-full rounded-xl bg-[#009EE3] hover:bg-[#0081B7] py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-[#009EE3]/30 transition-all cursor-pointer font-heading flex items-center justify-center gap-2 active:scale-[0.99]"
               >
                 <span>Continuar para o Pagamento</span>
                 <Check className="h-4 w-4" />
               </button>
 
               <div className="mt-3.5 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-body">
-                <Lock className="h-3.5 w-3.5 text-[#10B981]" />
-                <span>Dados protegidos por criptografia SSL de 256 bits</span>
+                <Lock className="h-3.5 w-3.5 text-[#009EE3]" />
+                <span>Compra 100% Protegida pelo Mercado Pago</span>
               </div>
             </form>
           )}
 
-          {/* PASSO 2: Tela de Confirmação, OrderBumps & Forma de Pagamento */}
+          {/* PASSO 2: Tela de Confirmação & OrderBumps */}
           {step === "CONFIRMACAO" && (
             <div>
               {/* Card Resumo do Plano Base */}
@@ -513,7 +531,7 @@ export function AccountCheckoutModal({
                   <span className="text-xs font-bold text-slate-800 uppercase font-heading">
                     Plano Selecionado
                   </span>
-                  <span className="text-xs font-code font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/80">
+                  <span className="text-xs font-code font-bold text-[#007EA7] bg-[#EBF5FA] px-2 py-0.5 rounded-md border border-[#009EE3]/30">
                     {plano.nome}
                   </span>
                 </div>
@@ -540,12 +558,12 @@ export function AccountCheckoutModal({
               <div
                 className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-2.5 ${
                   telasExtras > 0
-                    ? "bg-emerald-50/50 border-[#10B981] shadow-sm"
+                    ? "bg-[#EBF5FA]/70 border-[#009EE3] shadow-xs"
                     : "bg-slate-50/50 border-slate-200/80 hover:border-slate-300"
                 }`}
               >
                 <div className="flex items-start gap-2.5">
-                  <div className="p-1.5 rounded-xl bg-white border border-slate-200 text-emerald-600 shrink-0 mt-0.5 shadow-sm">
+                  <div className="p-1.5 rounded-xl bg-white border border-slate-200 text-[#009EE3] shrink-0 mt-0.5 shadow-sm">
                     <Tv className="h-4 w-4" />
                   </div>
                   <div className="flex-1">
@@ -553,7 +571,7 @@ export function AccountCheckoutModal({
                       <span className="text-xs font-extrabold uppercase text-slate-900 tracking-wide font-heading">
                         Tela Extra (+1 Conexão)
                       </span>
-                      <span className="text-[11px] font-bold font-code text-emerald-800 bg-emerald-100/70 px-1.5 py-0.5 rounded shrink-0">
+                      <span className="text-[11px] font-bold font-code text-[#007EA7] bg-[#EBF5FA] px-1.5 py-0.5 rounded shrink-0">
                         R$ 5,90 / tela
                       </span>
                     </div>
@@ -583,7 +601,7 @@ export function AccountCheckoutModal({
                         <button
                           type="button"
                           onClick={() => setTelasExtras((prev) => prev + 1)}
-                          className="flex h-6 w-6 items-center justify-center rounded-lg border border-[#10B981] bg-[#10B981] text-white hover:bg-[#059669] cursor-pointer transition-colors shadow-sm"
+                          className="flex h-6 w-6 items-center justify-center rounded-lg border border-[#009EE3] bg-[#009EE3] text-white hover:bg-[#0081B7] cursor-pointer transition-colors shadow-sm"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
@@ -597,7 +615,7 @@ export function AccountCheckoutModal({
               <div
                 className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-2.5 cursor-pointer ${
                   pacoteAdulto
-                    ? "bg-emerald-50/50 border-[#10B981] shadow-sm"
+                    ? "bg-[#EBF5FA]/70 border-[#009EE3] shadow-xs"
                     : "bg-slate-50/50 border-slate-200/80 hover:border-slate-300"
                 }`}
                 onClick={() => setPacoteAdulto(!pacoteAdulto)}
@@ -608,7 +626,7 @@ export function AccountCheckoutModal({
                       className={
                         "flex h-4 w-4 items-center justify-center rounded-md border transition-colors " +
                         (pacoteAdulto
-                          ? "border-[#10B981] bg-[#10B981] text-white"
+                          ? "border-[#009EE3] bg-[#009EE3] text-white"
                           : "border-slate-300 bg-white text-transparent")
                       }
                     >
@@ -644,7 +662,7 @@ export function AccountCheckoutModal({
               <div
                 className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-3 cursor-pointer ${
                   pacoteCristoFlix
-                    ? "bg-emerald-50/50 border-[#10B981] shadow-sm"
+                    ? "bg-[#EBF5FA]/70 border-[#009EE3] shadow-xs"
                     : "bg-slate-50/50 border-slate-200/80 hover:border-slate-300"
                 }`}
                 onClick={() => setPacoteCristoFlix(!pacoteCristoFlix)}
@@ -655,7 +673,7 @@ export function AccountCheckoutModal({
                       className={
                         "flex h-4 w-4 items-center justify-center rounded-md border transition-colors " +
                         (pacoteCristoFlix
-                          ? "border-[#10B981] bg-[#10B981] text-white"
+                          ? "border-[#009EE3] bg-[#009EE3] text-white"
                           : "border-slate-300 bg-white text-transparent")
                       }
                     >
@@ -686,7 +704,7 @@ export function AccountCheckoutModal({
                   <span className="text-slate-900 font-semibold font-code">R$ {plano.preco}</span>
                 </div>
                 {telasExtras > 0 && (
-                  <div className="flex justify-between items-center text-xs text-emerald-700 font-body mb-1 animate-in fade-in duration-200">
+                  <div className="flex justify-between items-center text-xs text-[#007EA7] font-body mb-1 animate-in fade-in duration-200">
                     <span>Telas Extras ({telasExtras}x):</span>
                     <span className="font-code">+ R$ {formatPrice(telasPriceTotal)}</span>
                   </div>
@@ -707,32 +725,32 @@ export function AccountCheckoutModal({
                   <span className="uppercase tracking-wider">
                     Valor Total a Pagar:
                   </span>
-                  <span className="text-base text-emerald-600 font-extrabold font-heading">
+                  <span className="text-base text-[#009EE3] font-extrabold font-heading">
                     R$ {totalPriceStr}
                   </span>
                 </div>
               </div>
 
-              {/* Botão de Gerar PIX */}
+              {/* Botão de Gerar PIX Mercado Pago */}
               <button
                 type="button"
                 disabled={loadingPix}
                 onClick={handleGerarPix}
-                className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#059669] hover:to-[#047857] py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/25 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed font-heading flex items-center justify-center gap-2 active:scale-[0.99]"
+                className="w-full rounded-xl bg-[#009EE3] hover:bg-[#0081B7] py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md shadow-[#009EE3]/30 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed font-heading flex items-center justify-center gap-2 active:scale-[0.99]"
               >
                 {loadingPix ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Gerando PIX...</span>
+                    <span>Gerando PIX Mercado Pago...</span>
                   </>
                 ) : (
-                  <span>Gerar PIX de R$ {totalPriceStr} →</span>
+                  <span>Pagar R$ {totalPriceStr} com PIX Mercado Pago →</span>
                 )}
               </button>
             </div>
           )}
 
-          {/* PASSO 3: Tela de Pagamento PIX */}
+          {/* PASSO 3: Tela de Pagamento PIX Mercado Pago */}
           {step === "PAGAMENTO" && (
             <div className="flex flex-col items-center text-center">
               {/* Resumo do Pedido */}
@@ -741,7 +759,7 @@ export function AccountCheckoutModal({
                   <span className="text-xs font-bold text-slate-900 uppercase font-heading">
                     Resumo do Pedido
                   </span>
-                  <span className="text-xs font-code font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  <span className="text-xs font-code font-bold text-[#007EA7] bg-[#EBF5FA] px-2 py-0.5 rounded border border-[#009EE3]/30">
                     {plano.nome}
                   </span>
                 </div>
@@ -755,15 +773,15 @@ export function AccountCheckoutModal({
                 </div>
                 <div className="flex justify-between items-center text-xs text-slate-600 font-body pt-1.5 border-t border-slate-200/70 mt-1.5">
                   <span>Total a Pagar:</span>
-                  <span className="text-sm font-extrabold text-slate-900 font-heading">
+                  <span className="text-sm font-extrabold text-[#009EE3] font-heading">
                     R$ {totalPriceStr}
                   </span>
                 </div>
               </div>
 
-              {/* Status & Timer */}
-              <div className="flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-code font-bold shadow-xs">
-                <Clock className="h-3.5 w-3.5 text-amber-600 animate-pulse" />
+              {/* Status & Timer Mercado Pago */}
+              <div className="flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-[#EBF5FA] border border-[#009EE3]/30 text-[#007EA7] text-xs font-code font-bold shadow-xs">
+                <Clock className="h-3.5 w-3.5 text-[#009EE3] animate-pulse" />
                 <span>PIX Expira em: {formatTimer(timerSeconds)}</span>
               </div>
 
@@ -776,7 +794,7 @@ export function AccountCheckoutModal({
                         ? pixQrBase64
                         : `data:image/png;base64,${pixQrBase64}`
                     }
-                    alt="QR Code Pix"
+                    alt="QR Code Pix Mercado Pago"
                     className="w-[160px] h-[160px] object-contain"
                   />
                 ) : (
@@ -789,8 +807,7 @@ export function AccountCheckoutModal({
               </div>
 
               <p className="text-xs text-slate-600 font-body mb-3">
-                Abra o app do seu banco e escaneie o QR Code acima para pagar
-                via PIX.
+                Abra o aplicativo do seu banco e escaneie o QR Code acima para concluir o pagamento com aprovação imediata via Mercado Pago.
               </p>
 
               {/* Chave PIX Copia e Cola */}
@@ -805,7 +822,7 @@ export function AccountCheckoutModal({
                   <button
                     type="button"
                     onClick={handleCopyPix}
-                    className="absolute right-1 py-1.5 px-3 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold font-heading uppercase transition-colors flex items-center gap-1 cursor-pointer shadow-md shadow-emerald-500/20"
+                    className="absolute right-1 py-1.5 px-3 rounded-lg bg-[#009EE3] hover:bg-[#0081B7] text-white text-xs font-bold font-heading uppercase transition-colors flex items-center gap-1 cursor-pointer shadow-md shadow-[#009EE3]/25"
                   >
                     {copied ? (
                       <>
@@ -823,29 +840,29 @@ export function AccountCheckoutModal({
               </div>
 
               {/* Passo a Passo Rápido para Pagamento */}
-              <div className="w-full rounded-xl bg-slate-50 border border-slate-200/80 p-3 mb-3 text-left">
-                <div className="flex items-center gap-1.5 text-[11px] font-heading font-bold text-emerald-700 uppercase mb-1.5">
-                  <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Como pagar em 3 passos:
+              <div className="w-full rounded-xl bg-[#EBF5FA]/70 border border-[#009EE3]/30 p-3 mb-3 text-left">
+                <div className="flex items-center gap-1.5 text-[11px] font-heading font-bold text-[#007EA7] uppercase mb-1.5">
+                  <span className="flex h-1.5 w-1.5 rounded-full bg-[#009EE3] animate-pulse" />
+                  Como pagar via Mercado Pago:
                 </div>
                 <div className="space-y-1.5 text-[11.5px] font-body text-slate-700">
                   <div className="flex items-center gap-2">
-                    <span className="text-[#10B981] font-bold">1.</span>
+                    <span className="text-[#009EE3] font-bold">1.</span>
                     <span>Clique em <strong>Copiar PIX</strong> acima</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[#10B981] font-bold">2.</span>
-                    <span>Abra seu Banco e selecione <strong>PIX Copia e Cola</strong></span>
+                    <span className="text-[#009EE3] font-bold">2.</span>
+                    <span>Abra seu banco e selecione a opção <strong>PIX Copia e Cola</strong></span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[#10B981] font-bold">3.</span>
-                    <span>Confirme. O sistema aprova e libera sua conta automaticamente!</span>
+                    <span className="text-[#009EE3] font-bold">3.</span>
+                    <span>Confirme o pagamento. A aprovação é imediata e seu acesso é liberado em segundos!</span>
                   </div>
                 </div>
               </div>
 
               <span className="text-[10.5px] font-body text-slate-500 flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-[#10B981]" /> PIX oficial processado pelo Banco Central • 100% Criptografado
+                <Shield className="h-3.5 w-3.5 text-[#009EE3]" /> Compra 100% Protegida pelo Mercado Pago • Criptografia SSL 256 bits
               </span>
             </div>
           )}
@@ -877,7 +894,7 @@ export function AccountCheckoutModal({
                   setTimerSeconds(900);
                   setStep("PAGAMENTO");
                 }}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer mb-2"
+                className="w-full py-3 rounded-xl bg-[#009EE3] hover:bg-[#0081B7] text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-md shadow-[#009EE3]/20 flex items-center justify-center gap-2 cursor-pointer mb-2"
               >
                 <span>Gerar Nova Chave PIX</span>
               </button>
@@ -892,32 +909,32 @@ export function AccountCheckoutModal({
             </div>
           )}
 
-          {/* PASSO 5: TELA VERDE — Pagamento Confirmado */}
+          {/* PASSO 5: Pagamento Confirmado */}
           {step === "SUCESSO" && (
             <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 shadow-lg shadow-emerald-500/20">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#EBF5FA] border-2 border-[#009EE3] text-[#009EE3] shadow-lg shadow-[#009EE3]/20">
                 <CheckCircle className="h-8 w-8" strokeWidth={2.5} />
               </div>
 
-              <span className="mb-1.5 inline-block rounded-full bg-emerald-100 px-3 py-0.5 text-[10px] font-bold font-code uppercase tracking-widest text-emerald-800 border border-emerald-300">
-                ✓ PAGAMENTO IDENTIFICADO
+              <span className="mb-1.5 inline-block rounded-full bg-[#EBF5FA] px-3 py-0.5 text-[10px] font-bold font-code uppercase tracking-widest text-[#007EA7] border border-[#009EE3]/30">
+                ✓ PAGAMENTO CONFIRMADO NO MERCADO PAGO
               </span>
 
               <h3 className="text-lg sm:text-xl font-extrabold uppercase text-slate-900 font-heading tracking-tight mb-1.5">
-                PAGAMENTO CONFIRMADO COM SUCESSO!
+                ACESSO LIBERADO COM SUCESSO!
               </h3>
 
               <p className="text-xs text-slate-600 font-body max-w-sm mb-4 leading-relaxed">
                 Olá, <strong className="text-slate-900 font-semibold">{nome}</strong>!
-                O pagamento do seu pedido do plano{" "}
-                <strong className="text-emerald-600">{plano.nome}</strong> no valor
+                Seu pagamento para o plano{" "}
+                <strong className="text-[#009EE3]">{plano.nome}</strong> no valor
                 de <strong className="text-slate-900">R$ {totalPriceStr}</strong> foi
-                aprovado.
+                aprovado com sucesso.
               </p>
 
               <div className="w-full space-y-2.5 mb-4 text-left">
-                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
-                  <Mail className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#EBF5FA] border border-[#009EE3]/30">
+                  <Mail className="h-4 w-4 text-[#009EE3] shrink-0 mt-0.5" />
                   <div className="text-xs font-body">
                     <span className="font-bold text-slate-900 block mb-0.5">
                       Enviado por E-mail
@@ -929,8 +946,8 @@ export function AccountCheckoutModal({
                   </div>
                 </div>
 
-                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
-                  <Phone className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#EBF5FA] border border-[#009EE3]/30">
+                  <Phone className="h-4 w-4 text-[#009EE3] shrink-0 mt-0.5" />
                   <div className="text-xs font-body">
                     <span className="font-bold text-slate-900 block mb-0.5">
                       Enviado por WhatsApp
@@ -946,7 +963,7 @@ export function AccountCheckoutModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/25 transition-all cursor-pointer font-heading"
+                className="w-full rounded-xl bg-[#009EE3] hover:bg-[#0081B7] py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-[#009EE3]/25 transition-all cursor-pointer font-heading"
               >
                 Concluído — Fechar
               </button>
