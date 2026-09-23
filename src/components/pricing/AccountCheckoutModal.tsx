@@ -309,10 +309,10 @@ export function AccountCheckoutModal({
   };
 
   return createPortal(
-    <div className="fixed inset-0 top-0 left-0 right-0 bottom-0 w-screen h-[100dvh] min-h-screen z-[9999999] flex items-center justify-center bg-black/90 backdrop-blur-md p-3 sm:p-4 overscroll-contain">
-      <div className="relative w-full max-w-lg max-h-[88dvh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/15 bg-gradient-to-b from-[#14161f] to-[#0e0f17] shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden my-auto">
-        {/* Header Fixo do Modal */}
-        <div className="shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-white/10 bg-[#14161f]/80 backdrop-blur-md z-10">
+    <div className="fixed inset-0 top-0 left-0 right-0 bottom-0 w-screen h-[100dvh] min-h-screen z-[9999999] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 overscroll-contain">
+      <div className="relative w-full max-w-lg max-h-[88dvh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white shadow-[0_25px_70px_-15px_rgba(15,23,42,0.25)] overflow-hidden my-auto">
+        {/* Header Fixo do Modal — Clean Light Theme */}
+        <div className="shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 bg-slate-50/80 backdrop-blur-md z-10">
           <div className="flex items-center gap-3">
             {(step === "CONFIRMACAO" ||
               step === "PAGAMENTO" ||
@@ -324,7 +324,7 @@ export function AccountCheckoutModal({
                   if (step === "PAGAMENTO") setStep("CONFIRMACAO");
                   if (step === "EXPIRADO") setStep("CADASTRO");
                 }}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition-colors cursor-pointer"
                 aria-label="Voltar"
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -332,15 +332,15 @@ export function AccountCheckoutModal({
             )}
 
             {/* Logo DezPila */}
-            <div className="flex items-center gap-2 text-sm sm:text-base font-bold tracking-tighter uppercase text-white font-heading shrink-0">
-              <div className="size-3.5 bg-brand skew-x-[-15deg] shadow-[0_0_10px_var(--brand-glow)]" />
+            <div className="flex items-center gap-2 text-sm sm:text-base font-bold tracking-tighter uppercase text-slate-900 font-heading shrink-0">
+              <div className="size-3.5 bg-brand skew-x-[-15deg] shadow-sm" />
               <span>
-                DEZ<span className="text-muted-foreground">PILA</span>
+                DEZ<span className="text-slate-400">PILA</span>
               </span>
             </div>
 
-            <div className="border-l border-white/15 pl-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
+            <div className="border-l border-slate-200 pl-3">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 font-heading">
                 {step === "CADASTRO"
                   ? "Criar Conta"
                   : step === "CONFIRMACAO"
@@ -351,7 +351,7 @@ export function AccountCheckoutModal({
                         ? "PIX Expirado"
                         : "Pagamento Confirmado"}
               </h2>
-              <span className="text-[11px] font-code text-[#970202] font-semibold block truncate max-w-[170px] sm:max-w-none">
+              <span className="text-[11.5px] font-code text-[#970202] font-bold block truncate max-w-[170px] sm:max-w-none">
                 Plano {plano.nome} — R$ {plano.preco}
               </span>
             </div>
@@ -360,7 +360,7 @@ export function AccountCheckoutModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <X className="h-5 w-5" />
@@ -368,10 +368,10 @@ export function AccountCheckoutModal({
         </div>
 
         {/* Corpo com Rolagem Interna Isolada */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 overscroll-contain">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 overscroll-contain bg-white">
           {/* Mensagem de Erro se houver */}
           {apiError && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-code flex items-center gap-2">
+            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-code flex items-center gap-2">
               <X className="h-4 w-4 shrink-0" />
               <span>{apiError}</span>
             </div>
@@ -380,76 +380,76 @@ export function AccountCheckoutModal({
           {/* PASSO 1: Form de Cadastro de Conta */}
           {step === "CADASTRO" && (
             <form onSubmit={handleCadastroSubmit}>
-              <p className="mb-3.5 text-xs text-slate-400 font-body">
-                Preencha seus dados para criar sua conta DezPila e liberar seu
+              <p className="mb-4 text-xs text-slate-600 font-body leading-relaxed">
+                Preencha seus dados abaixo para criar sua conta DezPila e liberar seu
                 acesso imediatamente.
               </p>
 
               {/* Nome Completo */}
-              <label className="mb-1 ml-0.5 block text-[11px] font-semibold text-slate-300">
+              <label className="mb-1 ml-0.5 block text-[11.5px] font-bold uppercase tracking-wide text-slate-700 font-heading">
                 Nome Completo
               </label>
-              <div className="relative mb-2.5">
+              <div className="relative mb-3">
                 <input
                   type="text"
                   required
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   placeholder="Seu nome completo"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2 px-3.5 pr-10 text-xs text-slate-100 outline-none focus:border-[#10B981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                 />
-                <User className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <User className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
 
               {/* CPF */}
-              <label className="mb-1 ml-0.5 block text-[11px] font-semibold text-slate-300">
+              <label className="mb-1 ml-0.5 block text-[11.5px] font-bold uppercase tracking-wide text-slate-700 font-heading">
                 CPF (Documento para ativação)
               </label>
-              <div className="relative mb-2.5">
+              <div className="relative mb-3">
                 <input
                   type="text"
                   required
                   value={cpf}
                   onChange={(e) => setCpf(maskCpf(e.target.value))}
                   placeholder="000.000.000-00"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2 px-3.5 pr-10 text-xs text-slate-100 outline-none focus:border-[#10B981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                 />
-                <Shield className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <Shield className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
 
               {/* Email */}
-              <label className="mb-1 ml-0.5 block text-[11px] font-semibold text-slate-300">
+              <label className="mb-1 ml-0.5 block text-[11.5px] font-bold uppercase tracking-wide text-slate-700 font-heading">
                 E-mail para Acesso à Plataforma
               </label>
-              <div className="relative mb-2.5">
+              <div className="relative mb-3">
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="voce@email.com"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2 px-3.5 pr-10 text-xs text-slate-100 outline-none focus:border-[#10B981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                 />
-                <Mail className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <Mail className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
 
               {/* Senha */}
-              <label className="mb-1 ml-0.5 block text-[11px] font-semibold text-slate-300">
+              <label className="mb-1 ml-0.5 block text-[11.5px] font-bold uppercase tracking-wide text-slate-700 font-heading">
                 Senha
               </label>
-              <div className="relative mb-2.5">
+              <div className="relative mb-3">
                 <input
                   type={verSenha ? "text" : "password"}
                   required
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                   placeholder="Crie uma senha de acesso"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2 px-3.5 pr-10 text-xs text-slate-100 outline-none focus:border-[#10B981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setVerSenha((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer"
                   aria-label={verSenha ? "Ocultar senha" : "Mostrar senha"}
                 >
                   {verSenha ? (
@@ -461,29 +461,29 @@ export function AccountCheckoutModal({
               </div>
 
               {/* WhatsApp */}
-              <label className="mb-1 ml-0.5 block text-[11px] font-semibold text-slate-300">
+              <label className="mb-1 ml-0.5 block text-[11.5px] font-bold uppercase tracking-wide text-slate-700 font-heading">
                 WhatsApp
               </label>
-              <div className="relative mb-3">
+              <div className="relative mb-3.5">
                 <input
                   type="tel"
                   required
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(maskWhatsapp(e.target.value))}
                   placeholder="(00) 00000-0000"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2 px-3.5 pr-10 text-xs text-slate-100 outline-none focus:border-[#10B981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 px-3.5 pr-10 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                 />
-                <Phone className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <Phone className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
 
               {/* Checkbox Lembrar */}
-              <div className="mb-4 flex items-center justify-between text-[11.5px] text-slate-400">
+              <div className="mb-4 flex items-center justify-between text-xs text-slate-600">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={lembrar}
                     onChange={(e) => setLembrar(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-white/20 bg-white/5 text-[#10B981] focus:ring-0"
+                    className="h-4 w-4 rounded border-slate-300 text-[#10B981] focus:ring-[#10B981]/20 accent-[#10B981]"
                   />
                   <span>Lembrar meus dados para acesso rápido</span>
                 </label>
@@ -491,14 +491,14 @@ export function AccountCheckoutModal({
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#34D399] hover:to-[#10B981] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-[0_8px_20px_rgba(16,185,129,0.45)] transition-all cursor-pointer font-heading flex items-center justify-center gap-2"
+                className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#059669] hover:to-[#047857] py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/25 transition-all cursor-pointer font-heading flex items-center justify-center gap-2 active:scale-[0.99]"
               >
                 <span>Continuar para o Pagamento</span>
                 <Check className="h-4 w-4" />
               </button>
 
-              <div className="mt-3 flex items-center justify-center gap-2 text-[10.5px] text-slate-500 font-code">
-                <Lock className="h-3 w-3 text-[#10B981]" />
+              <div className="mt-3.5 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-body">
+                <Lock className="h-3.5 w-3.5 text-[#10B981]" />
                 <span>Dados protegidos por criptografia SSL de 256 bits</span>
               </div>
             </form>
@@ -508,22 +508,22 @@ export function AccountCheckoutModal({
           {step === "CONFIRMACAO" && (
             <div>
               {/* Card Resumo do Plano Base */}
-              <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-3.5 mb-3 text-left">
+              <div className="w-full rounded-2xl bg-slate-50 border border-slate-200/80 p-3.5 mb-3.5 text-left">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-bold text-slate-300 uppercase font-heading">
+                  <span className="text-xs font-bold text-slate-800 uppercase font-heading">
                     Plano Selecionado
                   </span>
-                  <span className="text-xs font-code font-bold text-[#10B981] bg-[#10B981]/15 px-2 py-0.5 rounded border border-[#10B981]/30">
+                  <span className="text-xs font-code font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/80">
                     {plano.nome}
                   </span>
                 </div>
                 <div className="flex justify-between items-baseline pt-0.5">
-                  <span className="text-xs text-slate-400 font-code">
+                  <span className="text-xs text-slate-500 font-body">
                     {plano.desc}
                   </span>
-                  <span className="text-sm sm:text-base font-extrabold text-white font-heading">
+                  <span className="text-sm sm:text-base font-extrabold text-slate-900 font-heading">
                     R$ {plano.preco}{" "}
-                    <span className="text-xs font-normal text-slate-400 font-code">
+                    <span className="text-xs font-normal text-slate-500 font-code">
                       {plano.periodo}
                     </span>
                   </span>
@@ -531,7 +531,7 @@ export function AccountCheckoutModal({
               </div>
 
               <div className="mb-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 font-heading">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-heading">
                   Opcionais Recomendados:
                 </span>
               </div>
@@ -540,30 +540,30 @@ export function AccountCheckoutModal({
               <div
                 className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-2.5 ${
                   telasExtras > 0
-                    ? "bg-[#10B981]/10 border-[#10B981] shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                    : "bg-white/[0.02] border-white/10"
+                    ? "bg-emerald-50/50 border-[#10B981] shadow-sm"
+                    : "bg-slate-50/50 border-slate-200/80 hover:border-slate-300"
                 }`}
               >
                 <div className="flex items-start gap-2.5">
-                  <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 text-white shrink-0 mt-0.5">
-                    <Tv className="h-4 w-4 text-emerald-400" />
+                  <div className="p-1.5 rounded-xl bg-white border border-slate-200 text-emerald-600 shrink-0 mt-0.5 shadow-sm">
+                    <Tv className="h-4 w-4" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
-                      <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading">
+                      <span className="text-xs font-extrabold uppercase text-slate-900 tracking-wide font-heading">
                         Tela Extra (+1 Conexão)
                       </span>
-                      <span className="text-[11px] font-bold font-code text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded shrink-0">
+                      <span className="text-[11px] font-bold font-code text-emerald-800 bg-emerald-100/70 px-1.5 py-0.5 rounded shrink-0">
                         R$ 5,90 / tela
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300 font-body leading-relaxed mb-2">
+                    <p className="text-[11px] text-slate-600 font-body leading-relaxed mb-2">
                       Assista simultaneamente em mais aparelhos ou celular.
                     </p>
 
                     {/* Seletor de Quantidade */}
-                    <div className="flex items-center justify-between pt-1.5 border-t border-white/10">
-                      <span className="text-[11px] font-semibold text-slate-300">
+                    <div className="flex items-center justify-between pt-1.5 border-t border-slate-200/60">
+                      <span className="text-[11px] font-semibold text-slate-700">
                         Quantidade de telas:
                       </span>
                       <div className="flex items-center gap-2">
@@ -573,17 +573,17 @@ export function AccountCheckoutModal({
                             setTelasExtras((prev) => Math.max(0, prev - 1))
                           }
                           disabled={telasExtras === 0}
-                          className="flex h-6 w-6 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-slate-200 hover:bg-white/10 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                          className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-sm"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
-                        <span className="w-5 text-center text-xs font-bold text-white font-code">
+                        <span className="w-5 text-center text-xs font-bold text-slate-900 font-code">
                           {telasExtras}
                         </span>
                         <button
                           type="button"
                           onClick={() => setTelasExtras((prev) => prev + 1)}
-                          className="flex h-6 w-6 items-center justify-center rounded-lg border border-[#10B981] bg-[#10B981]/30 text-white hover:bg-[#10B981] cursor-pointer transition-colors"
+                          className="flex h-6 w-6 items-center justify-center rounded-lg border border-[#10B981] bg-[#10B981] text-white hover:bg-[#059669] cursor-pointer transition-colors shadow-sm"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
@@ -595,10 +595,10 @@ export function AccountCheckoutModal({
 
               {/* ORDER BUMP 2: Conteúdo Adulto VIP (Vazados Privacy & OnlyFans) */}
               <div
-                className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-3 cursor-pointer ${
+                className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-2.5 cursor-pointer ${
                   pacoteAdulto
-                    ? "bg-[#10B981]/10 border-[#10B981] shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                    : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                    ? "bg-emerald-50/50 border-[#10B981] shadow-sm"
+                    : "bg-slate-50/50 border-slate-200/80 hover:border-slate-300"
                 }`}
                 onClick={() => setPacoteAdulto(!pacoteAdulto)}
               >
@@ -606,10 +606,10 @@ export function AccountCheckoutModal({
                   <div className="mt-0.5">
                     <span
                       className={
-                        "flex h-4 w-4 items-center justify-center rounded-md border-[1.5px] transition-colors " +
+                        "flex h-4 w-4 items-center justify-center rounded-md border transition-colors " +
                         (pacoteAdulto
                           ? "border-[#10B981] bg-[#10B981] text-white"
-                          : "border-white/30 bg-white/5 text-transparent")
+                          : "border-slate-300 bg-white text-transparent")
                       }
                     >
                       <Check className="h-3 w-3" strokeWidth={3} />
@@ -617,23 +617,23 @@ export function AccountCheckoutModal({
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
-                      <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1">
-                        <LockKeyhole className="h-3.5 w-3.5 text-amber-400" />
+                      <span className="text-xs font-extrabold uppercase text-slate-900 tracking-wide font-heading flex items-center gap-1">
+                        <LockKeyhole className="h-3.5 w-3.5 text-amber-600" />
                         Conteúdo Adulto VIP (+18 Hot)
                       </span>
-                      <span className="text-[11px] font-bold font-code text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded shrink-0">
+                      <span className="text-[11px] font-bold font-code text-amber-800 bg-amber-100/70 px-1.5 py-0.5 rounded shrink-0">
                         + R$ 12,90
                       </span>
                     </div>
 
                     {/* Badge Vazados */}
                     <div className="my-1">
-                      <span className="text-[10px] font-bold font-code text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="text-[10px] font-bold font-code text-amber-800 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
                         Vazados Privacy & OnlyFans VIP
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-300 font-body leading-relaxed">
+                    <p className="text-[11px] text-slate-600 font-body leading-relaxed">
                       Acesso exclusivo ao acervo privado de influencers, fotos e vídeos vazados do Privacy/OnlyFans.
                     </p>
                   </div>
@@ -644,8 +644,8 @@ export function AccountCheckoutModal({
               <div
                 className={`relative overflow-hidden rounded-2xl border transition-all p-3 mb-3 cursor-pointer ${
                   pacoteCristoFlix
-                    ? "bg-[#10B981]/10 border-[#10B981] shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                    : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                    ? "bg-emerald-50/50 border-[#10B981] shadow-sm"
+                    : "bg-slate-50/50 border-slate-200/80 hover:border-slate-300"
                 }`}
                 onClick={() => setPacoteCristoFlix(!pacoteCristoFlix)}
               >
@@ -653,10 +653,10 @@ export function AccountCheckoutModal({
                   <div className="mt-0.5">
                     <span
                       className={
-                        "flex h-4 w-4 items-center justify-center rounded-md border-[1.5px] transition-colors " +
+                        "flex h-4 w-4 items-center justify-center rounded-md border transition-colors " +
                         (pacoteCristoFlix
                           ? "border-[#10B981] bg-[#10B981] text-white"
-                          : "border-white/30 bg-white/5 text-transparent")
+                          : "border-slate-300 bg-white text-transparent")
                       }
                     >
                       <Check className="h-3 w-3" strokeWidth={3} />
@@ -664,15 +664,15 @@ export function AccountCheckoutModal({
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
-                      <span className="text-xs font-extrabold uppercase text-white tracking-wide font-heading flex items-center gap-1">
-                        <BookOpen className="h-3.5 w-3.5 text-cyan-400" />
+                      <span className="text-xs font-extrabold uppercase text-slate-900 tracking-wide font-heading flex items-center gap-1">
+                        <BookOpen className="h-3.5 w-3.5 text-cyan-600" />
                         CristoFlix Infantil (Bíblico & Educativo)
                       </span>
-                      <span className="text-[11px] font-bold font-code text-cyan-400 bg-cyan-400/10 px-1.5 py-0.5 rounded shrink-0">
+                      <span className="text-[11px] font-bold font-code text-cyan-800 bg-cyan-100/70 px-1.5 py-0.5 rounded shrink-0">
                         + R$ 7,90
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300 font-body leading-relaxed">
+                    <p className="text-[11px] text-slate-600 font-body leading-relaxed">
                       Desenhos animados, histórias bíblicas e valores cristãos edificantes para proteger e ensinar suas crianças.
                     </p>
                   </div>
@@ -680,34 +680,34 @@ export function AccountCheckoutModal({
               </div>
 
               {/* VALOR TOTAL DO PEDIDO E BOTÃO PIX */}
-              <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-3 mb-3.5 mt-2">
-                <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-1">
+              <div className="w-full rounded-2xl bg-slate-50 border border-slate-200/90 p-3.5 mb-3.5 mt-2">
+                <div className="flex justify-between items-center text-xs text-slate-600 font-body mb-1">
                   <span>Plano {plano.nome}:</span>
-                  <span className="text-slate-200">R$ {plano.preco}</span>
+                  <span className="text-slate-900 font-semibold font-code">R$ {plano.preco}</span>
                 </div>
                 {telasExtras > 0 && (
-                  <div className="flex justify-between items-center text-xs text-emerald-400 font-code mb-1 animate-in fade-in duration-200">
+                  <div className="flex justify-between items-center text-xs text-emerald-700 font-body mb-1 animate-in fade-in duration-200">
                     <span>Telas Extras ({telasExtras}x):</span>
-                    <span>+ R$ {formatPrice(telasPriceTotal)}</span>
+                    <span className="font-code">+ R$ {formatPrice(telasPriceTotal)}</span>
                   </div>
                 )}
                 {pacoteAdulto && (
-                  <div className="flex justify-between items-center text-xs text-amber-400 font-code mb-1 animate-in fade-in duration-200">
+                  <div className="flex justify-between items-center text-xs text-amber-700 font-body mb-1 animate-in fade-in duration-200">
                     <span>Conteúdo Adulto:</span>
-                    <span>+ R$ 12,90</span>
+                    <span className="font-code">+ R$ 12,90</span>
                   </div>
                 )}
                 {pacoteCristoFlix && (
-                  <div className="flex justify-between items-center text-xs text-cyan-400 font-code mb-1 animate-in fade-in duration-200">
+                  <div className="flex justify-between items-center text-xs text-cyan-700 font-body mb-1 animate-in fade-in duration-200">
                     <span>CristoFlix Infantil:</span>
-                    <span>+ R$ 7,90</span>
+                    <span className="font-code">+ R$ 7,90</span>
                   </div>
                 )}
-                <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-white font-heading pt-1.5 border-t border-white/10 mt-1">
+                <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-900 font-heading pt-2 border-t border-slate-200 mt-1.5">
                   <span className="uppercase tracking-wider">
                     Valor Total a Pagar:
                   </span>
-                  <span className="text-base text-emerald-400 font-heading">
+                  <span className="text-base text-emerald-600 font-extrabold font-heading">
                     R$ {totalPriceStr}
                   </span>
                 </div>
@@ -718,7 +718,7 @@ export function AccountCheckoutModal({
                 type="button"
                 disabled={loadingPix}
                 onClick={handleGerarPix}
-                className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#34D399] hover:to-[#10B981] py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-[0_8px_20px_rgba(16,185,129,0.45)] transition-all hover:brightness-110 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed font-heading flex items-center justify-center gap-2"
+                className="w-full rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#059669] hover:to-[#047857] py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/25 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed font-heading flex items-center justify-center gap-2 active:scale-[0.99]"
               >
                 {loadingPix ? (
                   <>
@@ -736,39 +736,39 @@ export function AccountCheckoutModal({
           {step === "PAGAMENTO" && (
             <div className="flex flex-col items-center text-center">
               {/* Resumo do Pedido */}
-              <div className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-3 mb-3 text-left">
-                <div className="flex justify-between items-center mb-1.5 pb-1.5 border-b border-white/10">
-                  <span className="text-xs font-bold text-slate-300 uppercase font-heading">
+              <div className="w-full rounded-2xl bg-slate-50 border border-slate-200 p-3.5 mb-3 text-left">
+                <div className="flex justify-between items-center mb-1.5 pb-1.5 border-b border-slate-200">
+                  <span className="text-xs font-bold text-slate-900 uppercase font-heading">
                     Resumo do Pedido
                   </span>
-                  <span className="text-xs font-code font-bold text-[#10B981] bg-[#10B981]/15 px-2 py-0.5 rounded border border-[#10B981]/30">
+                  <span className="text-xs font-code font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                     {plano.nome}
                   </span>
                 </div>
-                <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-0.5">
+                <div className="flex justify-between items-center text-xs text-slate-600 font-body mb-0.5">
                   <span>Cliente:</span>
-                  <span className="text-slate-200 font-semibold">{nome}</span>
+                  <span className="text-slate-900 font-semibold">{nome}</span>
                 </div>
-                <div className="flex justify-between items-center text-xs text-slate-400 font-code mb-0.5">
+                <div className="flex justify-between items-center text-xs text-slate-600 font-body mb-0.5">
                   <span>Acesso:</span>
-                  <span className="text-slate-200">{email}</span>
+                  <span className="text-slate-900 font-medium">{email}</span>
                 </div>
-                <div className="flex justify-between items-center text-xs text-slate-400 font-code pt-1 border-t border-white/5 mt-1">
+                <div className="flex justify-between items-center text-xs text-slate-600 font-body pt-1.5 border-t border-slate-200/70 mt-1.5">
                   <span>Total a Pagar:</span>
-                  <span className="text-sm font-bold text-white font-heading">
+                  <span className="text-sm font-extrabold text-slate-900 font-heading">
                     R$ {totalPriceStr}
                   </span>
                 </div>
               </div>
 
               {/* Status & Timer */}
-              <div className="flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-[#10B981]/10 border border-[#10B981]/30 text-[#10B981] text-xs font-code font-bold">
-                <Clock className="h-3.5 w-3.5 animate-pulse" />
+              <div className="flex items-center gap-2 mb-3 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-code font-bold shadow-xs">
+                <Clock className="h-3.5 w-3.5 text-amber-600 animate-pulse" />
                 <span>PIX Expira em: {formatTimer(timerSeconds)}</span>
               </div>
 
               {/* QR Code Container */}
-              <div className="p-2.5 bg-white rounded-2xl shadow-xl mb-3 flex items-center justify-center">
+              <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-md mb-3 flex items-center justify-center">
                 {pixQrBase64 ? (
                   <img
                     src={
@@ -777,18 +777,18 @@ export function AccountCheckoutModal({
                         : `data:image/png;base64,${pixQrBase64}`
                     }
                     alt="QR Code Pix"
-                    className="w-[155px] h-[155px] object-contain"
+                    className="w-[160px] h-[160px] object-contain"
                   />
                 ) : (
                   <QRCodeSVG
                     value={pixPayload || "https://dezpila.com.br"}
-                    size={155}
+                    size={160}
                     level="M"
                   />
                 )}
               </div>
 
-              <p className="text-xs text-slate-300 font-code mb-2.5">
+              <p className="text-xs text-slate-600 font-body mb-3">
                 Abra o app do seu banco e escaneie o QR Code acima para pagar
                 via PIX.
               </p>
@@ -800,12 +800,12 @@ export function AccountCheckoutModal({
                     type="text"
                     readOnly
                     value={pixPayload}
-                    className="w-full rounded-xl border border-white/10 bg-white/[0.05] py-2 pl-3 pr-28 text-[11px] font-code text-slate-300 outline-none truncate"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-3 pr-28 text-[11px] font-code text-slate-800 outline-none truncate"
                   />
                   <button
                     type="button"
                     onClick={handleCopyPix}
-                    className="absolute right-1 py-1 px-3 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold font-heading uppercase transition-colors flex items-center gap-1 cursor-pointer shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                    className="absolute right-1 py-1.5 px-3 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold font-heading uppercase transition-colors flex items-center gap-1 cursor-pointer shadow-md shadow-emerald-500/20"
                   >
                     {copied ? (
                       <>
@@ -823,12 +823,12 @@ export function AccountCheckoutModal({
               </div>
 
               {/* Passo a Passo Rápido para Pagamento */}
-              <div className="w-full rounded-xl bg-white/[0.03] border border-white/10 p-2.5 mb-3 text-left">
-                <div className="flex items-center gap-1.5 text-[11px] font-heading font-bold text-emerald-400 uppercase mb-1.5">
-                  <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="w-full rounded-xl bg-slate-50 border border-slate-200/80 p-3 mb-3 text-left">
+                <div className="flex items-center gap-1.5 text-[11px] font-heading font-bold text-emerald-700 uppercase mb-1.5">
+                  <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Como pagar em 3 passos:
                 </div>
-                <div className="space-y-1 text-[11px] font-code text-slate-300">
+                <div className="space-y-1.5 text-[11.5px] font-body text-slate-700">
                   <div className="flex items-center gap-2">
                     <span className="text-[#10B981] font-bold">1.</span>
                     <span>Clique em <strong>Copiar PIX</strong> acima</span>
@@ -844,8 +844,8 @@ export function AccountCheckoutModal({
                 </div>
               </div>
 
-              <span className="text-[10.5px] font-code text-slate-400 flex items-center gap-1.5">
-                <Lock className="h-3 w-3 text-[#10B981]" /> PIX oficial processado pelo Banco Central • 100% Criptografado
+              <span className="text-[10.5px] font-body text-slate-500 flex items-center gap-1.5">
+                <Lock className="h-3.5 w-3.5 text-[#10B981]" /> PIX oficial processado pelo Banco Central • 100% Criptografado
               </span>
             </div>
           )}
@@ -853,19 +853,19 @@ export function AccountCheckoutModal({
           {/* PASSO 4: TELA DE PIX EXPIRADO */}
           {step === "EXPIRADO" && (
             <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 border-2 border-amber-500 text-amber-400 shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 border-2 border-amber-400 text-amber-600 shadow-md shadow-amber-500/10">
                 <Clock className="h-8 w-8" strokeWidth={2.5} />
               </div>
 
-              <span className="mb-1.5 inline-block rounded-full bg-amber-500/20 px-3 py-0.5 text-[10px] font-bold font-code uppercase tracking-widest text-amber-400 border border-amber-500/40">
+              <span className="mb-1.5 inline-block rounded-full bg-amber-100 px-3 py-0.5 text-[10px] font-bold font-code uppercase tracking-widest text-amber-800 border border-amber-300">
                 ⚠️ CÓDIGO PIX EXPIROU
               </span>
 
-              <h3 className="text-lg sm:text-xl font-extrabold uppercase text-white font-heading tracking-tight mb-1.5">
+              <h3 className="text-lg sm:text-xl font-extrabold uppercase text-slate-900 font-heading tracking-tight mb-1.5">
                 CHAVE PIX EXPIRADA!
               </h3>
 
-              <p className="text-xs text-slate-300 font-body max-w-sm mb-4 leading-relaxed">
+              <p className="text-xs text-slate-600 font-body max-w-sm mb-4 leading-relaxed">
                 O tempo limite de 15 minutos encerrou. Suas informações
                 continuam salvas para gerar uma nova chave.
               </p>
@@ -877,7 +877,7 @@ export function AccountCheckoutModal({
                   setTimerSeconds(900);
                   setStep("PAGAMENTO");
                 }}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#34D399] hover:to-[#10B981] text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-[0_8px_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2 cursor-pointer mb-2"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-xs font-bold font-heading text-white uppercase tracking-wider transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer mb-2"
               >
                 <span>Gerar Nova Chave PIX</span>
               </button>
@@ -885,7 +885,7 @@ export function AccountCheckoutModal({
               <button
                 type="button"
                 onClick={() => setStep("CADASTRO")}
-                className="w-full py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-300 transition-colors cursor-pointer"
+                className="w-full py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
               >
                 Editar dados de cadastro
               </button>
@@ -895,49 +895,49 @@ export function AccountCheckoutModal({
           {/* PASSO 5: TELA VERDE — Pagamento Confirmado */}
           {step === "SUCESSO" && (
             <div className="flex flex-col items-center text-center py-2 animate-in zoom-in-95 duration-300">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#00C853]/15 border-2 border-[#00C853] text-[#00C853] shadow-[0_0_30px_rgba(0,200,83,0.5)]">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 border-2 border-emerald-500 text-emerald-600 shadow-lg shadow-emerald-500/20">
                 <CheckCircle className="h-8 w-8" strokeWidth={2.5} />
               </div>
 
-              <span className="mb-1.5 inline-block rounded-full bg-[#00C853]/20 px-3 py-0.5 text-[10px] font-bold font-code uppercase tracking-widest text-[#00C853] border border-[#00C853]/40">
+              <span className="mb-1.5 inline-block rounded-full bg-emerald-100 px-3 py-0.5 text-[10px] font-bold font-code uppercase tracking-widest text-emerald-800 border border-emerald-300">
                 ✓ PAGAMENTO IDENTIFICADO
               </span>
 
-              <h3 className="text-lg sm:text-xl font-extrabold uppercase text-white font-heading tracking-tight mb-1.5">
+              <h3 className="text-lg sm:text-xl font-extrabold uppercase text-slate-900 font-heading tracking-tight mb-1.5">
                 PAGAMENTO CONFIRMADO COM SUCESSO!
               </h3>
 
-              <p className="text-xs text-slate-300 font-body max-w-sm mb-4 leading-relaxed">
-                Olá, <strong className="text-white font-semibold">{nome}</strong>!
+              <p className="text-xs text-slate-600 font-body max-w-sm mb-4 leading-relaxed">
+                Olá, <strong className="text-slate-900 font-semibold">{nome}</strong>!
                 O pagamento do seu pedido do plano{" "}
-                <strong className="text-[#00C853]">{plano.nome}</strong> no valor
-                de <strong className="text-white">R$ {totalPriceStr}</strong> foi
+                <strong className="text-emerald-600">{plano.nome}</strong> no valor
+                de <strong className="text-slate-900">R$ {totalPriceStr}</strong> foi
                 aprovado.
               </p>
 
               <div className="w-full space-y-2.5 mb-4 text-left">
-                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30">
-                  <Mail className="h-4 w-4 text-[#00C853] shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+                  <Mail className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                   <div className="text-xs font-body">
-                    <span className="font-bold text-white block mb-0.5">
+                    <span className="font-bold text-slate-900 block mb-0.5">
                       Enviado por E-mail
                     </span>
-                    <span className="text-slate-300 font-code text-[11px]">
+                    <span className="text-slate-600 font-body text-[11px]">
                       Dados de acesso enviados para{" "}
-                      <strong className="text-white">{email}</strong>.
+                      <strong className="text-slate-900">{email}</strong>.
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#00C853]/10 border border-[#00C853]/30">
-                  <Phone className="h-4 w-4 text-[#00C853] shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+                  <Phone className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                   <div className="text-xs font-body">
-                    <span className="font-bold text-white block mb-0.5">
+                    <span className="font-bold text-slate-900 block mb-0.5">
                       Enviado por WhatsApp
                     </span>
-                    <span className="text-slate-300 font-code text-[11px]">
+                    <span className="text-slate-600 font-body text-[11px]">
                       Disparado automaticamente para{" "}
-                      <strong className="text-white">{whatsapp}</strong>.
+                      <strong className="text-slate-900">{whatsapp}</strong>.
                     </span>
                   </div>
                 </div>
@@ -946,7 +946,7 @@ export function AccountCheckoutModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full rounded-xl bg-gradient-to-r from-[#00C853] to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-[0_8px_20px_rgba(0,200,83,0.4)] transition-all cursor-pointer font-heading"
+                className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/25 transition-all cursor-pointer font-heading"
               >
                 Concluído — Fechar
               </button>
