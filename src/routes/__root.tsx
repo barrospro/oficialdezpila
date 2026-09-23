@@ -83,7 +83,7 @@ export const Route = createRootRoute({
           {
             "@type": "Offer",
             name: "Plus Trimestral",
-            price: "29.90",
+            price: "24.90",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
             url: "https://oficialdezpila.lovable.app/#planos",

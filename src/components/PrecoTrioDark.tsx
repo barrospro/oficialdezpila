@@ -15,7 +15,7 @@ const planos: PlanoData[] = [
     id: "TRIMESTRAL",
     nome: "Plus Trimestral",
     desc: "Assista em até 2 telas",
-    preco: "29,90",
+    preco: "24,90",
     periodo: "/trim",
     link: "https://go.nitropagamentos.com/h64gr",
   },
@@ -75,7 +75,7 @@ const ctaLabels: Record<string, string> = {
 
 const planoDailyAnchor: Record<string, string> = {
   MENSAL: "Apenas R$ 0,33 por dia",
-  TRIMESTRAL: "Equivale a R$ 9,97/mês • 2 Telas",
+  TRIMESTRAL: "Equivale a R$ 8,30/mês • 2 Telas",
   SEMESTRAL: "Equivale a R$ 7,98/mês • Mais Vendido",
   ANUAL: "Equivale a R$ 6,16/mês • Maior Economia",
 };

@@ -3,7 +3,7 @@ import { useState } from "react";
 const faqs = [
   {
     q: "Como recebo o meu acesso após o pagamento?",
-    a: "O envio dos seus dados de login e o passo a passo de configuração são disparados automaticamente no seu WhatsApp e E-mail em menos de 2 minutos após a confirmação do PIX ou Cartão.",
+    a: "O envio dos seus dados de login e o passo a passo de configuração são disparados automaticamente no seu WhatsApp e E-mail em menos de 2 minutos após a confirmação do PIX.",
   },
   {
     q: "Funciona em quais aparelhos?",
@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "O pagamento é seguro e sem fidelidade?",
-    a: "Totalmente seguro! Pagamento processado via PIX com aprovação instantânea ou Cartão de Crédito. Sem fidelidade, sem contrato de carência e você pode cancelar quando quiser sem multas.",
+    a: "Totalmente seguro! Pagamento processado via PIX com aprovação instantânea. Sem fidelidade, sem contrato de carência e você pode cancelar quando quiser sem multas.",
   },
   {
     q: "Qual é a velocidade de internet recomendada?",

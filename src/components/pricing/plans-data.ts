@@ -37,7 +37,7 @@ export const plans: Plan[] = [
     id: "TRIMESTRAL",
     name: "TRIMESTRAL",
     screens: "2 conexões simultâneas",
-    price: "29,90",
+    price: "24,90",
     period: "/trim",
     originalPrice: null,
     discount: null,

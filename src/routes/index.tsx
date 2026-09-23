@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
           name: "Como recebo o meu acesso após o pagamento?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "O envio dos seus dados de login e o passo a passo de configuração são disparados automaticamente no seu WhatsApp e E-mail em menos de 2 minutos após a confirmação do PIX ou Cartão.",
+            text: "O envio dos seus dados de login e o passo a passo de configuração são disparados automaticamente no seu WhatsApp e E-mail em menos de 2 minutos após a confirmação do PIX.",
           },
         },
         {
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
           name: "O pagamento é seguro e sem fidelidade?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Totalmente seguro! Pagamento processado via PIX com aprovação instantânea ou Cartão de Crédito. Sem fidelidade, sem contrato de carência e você pode cancelar quando quiser sem multas.",
+            text: "Totalmente seguro! Pagamento processado via PIX com aprovação instantânea. Sem fidelidade, sem contrato de carência e você pode cancelar quando quiser sem multas.",
           },
         },
         {
