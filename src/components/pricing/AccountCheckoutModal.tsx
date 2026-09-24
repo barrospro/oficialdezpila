@@ -342,16 +342,17 @@ export function AccountCheckoutModal({
               </button>
             )}
 
-            {/* Logo Mercado Pago no Oval/Badge Escuro */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <div className="flex items-center justify-center size-6 rounded-full border border-white/20 bg-white/10 text-white">
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M7 10h10M7 14h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </div>
-              <span className="text-[11px] font-extrabold tracking-tight font-heading text-white">
-                mercado<br />pago
-              </span>
+            {/* Logo Oficial Mercado Pago */}
+            <div className="flex items-center shrink-0">
+              <img
+                src="/brand/mercado-pago.svg"
+                alt="Mercado Pago"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    "https://cdn.worldvectorlogo.com/logos/cd4804d4-fa18-4481-8595-e4fff80e6ce8/mercado-pago-1.svg";
+                }}
+                className="h-6 sm:h-7 w-auto object-contain bg-white px-2 py-0.5 rounded-lg border border-white/20 shadow-xs"
+              />
             </div>
 
             <div className="h-4 w-[1px] bg-white/20 shrink-0 mx-0.5" />
