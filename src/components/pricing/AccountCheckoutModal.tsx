@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Clock,
   Shield,
+  ShieldCheck,
   CheckCircle,
   Tv,
   LockKeyhole,
@@ -322,9 +323,9 @@ export function AccountCheckoutModal({
           <X className="h-5 w-5" />
         </button>
 
-        {/* Top Header Dark Box idêntico à imagem */}
-        <div className="mx-4 mt-4 mb-2 shrink-0 rounded-2xl bg-[#28282B] p-3 sm:p-3.5 text-white flex items-center justify-between shadow-sm z-10">
-          <div className="flex items-center gap-2.5 min-w-0 pr-6">
+        {/* Top Header Dark Box Moderno e Nítido */}
+        <div className="mx-4 mt-4 mb-2 shrink-0 rounded-2xl bg-gradient-to-r from-[#1C232B] via-[#222B34] to-[#1C232B] border border-white/10 p-3 sm:p-3.5 text-white flex items-center justify-between shadow-md z-10">
+          <div className="flex items-center gap-3 min-w-0 pr-2">
             {(step === "CONFIRMACAO" ||
               step === "PAGAMENTO" ||
               step === "EXPIRADO") && (
@@ -335,35 +336,40 @@ export function AccountCheckoutModal({
                   if (step === "PAGAMENTO") setStep("CONFIRMACAO");
                   if (step === "EXPIRADO") setStep("CADASTRO");
                 }}
-                className="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+                className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
                 aria-label="Voltar"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
             )}
 
-            {/* Logo Oficial Mercado Pago */}
+            {/* Badge Nítido e Ampliado da Logo Mercado Pago */}
             <div className="flex items-center shrink-0">
-              <img
-                src="/brand/mercado-pago.svg"
-                alt="Mercado Pago"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src =
-                    "https://cdn.worldvectorlogo.com/logos/cd4804d4-fa18-4481-8595-e4fff80e6ce8/mercado-pago-1.svg";
-                }}
-                className="h-6 sm:h-7 w-auto object-contain bg-white px-2 py-0.5 rounded-lg border border-white/20 shadow-xs"
-              />
+              <div className="flex items-center justify-center bg-white px-3 py-1 rounded-xl border border-white/40 shadow-xs h-8 sm:h-8.5 min-w-[105px] sm:min-w-[115px]">
+                <img
+                  src="/brand/mercado-pago.svg"
+                  alt="Mercado Pago"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      "https://cdn.worldvectorlogo.com/logos/cd4804d4-fa18-4481-8595-e4fff80e6ce8/mercado-pago-1.svg";
+                  }}
+                  className="h-5 sm:h-5.5 w-auto max-w-full object-contain"
+                />
+              </div>
             </div>
 
-            <div className="h-4 w-[1px] bg-white/20 shrink-0 mx-0.5" />
+            <div className="h-5 w-[1px] bg-white/20 shrink-0 mx-0.5" />
 
-            <span className="text-xs font-semibold text-slate-100 font-body truncate">
-              Mercado Pago | Pagamento Seguro
-            </span>
+            <div className="flex items-center gap-1.5 truncate">
+              <ShieldCheck className="h-4 w-4 text-[#009EE3] shrink-0" />
+              <span className="text-xs sm:text-sm font-bold text-white tracking-tight font-heading truncate">
+                Pagamento Seguro
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center justify-center size-5 rounded-full bg-white/15 text-white shrink-0">
-            <Check className="h-3 w-3 text-white" strokeWidth={3} />
+          <div className="flex items-center justify-center size-6 rounded-full bg-[#009EE3]/20 border border-[#009EE3]/40 text-[#009EE3] shrink-0">
+            <Check className="h-3.5 w-3.5 text-[#009EE3]" strokeWidth={3} />
           </div>
         </div>
 
