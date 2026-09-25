@@ -14,7 +14,7 @@ const planos: PlanoData[] = [
   {
     id: "TRIMESTRAL",
     nome: "Plus Trimestral",
-    desc: "Assista em até 2 telas",
+    desc: "O mais escolhido • 2 Telas liberadas",
     preco: "24,90",
     periodo: "/trim",
     link: "https://go.nitropagamentos.com/h64gr",
@@ -22,7 +22,7 @@ const planos: PlanoData[] = [
   {
     id: "SEMESTRAL",
     nome: "Pro Semestral",
-    desc: "Economia de 60% de desconto",
+    desc: "Economia brutal de 60% de desconto",
     preco: "47,90",
     periodo: "/sem",
     link: "https://go.nitropagamentos.com/oinxr",
@@ -48,6 +48,7 @@ const planoRecursos: Record<string, string[]> = {
     "2 Conexões Simultâneas (Casal)",
     "Qualidade 4K Ultra HD",
     "Premiere, Champions & Filmes",
+    "Sinal Liso Antitravamento",
     "Suporte Dedicado via WhatsApp",
   ],
   SEMESTRAL: [
@@ -67,15 +68,15 @@ const planoRecursos: Record<string, string[]> = {
 
 const ctaLabels: Record<string, string> = {
   MENSAL: "Testar por R$ 10/Mês",
-  TRIMESTRAL: "Assinar Trimestral (2 Telas)",
-  SEMESTRAL: "Assinar Semestral (Mais Vendido)",
+  TRIMESTRAL: "Assinar Trimestral (Mais Vendido)",
+  SEMESTRAL: "Assinar Semestral (3 Telas)",
   ANUAL: "Garantir VIP Anual (Maior Economia)",
 };
 
 const planoDailyAnchor: Record<string, string> = {
   MENSAL: "Apenas R$ 0,33 por dia",
-  TRIMESTRAL: "Equivale a R$ 8,30/mês • 2 Telas",
-  SEMESTRAL: "Equivale a R$ 7,98/mês • Mais Vendido",
+  TRIMESTRAL: "Equivale a R$ 8,30/mês • Mais Vendido",
+  SEMESTRAL: "Equivale a R$ 7,98/mês • 3 Telas",
   ANUAL: "Equivale a R$ 6,16/mês • R$ 0,20/dia",
 };
 
@@ -112,7 +113,7 @@ export function PrecoTrioDark() {
 
       <div className="relative flex flex-wrap lg:flex-nowrap items-stretch gap-[16px] w-full max-w-6xl justify-center pt-3">
         {planos.map((p) => {
-          const isPopular = p.id === "SEMESTRAL";
+          const isPopular = p.id === "TRIMESTRAL";
           const recursos = planoRecursos[p.id] || [];
           const cta = ctaLabels[p.id] || "Assinar Agora";
 
