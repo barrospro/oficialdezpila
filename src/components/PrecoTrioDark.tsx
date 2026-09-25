@@ -39,45 +39,44 @@ const planos: PlanoData[] = [
 
 const planoRecursos: Record<string, string[]> = {
   MENSAL: [
-    "1 conexão simultânea",
-    "+60.000 conteúdos (4K/FHD)",
-    "Guia de programação (EPG)",
-    "Suporte via WhatsApp",
+    "1 Conexão Simultânea",
+    "+60.000 Conteúdos (4K/FHD)",
+    "Futebol, Filmes & Séries",
+    "Ativação Instantânea via Pix",
   ],
   TRIMESTRAL: [
-    "2 conexões simultâneas",
-    "+60.000 conteúdos em 4K",
-    "Filmes, Séries & EPG completo",
-    "Canais Adultos (Opcional)",
-    "Suporte via WhatsApp",
+    "2 Conexões Simultâneas (Casal)",
+    "Qualidade 4K Ultra HD",
+    "Premiere, Champions & Filmes",
+    "Suporte Dedicado via WhatsApp",
   ],
   SEMESTRAL: [
-    "3 conexões simultâneas",
-    "+60.000 conteúdos em 4K",
-    "Filmes, Séries & Premiere",
-    "Instalação em múltiplos TVs",
-    "Suporte prioritário 24/7",
+    "3 Conexões Simultâneas (Família)",
+    "Sinal Liso Antitravamento 4K",
+    "Todos os Canais & Lançamentos",
+    "Instalação Guiada em 2 Minutos",
+    "Economia Brutal de 60%",
   ],
   ANUAL: [
-    "4 conexões simultâneas",
-    "+60.000 conteúdos 4K liberados",
-    "Canais Adultos (Opcional)",
-    "Garantia total de estabilidade",
+    "4 Conexões Simultâneas Liberadas",
+    "Maior Economia (R$ 0,20/dia)",
+    "Acesso VIP Total em 4K",
+    "Garantia Total de Estabilidade",
   ],
 };
 
 const ctaLabels: Record<string, string> = {
-  MENSAL: "Assinar Mensal",
-  TRIMESTRAL: "Assinar Trimestral",
-  SEMESTRAL: "Assinar Semestral",
-  ANUAL: "Assinar Anual",
+  MENSAL: "Testar por R$ 10/Mês",
+  TRIMESTRAL: "Assinar Trimestral (2 Telas)",
+  SEMESTRAL: "Assinar Semestral (Mais Vendido)",
+  ANUAL: "Garantir VIP Anual (Maior Economia)",
 };
 
 const planoDailyAnchor: Record<string, string> = {
   MENSAL: "Apenas R$ 0,33 por dia",
   TRIMESTRAL: "Equivale a R$ 8,30/mês • 2 Telas",
   SEMESTRAL: "Equivale a R$ 7,98/mês • Mais Vendido",
-  ANUAL: "Equivale a R$ 6,16/mês • Maior Economia",
+  ANUAL: "Equivale a R$ 6,16/mês • R$ 0,20/dia",
 };
 
 export function PrecoTrioDark() {
@@ -96,18 +95,18 @@ export function PrecoTrioDark() {
             "radial-gradient(closest-side, rgba(151, 2, 2, 0.25), transparent 70%)",
         }}
       />
-      <div className="relative mb-12 text-center">
+      <div className="relative mb-12 text-center max-w-2xl mx-auto">
         <span className="mb-3 inline-block rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 font-code text-xs font-bold tracking-[2.5px] uppercase text-brand">
-          SELECIONE SEU NÍVEL DE ACESSO
+          🛡️ RISCO ZERO • TESTE POR 7 DIAS
         </span>
         <h2 className="section-title text-center text-foreground">
-          ESCOLHA SEU{" "}
+          ESCOLHA SEU PLANO E{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-foreground">
-            PLANO
+            ECONOMIZE ATÉ 69%
           </span>
         </h2>
         <p className="text-muted-foreground mt-3 font-code text-xs uppercase tracking-wider">
-          Acesso total liberado em minutos após o pagamento
+          Sem contrato, sem fidelidade e com ativação instantânea em 2 minutos via Pix.
         </p>
       </div>
 
@@ -243,6 +242,22 @@ export function PrecoTrioDark() {
             </div>
           );
         })}
+      </div>
+
+      {/* Selos de Confiança e Garantia */}
+      <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-center font-code text-xs text-muted-foreground max-w-4xl border-t border-white/5 pt-8">
+        <div className="flex items-center gap-2">
+          <span className="text-emerald-400 font-bold text-sm">🛡️</span>
+          <span>Garantia de 7 Dias ou Seu Dinheiro de Volta</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-amber-400 font-bold text-sm">⚡</span>
+          <span>Liberação Automática via Pix em 2 Minutos</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-cyan-400 font-bold text-sm">📱</span>
+          <span>Instalação sem Antenas em Qualquer Aparelho</span>
+        </div>
       </div>
 
       <AccountCheckoutModal
