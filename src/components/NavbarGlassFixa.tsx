@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 const links = [
-  { name: "Conteúdo", href: "#conteudo" },
-  { name: "Planos", href: "#planos" },
-  { name: "Dúvidas", href: "#faq" },
+  { name: "Conteúdo", href: "/#conteudo" },
+  { name: "Planos", href: "/#planos" },
+  { name: "Loja 🛍️", href: "/shop" },
+  { name: "Dúvidas", href: "/#faq" },
 ];
 
 export function NavbarGlassFixa() {

@@ -47,9 +47,9 @@ function AdminDashboard() {
   const [pass, setPass] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  // Main Tab State: 'artes' | 'feed' | 'stories' | 'todos' | 'identidade'
+  // Main Tab State: 'artes' | 'feed' | 'stories' | 'todos' | 'identidade' | 'loja'
   const [activeTab, setActiveTab] = useState<
-    "artes" | "feed" | "stories" | "todos" | "identidade"
+    "artes" | "feed" | "stories" | "todos" | "identidade" | "loja"
   >("artes");
 
   // Sub-Tab State inside 'identidade'
@@ -396,6 +396,19 @@ function AdminDashboard() {
             >
               <Palette className="h-4 w-4 text-emerald-400" />
               <span>🎨 Identidade Visual</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("loja")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase font-heading tracking-wider transition-all cursor-pointer ${
+                activeTab === "loja"
+                  ? "bg-[#970202] text-white shadow-[0_0_20px_rgba(151,2,2,0.6)]"
+                  : "bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <CreditCard className="h-4 w-4 text-amber-400" />
+              <span>🛍️ Gestão da Loja</span>
             </button>
           </div>
 
@@ -800,7 +813,7 @@ function AdminDashboard() {
         {/* ========================================================================= */}
         {/* ABA 3: GRID DE CRIATIVOS DE FEED E STORY (30 POSTS COM CTA COMENTE TV)    */}
         {/* ========================================================================= */}
-        {activeTab !== "identidade" && activeTab !== "artes" && (
+        {activeTab !== "identidade" && activeTab !== "artes" && activeTab !== "loja" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCreatives.map((creative) => {
               const showFeed = activeTab === "feed" || activeTab === "todos";
@@ -1014,6 +1027,63 @@ function AdminDashboard() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* ABA DE GESTÃO DA LOJA E-COMMERCE */}
+        {activeTab === "loja" && (
+          <div className="flex flex-col gap-6 animate-in fade-in">
+            <div className="bg-surface/40 border border-white/10 p-6 rounded-3xl backdrop-blur-xl">
+              <h2 className="text-xl font-heading font-bold uppercase text-white mb-2">
+                🛍️ Gestão de Produtos & Estoque da Loja
+              </h2>
+              <p className="text-xs font-code text-slate-400">
+                Gerencie a visibilidade e o estoque dos 12 produtos cadastrados na loja.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {INITIAL_PRODUCTS.map((p) => (
+                <div
+                  key={p.id}
+                  className="bg-[#09090e] border border-white/10 p-5 rounded-2xl flex flex-col justify-between gap-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={p.imagem_url}
+                      alt={p.nome}
+                      className="size-16 rounded-xl object-cover bg-black border border-white/10 shrink-0"
+                    />
+                    <div>
+                      <span className="text-[10px] font-code text-slate-400 uppercase tracking-widest block">
+                        {p.categoria === "acessorios_tv" ? "TV & Streaming" : "Night de Filme"}
+                      </span>
+                      <h3 className="font-heading font-bold text-sm text-white line-clamp-1">{p.nome}</h3>
+                      <span className="text-xs font-code text-emerald-400 font-bold block mt-0.5">
+                        R$ {p.preco.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-white/5 flex items-center justify-between font-code text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-400">Estoque:</span>
+                      <span className="text-white font-bold">{p.estoque} un.</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                          p.ativo ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"
+                        }`}
+                      >
+                        {p.ativo ? "Ativo" : "Inativo"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </main>

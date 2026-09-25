@@ -13,6 +13,11 @@ import { Route as MockupsRouteImport } from './routes/mockups'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopIndexRouteImport } from './routes/shop/index'
+import { Route as ShopCheckoutRouteImport } from './routes/shop/checkout'
+import { Route as ShopCarrinhoRouteImport } from './routes/shop/carrinho'
+import { Route as ShopProductIdRouteImport } from './routes/shop/$productId'
+import { Route as ShopPedidoOrderIdRouteImport } from './routes/shop/pedido.$orderId'
 
 const MockupsRoute = MockupsRouteImport.update({
   id: '/mockups',
@@ -34,18 +39,53 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopCheckoutRoute = ShopCheckoutRouteImport.update({
+  id: '/shop/checkout',
+  path: '/shop/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopCarrinhoRoute = ShopCarrinhoRouteImport.update({
+  id: '/shop/carrinho',
+  path: '/shop/carrinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopProductIdRoute = ShopProductIdRouteImport.update({
+  id: '/shop/$productId',
+  path: '/shop/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopPedidoOrderIdRoute = ShopPedidoOrderIdRouteImport.update({
+  id: '/shop/pedido/$orderId',
+  path: '/shop/pedido/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/design-system': typeof DesignSystemRoute
   '/mockups': typeof MockupsRoute
+  '/shop/$productId': typeof ShopProductIdRoute
+  '/shop/carrinho': typeof ShopCarrinhoRoute
+  '/shop/checkout': typeof ShopCheckoutRoute
+  '/shop/': typeof ShopIndexRoute
+  '/shop/pedido/$orderId': typeof ShopPedidoOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/design-system': typeof DesignSystemRoute
   '/mockups': typeof MockupsRoute
+  '/shop/$productId': typeof ShopProductIdRoute
+  '/shop/carrinho': typeof ShopCarrinhoRoute
+  '/shop/checkout': typeof ShopCheckoutRoute
+  '/shop': typeof ShopIndexRoute
+  '/shop/pedido/$orderId': typeof ShopPedidoOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +93,46 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/design-system': typeof DesignSystemRoute
   '/mockups': typeof MockupsRoute
+  '/shop/$productId': typeof ShopProductIdRoute
+  '/shop/carrinho': typeof ShopCarrinhoRoute
+  '/shop/checkout': typeof ShopCheckoutRoute
+  '/shop/': typeof ShopIndexRoute
+  '/shop/pedido/$orderId': typeof ShopPedidoOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/design-system' | '/mockups'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/design-system'
+    | '/mockups'
+    | '/shop/$productId'
+    | '/shop/carrinho'
+    | '/shop/checkout'
+    | '/shop/'
+    | '/shop/pedido/$orderId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/design-system' | '/mockups'
-  id: '__root__' | '/' | '/admin' | '/design-system' | '/mockups'
+  to:
+    | '/'
+    | '/admin'
+    | '/design-system'
+    | '/mockups'
+    | '/shop/$productId'
+    | '/shop/carrinho'
+    | '/shop/checkout'
+    | '/shop'
+    | '/shop/pedido/$orderId'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/design-system'
+    | '/mockups'
+    | '/shop/$productId'
+    | '/shop/carrinho'
+    | '/shop/checkout'
+    | '/shop/'
+    | '/shop/pedido/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +140,11 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   DesignSystemRoute: typeof DesignSystemRoute
   MockupsRoute: typeof MockupsRoute
+  ShopProductIdRoute: typeof ShopProductIdRoute
+  ShopCarrinhoRoute: typeof ShopCarrinhoRoute
+  ShopCheckoutRoute: typeof ShopCheckoutRoute
+  ShopIndexRoute: typeof ShopIndexRoute
+  ShopPedidoOrderIdRoute: typeof ShopPedidoOrderIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +177,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/checkout': {
+      id: '/shop/checkout'
+      path: '/shop/checkout'
+      fullPath: '/shop/checkout'
+      preLoaderRoute: typeof ShopCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/carrinho': {
+      id: '/shop/carrinho'
+      path: '/shop/carrinho'
+      fullPath: '/shop/carrinho'
+      preLoaderRoute: typeof ShopCarrinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/$productId': {
+      id: '/shop/$productId'
+      path: '/shop/$productId'
+      fullPath: '/shop/$productId'
+      preLoaderRoute: typeof ShopProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/pedido/$orderId': {
+      id: '/shop/pedido/$orderId'
+      path: '/shop/pedido/$orderId'
+      fullPath: '/shop/pedido/$orderId'
+      preLoaderRoute: typeof ShopPedidoOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +220,11 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   DesignSystemRoute: DesignSystemRoute,
   MockupsRoute: MockupsRoute,
+  ShopProductIdRoute: ShopProductIdRoute,
+  ShopCarrinhoRoute: ShopCarrinhoRoute,
+  ShopCheckoutRoute: ShopCheckoutRoute,
+  ShopIndexRoute: ShopIndexRoute,
+  ShopPedidoOrderIdRoute: ShopPedidoOrderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
