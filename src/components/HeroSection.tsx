@@ -168,7 +168,7 @@ export function HeroSection() {
               style={{ animation: "strobe 1s infinite" }}
             />
             <span className="text-live font-code text-[10px] tracking-widest font-bold uppercase">
-              Sinal Ativo • +2.000 Canais Online
+              ⚡ Sinal Liso 4K • R$ 0,33/Dia • Liberação Instantânea via Pix
             </span>
           </div>
 
@@ -181,16 +181,15 @@ export function HeroSection() {
           </div>
 
           <h1 className="text-5xl lg:text-7xl font-bold uppercase leading-[0.85] tracking-tighter text-balance drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            Streaming Ilimitado{" "}
+            Cancele a TV a Cabo:{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-orange-500">
-              Por R$10/Mês
+              Sinal Liso 4K
             </span>{" "}
-            e +2.000 Canais 4K.
+            Por Apenas R$ 10/Mês.
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-[45ch] font-medium text-pretty leading-relaxed">
-            Netflix, Disney+, HBO Max, esportes ao vivo e +60.000 conteúdos. Qualidade 4K, sistema
-            anti-travamento e suporte dedicado 24/7. Tudo por R$10/mês.
+            Esportes ao vivo, futebol sem travamentos na hora do gol, filmes do cinema e séries liberadas na sua Smart TV. Sem contrato, sem antenas e com suporte no WhatsApp.
           </p>
 
           <div className="w-full max-w-md mt-2 flex flex-col gap-3">
@@ -198,16 +197,16 @@ export function HeroSection() {
 
             <div className="flex items-center justify-between px-5 py-3 bg-brand/10 border-l-4 border-brand backdrop-blur-sm">
               <span className="text-brand font-code text-xs uppercase font-bold tracking-widest">
-                Oferta Encerra Em:
+                Lote Promocional Encerra Em:
               </span>
               <CountdownTimer />
             </div>
             <a href="#planos" className="btn-brand w-full text-center text-lg">
-              LIBERAR ACESSO IMEDIATO
+              LIBERAR ACESSO EM 2 MINUTOS
             </a>
             <div className="flex items-center gap-2 justify-center mt-1 opacity-50">
               <span className="font-code text-[10px] uppercase tracking-widest">
-                Pagamento seguro • Liberação imediata via PIX
+                🔒 Pagamento 100% Seguro • Reembolso Garantido em 7 Dias
               </span>
             </div>
           </div>
