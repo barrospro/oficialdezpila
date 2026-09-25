@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /design-system
+Disallow: /mockups
+
+Sitemap: https://oficialdezpila.lovable.app/sitemap.xml
