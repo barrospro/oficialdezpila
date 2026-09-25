@@ -38,16 +38,16 @@ export function StickyBottomBar() {
           <div className="flex items-center gap-1.5">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-white font-heading font-extrabold text-xs sm:text-sm uppercase tracking-tight">
-              Acesso VIP: <span className="text-brand">R$ 10,00/mês</span>
+              Acesso 4K: <span className="text-brand">R$ 10,00/mês</span> <span className="text-emerald-400 text-[10px] font-code"> (R$ 0,33/dia)</span>
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-2 text-[11px] font-code text-slate-400">
             <span className="flex items-center gap-1">
-              <Zap className="h-3 w-3 text-amber-400" /> +2.000 Canais 4K
+              <Zap className="h-3 w-3 text-amber-400" /> Sinal Liso Antitravamento
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">
-              <ShieldCheck className="h-3 w-3 text-emerald-400" /> Liberação Imediata
+              <ShieldCheck className="h-3 w-3 text-emerald-400" /> Liberação em 2 Min
             </span>
           </div>
         </div>
@@ -58,7 +58,7 @@ export function StickyBottomBar() {
           onClick={handleScrollToPlans}
           className="flex-none px-5 sm:px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand to-rose-600 hover:from-rose-600 hover:to-brand text-white font-heading font-extrabold text-xs uppercase tracking-wider shadow-[0_0_20px_var(--brand-glow)] transition-all cursor-pointer hover:scale-105 active:scale-95"
         >
-          Liberar Acesso →
+          ASSINAR POR R$ 10 →
         </button>
       </div>
     </aside>
