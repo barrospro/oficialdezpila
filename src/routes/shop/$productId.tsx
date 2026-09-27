@@ -103,11 +103,18 @@ function ProductDetailPage() {
               </h1>
             </div>
 
-            <div className="flex items-baseline gap-3 border-b border-white/10 pb-6">
-              <span className="text-3xl sm:text-4xl font-extrabold font-code text-white">
-                {formatCurrency(product.preco)}
-              </span>
-              <span className="text-xs font-code text-slate-400">em até 3x sem juros via Pix</span>
+            <div className="flex flex-col gap-1 border-b border-white/10 pb-6">
+              {product.preco_original && (
+                <span className="text-sm font-code text-slate-500 line-through">
+                  De {formatCurrency(product.preco_original)}
+                </span>
+              )}
+              <div className="flex items-baseline gap-3">
+                <span className="text-3xl sm:text-4xl font-extrabold font-code text-emerald-400">
+                  Por {formatCurrency(product.preco)}
+                </span>
+                <span className="text-xs font-code text-slate-400">em até 3x no Pix</span>
+              </div>
             </div>
 
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-body">

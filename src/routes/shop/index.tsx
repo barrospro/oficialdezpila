@@ -214,9 +214,15 @@ function ShopCatalogPage() {
                 {/* Conteúdo do Card */}
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-code text-slate-400 uppercase tracking-widest block mb-1">
-                      {p.categoria === "acessorios_tv" ? "TV & Streaming" : "Night de Filme"}
-                    </span>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-code text-slate-400 uppercase tracking-widest">
+                        {p.categoria === "acessorios_tv" ? "TV & Streaming" : "Night de Filme"}
+                      </span>
+                      <span className="text-[10px] font-code text-emerald-400 font-bold">
+                        ⭐ 5.0 (+100 vendidos)
+                      </span>
+                    </div>
+
                     <Link
                       to="/shop/$productId"
                       params={{ productId: p.id }}
@@ -229,10 +235,21 @@ function ShopCatalogPage() {
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                  <div className="mt-4 pt-4 border-t border-white/5 flex items-end justify-between">
                     <div>
-                      <span className="text-[10px] font-code text-slate-400 block">Preço</span>
-                      <span className="text-xl font-black font-code text-white">{formatCurrency(p.preco)}</span>
+                      {p.preco_original && (
+                        <span className="text-xs font-code text-slate-500 line-through block">
+                          {formatCurrency(p.preco_original)}
+                        </span>
+                      )}
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-2xl font-black font-code text-emerald-400">
+                          {formatCurrency(p.preco)}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-code text-emerald-500 font-bold block">
+                        🚚 Frete grátis liberado
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-2">

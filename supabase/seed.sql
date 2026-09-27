@@ -1,102 +1,38 @@
 -- ====================================================================
--- SEED DE PRODUTOS INICIAIS - LOJA DEZ PILA (12 PRODUTOS REALISTAS)
+-- SEED DE PRODUTOS REALISTAS DE TV BOX & STICK (PREÇOS ABAIXO DO MERCADO)
 -- ====================================================================
 
-INSERT INTO public.products (id, nome, descricao, categoria, preco, imagem_url, estoque, destaque, badge, ativo) VALUES
--- ACESSÓRIOS DE SMART TV
-('10000000-0000-0000-0000-000000000001', 
- 'Controle Remoto Universal Smart TV com Comando de Voz', 
- 'Controle inteligente compatível com Samsung, LG, TCL, Android TV e Roku. Possui botões dedicados de atalho e reconhecimento de voz de alta precisão.', 
- 'acessorios_tv', 
- 49.90, 
- 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop&q=80', 
- 60, true, 'Mais Vendido', true),
+TRUNCATE TABLE public.products CASCADE;
 
-('10000000-0000-0000-0000-000000000002', 
- 'Suporte de Parede Articulado para TV 32" a 75"', 
- 'Estrutura reforçada em aço carbono com nível de bolha integrado. Giro de 180° e inclinação anti-reflexo para o melhor ângulo da sua sala.', 
+INSERT INTO public.products (id, nome, descricao, categoria, preco, imagem_url, estoque, destaque, badge, ativo) VALUES
+('30000000-0000-0000-0000-000000000001', 
+ 'Tv Box Smart Pro Android 4k Wi-fi Transforme Sua Tv Em Smart', 
+ 'Transforme qualquer TV comum em uma Smart TV 4K Ultra HD de alta velocidade. Acompanha controle remoto multifuncional, cabo HDMI e fonte de alimentação. Conexão Wi-Fi rápida e suporte total aos melhores aplicativos de streaming.', 
+ 'acessorios_tv', 
+ 69.90, 
+ 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&auto=format&fit=crop&q=80', 
+ 85, true, '57% OFF • Mais Vendido', true),
+
+('30000000-0000-0000-0000-000000000002', 
+ 'Smart Tv Box Pró 4k Android C/ Play Store Baixa Aplicativos', 
+ 'Versão Pro de alta performance com Android atualizado, Play Store liberada para baixar qualquer aplicativo, processador Quad-Core e transmissão 4K fluida sem travamentos no futebol ao vivo.', 
+ 'acessorios_tv', 
+ 99.90, 
+ 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&auto=format&fit=crop&q=80', 
+ 60, true, '60% OFF • Edição Pro', true),
+
+('30000000-0000-0000-0000-000000000003', 
+ 'Tv Box Smart Pro Android 4k Transforme Sua Tv Em Smart Wifi', 
+ 'Receptor inteligente 4K de resposta ultra rápida, design compacto premium, 4 portas USB, saída de áudio digital e Wi-Fi dual band otimizado para máxima estabilidade em transmissões 4K.', 
+ 'acessorios_tv', 
+ 67.90, 
+ 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80', 
+ 100, false, '57% OFF • Menor Preço', true),
+
+('30000000-0000-0000-0000-000000000004', 
+ 'Aparelho Smart Tv Box Stick Android 4k Wi-fi C/play Store Y9 Stick', 
+ 'Dongle TV Stick 4K formato pendrive ultra discreto. Conecta direto na porta HDMI atrás da TV com controle remoto via Bluetooth, suporte a comando de voz e Play Store instalada.', 
  'acessorios_tv', 
  89.90, 
- 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600&auto=format&fit=crop&q=80', 
- 40, true, 'Frete Grátis Opcional', true),
-
-('10000000-0000-0000-0000-000000000003', 
- 'Cabo HDMI 2.1 Ultra HD 8K / 4K 120Hz (2 Metros)', 
- 'Conectores banhados a ouro 24k com malha trançada de alta resistência. Suporta HDR10+, eARC e velocidade de 48Gbps sem perdas.', 
- 'acessorios_tv', 
- 39.90, 
- 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80', 
- 100, false, 'Qualidade 4K', true),
-
-('10000000-0000-0000-0000-000000000004', 
- 'Adaptador Extensor Flexível Fire Stick & Chromecast 4K', 
- 'Cabo extensor de 30cm para evitar superaquecimento e facilitar o encaixe em portas HDMI de difícil acesso atrás de Smart TVs.', 
- 'acessorios_tv', 
- 29.90, 
- 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=600&auto=format&fit=crop&q=80', 
- 75, false, 'Prático', true),
-
-('10000000-0000-0000-0000-000000000005', 
- 'Soundbar Compacta Bluetooth Cinema Surround 2.0 (80W RMS)', 
- 'Qualidade de áudio de cinema com graves profundos e conexão óptica + Bluetooth 5.0. Acompanha controle remoto e kit de fixação.', 
- 'acessorios_tv', 
- 179.90, 
- 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=600&auto=format&fit=crop&q=80', 
- 25, true, 'Frete Grátis', true),
-
-('10000000-0000-0000-0000-000000000006', 
- 'Mini Teclado Wireless Retroiluminado RGB para Smart TV & TV Box', 
- 'Teclado QWERTY com touch pad integrado. Iluminação em 7 cores RGB e bateria recarregável via USB para navegar em filmes no escuro.', 
- 'acessorios_tv', 
- 34.90, 
- 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80', 
- 85, false, 'Luz RGB', true),
-
--- NIGHT DE FILME (CINEMA EM CASA)
-('20000000-0000-0000-0000-000000000001', 
- 'Balde de Pipoca Gigante Tema Cinema Retrô (3.5 Litros)', 
- 'Balde de plástico reforçado livre de BPA, lavável e reutilizável. Design divertido estilo cinema vintage perfeito para noites de filmes.', 
- 'cinema_em_casa', 
- 24.90, 
- 'https://images.unsplash.com/photo-1578849278619-e73505e9610f?w=600&auto=format&fit=crop&q=80', 
- 120, true, 'Sucesso de Vendas', true),
-
-('20000000-0000-0000-0000-000000000002', 
- 'Copo Térmico Inox 700ml com Tampa e Canudo Tema Streaming', 
- 'Mantém sua bebida gelada por até 8 horas durante maratonas de séries. Isolamento a vácuo de parede dupla sem suar por fora.', 
- 'cinema_em_casa', 
- 39.90, 
- 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600&auto=format&fit=crop&q=80', 
- 90, true, 'Mantém Gelado', true),
-
-('20000000-0000-0000-0000-000000000003', 
- 'Kit Pipoca de Cinema Gourmet (Milho Premium + Manteiga + Temperos)', 
- 'Kit completo com 500g de milho Mushroom (pipoca redonda igual de cinema), óleo sabor manteiga especial e 2 temperos exclusivos.', 
- 'cinema_em_casa', 
- 44.90, 
- 'https://images.unsplash.com/photo-1585647347384-2593bc35786b?w=600&auto=format&fit=crop&q=80', 
- 50, false, 'Sabor de Cinema', true),
-
-('20000000-0000-0000-0000-000000000004', 
- 'Manta Coberta Soft de Casal Flannel Ultra Aconchegante', 
- 'Tecido aveludado super macio de 2.00m x 1.80m. Esquenta sem pesar, perfeita para curtir o futebol ou a série no ar-condicionado.', 
- 'cinema_em_casa', 
- 79.90, 
- 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=600&auto=format&fit=crop&q=80', 
- 35, true, 'Super Macia', true),
-
-('20000000-0000-0000-0000-000000000005', 
- 'Pantufa Aconchegante Antiderrapante Unisex Almofadada', 
- 'Pantufa com sola de borracha silenciosa e interior aveludado em algodão. Conforto absoluto para relaxar no sofá da sala.', 
- 'cinema_em_casa', 
- 59.90, 
- 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&auto=format&fit=crop&q=80', 
- 45, false, 'Conforto VIP', true),
-
-('20000000-0000-0000-0000-000000000006', 
- 'Organizador de Almofada para Sofá (Porta Copos e Controle Remoto)', 
- 'Suporte rígido em couro sintético lavável que encaixa no braço do sofá. Evita derramar bebidas e guarda seus controles sempre à mão.', 
- 'cinema_em_casa', 
- 69.90, 
- 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop&q=80', 
- 30, false, 'Praticidade', true);
+ 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop&q=80', 
+ 50, true, '66% OFF • Formato Stick', true);
