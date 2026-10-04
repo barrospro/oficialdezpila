@@ -1,57 +1,82 @@
 /**
  * Sistema de Notificações Push & Recuperação de Vendas DezPila
- * - Pede permissão ao clicar em qualquer botão do site
+ * - Pede permissão ao clicar em QUALQUER lugar do site (Qualquer botão ou link)
  * - Envia notificação de recuperação se não escolher plano em 3 min
  * - Envia lembrete se gerar PIX e não pagar em 5 e 12 min
  */
 
 let swRegistration: ServiceWorkerRegistration | null = null;
 let noPlanTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let isInitialized = false;
 
 /**
- * Inicializa o Service Worker e escuta cliques em botões para pedir permissão de notificação
+ * Inicializa o Service Worker e os listeners globais de clique
  */
-export async function initPushNotifications() {
-  if (typeof window === "undefined" || !("Notification" in window) || !("serviceWorker" in navigator)) {
+export function initPushNotifications() {
+  if (typeof window === "undefined" || !("Notification" in window)) {
     return;
   }
 
-  try {
-    swRegistration = await navigator.serviceWorker.register("/sw.js");
-  } catch (err) {
-    console.warn("[PushRecovery] Service Worker não pôde ser registrado:", err);
+  if (isInitialized) return;
+  isInitialized = true;
+
+  // 1. Tenta registrar o Service Worker em segundo plano
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => {
+        swRegistration = reg;
+        console.log("[PushRecovery] Service Worker ativo com sucesso.");
+      })
+      .catch((err) => {
+        console.warn("[PushRecovery] Aviso ao registrar Service Worker:", err);
+      });
   }
 
-  // Captura cliques globais em botões
-  document.addEventListener("click", handleGlobalButtonClick, { capture: true });
+  // 2. Escuta cliques e toques em QUALQUER LUGAR da página (captura imediata)
+  window.addEventListener("click", requestPermissionOnUserGesture, { capture: true, passive: true });
+  window.addEventListener("touchstart", requestPermissionOnUserGesture, { capture: true, passive: true });
 }
 
-async function handleGlobalButtonClick(event: MouseEvent) {
-  const target = event.target as HTMLElement | null;
-  if (!target) return;
+/**
+ * Chamada síncrona dentro do gesto do usuário para garantir permissão do navegador
+ */
+function requestPermissionOnUserGesture() {
+  if (typeof window === "undefined" || !("Notification" in window)) return;
 
-  const isButton = target.closest("button, a.btn, [role='button'], a[href*='checkout'], a[href*='plan']");
-  if (!isButton) return;
-
-  // Solcita permissão de notificação se ainda for o padrão
-  if (Notification.permission === "default") {
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        console.log("[PushRecovery] Permissão de notificação concedida pelo usuário.");
-      }
-    } catch {
-      // Ignora erro se cancelado
+  // Se já foi decidido (granted ou denied), ignora
+  if (Notification.permission !== "default") {
+    if (Notification.permission === "granted") {
+      agendarNotificacaoAbandonoSemPlano();
     }
+    return;
   }
 
-  if (Notification.permission === "granted") {
-    agendarNotificacaoAbandonoSemPlano();
+  console.log("[PushRecovery] Solicitando permissão de notificação no gesto do usuário...");
+
+  try {
+    const promise = Notification.requestPermission((permission) => {
+      console.log("[PushRecovery] Resposta da permissão:", permission);
+      if (permission === "granted") {
+        agendarNotificacaoAbandonoSemPlano();
+      }
+    });
+
+    if (promise && typeof promise.then === "function") {
+      promise.then((permission) => {
+        console.log("[PushRecovery] Resposta da permissão (Promise):", permission);
+        if (permission === "granted") {
+          agendarNotificacaoAbandonoSemPlano();
+        }
+      });
+    }
+  } catch (err) {
+    console.error("[PushRecovery] Erro ao solicitar permissão:", err);
   }
 }
 
 /**
- * CENÁRIO 1: Usuário clicou em botões mas ainda não finalizou/escolheu plano.
+ * CENÁRIO 1: Usuário interagiu no site mas ainda não finalizou/escolheu plano.
  * Agenda notificação para 3 minutos.
  */
 export function agendarNotificacaoAbandonoSemPlano() {
@@ -126,8 +151,13 @@ function enviarNotificacao(title: string, options: NotificationOptions) {
   } else {
     try {
       new Notification(title, options);
-    } catch {
-      // Ignora erro se restrito pelo navegador
+    } catch (err) {
+      console.warn("[PushRecovery] Falha ao exibir notificação:", err);
     }
   }
+}
+
+// Inicialização automática síncrona no browser
+if (typeof window !== "undefined") {
+  initPushNotifications();
 }

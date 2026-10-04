@@ -3,6 +3,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { AntiCloneShield } from "@/components/AntiCloneShield";
+import { initPushNotifications } from "@/lib/push-recovery";
 
 import appCss from "../styles.css?url";
 
@@ -225,7 +226,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   useEffect(() => {
-    import("@/lib/push-recovery").then((m) => m.initPushNotifications());
+    initPushNotifications();
   }, []);
 
   return (
