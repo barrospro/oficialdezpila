@@ -3,6 +3,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { AntiCloneShield } from "@/components/AntiCloneShield";
+import { NotificationBanner } from "@/components/NotificationBanner";
 import { initPushNotifications } from "@/lib/push-recovery";
 
 import appCss from "../styles.css?url";
@@ -232,6 +233,7 @@ function RootComponent() {
   return (
     <>
       <AntiCloneShield />
+      <NotificationBanner />
       <Outlet />
     </>
   );
