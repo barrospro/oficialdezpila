@@ -69,6 +69,7 @@ function CheckoutPage() {
 
         if (res.paid || res.status === "pago") {
           setPaymentStatus("pago");
+          import("@/lib/push-recovery").then((m) => m.marcarComoPago(pixData.orderId));
           clearCart();
           clearInterval(pollInterval);
           setTimeout(() => {
@@ -128,6 +129,10 @@ function CheckoutPage() {
         qrCode: res.qrCode,
         qrCodeBase64: res.qrCodeBase64,
         total: res.total || summary.total,
+      });
+
+      import("@/lib/push-recovery").then((m) => {
+        m.agendarLembretePixPendente(res.orderId!, res.total || summary.total);
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao processar pedido.";
