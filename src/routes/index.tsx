@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TopBanner } from "@/components/TopBanner";
 import { NavbarGlassFixa } from "@/components/NavbarGlassFixa";
 import { HeroSection } from "@/components/HeroSection";
-import { ContentSection } from "@/components/ContentSection";
 import { PriceComparison } from "@/components/PriceComparison";
 import { PrecoTrioDark } from "@/components/PrecoTrioDark";
 import { MarqueeDepoimentos } from "@/components/MarqueeDepoimentos";
@@ -10,7 +9,6 @@ import { FAQSection } from "@/components/FAQSection";
 import { Footer } from "@/components/Footer";
 import { SocialProofToasts } from "@/components/SocialProofToasts";
 import { Reveal } from "@/components/Reveal";
-import { DeviceCompatibility } from "@/components/DeviceCompatibility";
 import { StickyBottomBar } from "@/components/StickyBottomBar";
 import { ContentSearchSimulator } from "@/components/ContentSearchSimulator";
 
@@ -129,13 +127,7 @@ function Index() {
           <PrecoTrioDark />
         </Reveal>
         <Reveal>
-          <DeviceCompatibility />
-        </Reveal>
-        <Reveal>
           <ContentSearchSimulator />
-        </Reveal>
-        <Reveal>
-          <ContentSection />
         </Reveal>
         <Reveal>
           <PriceComparison />
