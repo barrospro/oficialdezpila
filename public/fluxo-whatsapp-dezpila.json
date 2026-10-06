@@ -2,143 +2,103 @@
   "nodes": [
     {
       "id": "1",
-      "type": "question",
+      "type": "message",
       "position": { "x": 100, "y": 100 },
       "data": {
-        "title": "Boas-vindas e Aparelho",
-        "label": "Pergunta Inicial",
-        "text": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?",
-        "options": [
-          { "id": "opt_tv", "label": "📺 Smart TV / TV Box" },
-          { "id": "opt_celular", "label": "📱 Celular / Tablet" },
-          { "id": "opt_pc", "label": "💻 Computador / Notebook" }
-        ]
+        "title": "01 - Boas Vindas e Qualificacao",
+        "label": "Início",
+        "content": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?\n1️⃣ Smart TV / TV Box\n2️⃣ Celular / Tablet\n3️⃣ Computador / Notebook",
+        "text": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?\n1️⃣ Smart TV / TV Box\n2️⃣ Celular / Tablet\n3️⃣ Computador / Notebook",
+        "message": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?\n1️⃣ Smart TV / TV Box\n2️⃣ Celular / Tablet\n3️⃣ Computador / Notebook",
+        "body": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?\n1️⃣ Smart TV / TV Box\n2️⃣ Celular / Tablet\n3️⃣ Computador / Notebook",
+        "value": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?\n1️⃣ Smart TV / TV Box\n2️⃣ Celular / Tablet\n3️⃣ Computador / Notebook"
       }
     },
     {
       "id": "2",
       "type": "message",
-      "position": { "x": 100, "y": 300 },
+      "position": { "x": 400, "y": 100 },
       "data": {
-        "title": "Prova Social e Ancoragem",
-        "text": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos."
+        "title": "02 - Prova Social e Ancoragem",
+        "content": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos.",
+        "text": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos.",
+        "message": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos.",
+        "body": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos.",
+        "value": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos."
       }
     },
     {
       "id": "3",
-      "type": "question",
-      "position": { "x": 100, "y": 500 },
+      "type": "message",
+      "position": { "x": 700, "y": 100 },
       "data": {
-        "title": "Escolha de Planos",
+        "title": "03 - Escolha de Planos",
+        "content": "Escolha o melhor plano para o seu perfil e garanta a sua vaga promocional de hoje:\n\n1️⃣ *Plano Mensal (1 Tela)* ➔ R$ 10,00 /mês\n2️⃣ *Plano Trimestral (2 Telas)* ➔ R$ 24,90 (Economize +20%)\n3️⃣ *Plano Semestral (3 Telas)* ➔ R$ 47,90 🔥 *MAIS VENDIDO*\n4️⃣ *Plano Anual (4 Telas)* ➔ R$ 73,90 🏆 *CAMPEAO DE ECONOMIA*\n\nQual plano você prefere ativar agora?",
         "text": "Escolha o melhor plano para o seu perfil e garanta a sua vaga promocional de hoje:\n\n1️⃣ *Plano Mensal (1 Tela)* ➔ R$ 10,00 /mês\n2️⃣ *Plano Trimestral (2 Telas)* ➔ R$ 24,90 (Economize +20%)\n3️⃣ *Plano Semestral (3 Telas)* ➔ R$ 47,90 🔥 *MAIS VENDIDO*\n4️⃣ *Plano Anual (4 Telas)* ➔ R$ 73,90 🏆 *CAMPEAO DE ECONOMIA*\n\nQual plano você prefere ativar agora?",
-        "options": [
-          { "id": "p_mensal", "label": "1️⃣ Mensal (R$ 10,00)" },
-          { "id": "p_trimestral", "label": "2️⃣ Trimestral (R$ 24,90)" },
-          { "id": "p_semestral", "label": "3️⃣ Semestral (R$ 47,90)" },
-          { "id": "p_anual", "label": "4️⃣ Anual (R$ 73,90)" }
-        ]
+        "message": "Escolha o melhor plano para o seu perfil e garanta a sua vaga promocional de hoje:\n\n1️⃣ *Plano Mensal (1 Tela)* ➔ R$ 10,00 /mês\n2️⃣ *Plano Trimestral (2 Telas)* ➔ R$ 24,90 (Economize +20%)\n3️⃣ *Plano Semestral (3 Telas)* ➔ R$ 47,90 🔥 *MAIS VENDIDO*\n4️⃣ *Plano Anual (4 Telas)* ➔ R$ 73,90 🏆 *CAMPEAO DE ECONOMIA*\n\nQual plano você prefere ativar agora?",
+        "body": "Escolha o melhor plano para o seu perfil e garanta a sua vaga promocional de hoje:\n\n1️⃣ *Plano Mensal (1 Tela)* ➔ R$ 10,00 /mês\n2️⃣ *Plano Trimestral (2 Telas)* ➔ R$ 24,90 (Economize +20%)\n3️⃣ *Plano Semestral (3 Telas)* ➔ R$ 47,90 🔥 *MAIS VENDIDO*\n4️⃣ *Plano Anual (4 Telas)* ➔ R$ 73,90 🏆 *CAMPEAO DE ECONOMIA*\n\nQual plano você prefere ativar agora?",
+        "value": "Escolha o melhor plano para o seu perfil e garanta a sua vaga promocional de hoje:\n\n1️⃣ *Plano Mensal (1 Tela)* ➔ R$ 10,00 /mês\n2️⃣ *Plano Trimestral (2 Telas)* ➔ R$ 24,90 (Economize +20%)\n3️⃣ *Plano Semestral (3 Telas)* ➔ R$ 47,90 🔥 *MAIS VENDIDO*\n4️⃣ *Plano Anual (4 Telas)* ➔ R$ 73,90 🏆 *CAMPEAO DE ECONOMIA*\n\nQual plano você prefere ativar agora?"
       }
     },
     {
       "id": "4_mensal",
-      "type": "webhook",
-      "position": { "x": -200, "y": 700 },
+      "type": "message",
+      "position": { "x": 1000, "y": 100 },
       "data": {
-        "title": "Gerar PIX R$ 10.00",
-        "url": "https://oficialdezpila.lovable.app/api/pix?amount=10.00&name={{name}}&phone={{whatsapp}}",
-        "method": "GET"
-      }
-    },
-    {
-      "id": "4_trimestral",
-      "type": "webhook",
-      "position": { "x": 0, "y": 700 },
-      "data": {
-        "title": "Gerar PIX R$ 24.90",
-        "url": "https://oficialdezpila.lovable.app/api/pix?amount=24.90&name={{name}}&phone={{whatsapp}}",
-        "method": "GET"
-      }
-    },
-    {
-      "id": "4_semestral",
-      "type": "webhook",
-      "position": { "x": 200, "y": 700 },
-      "data": {
-        "title": "Gerar PIX R$ 47.90",
-        "url": "https://oficialdezpila.lovable.app/api/pix?amount=47.90&name={{name}}&phone={{whatsapp}}",
-        "method": "GET"
-      }
-    },
-    {
-      "id": "4_anual",
-      "type": "webhook",
-      "position": { "x": 400, "y": 700 },
-      "data": {
-        "title": "Gerar PIX R$ 73.90",
-        "url": "https://oficialdezpila.lovable.app/api/pix?amount=73.90&name={{name}}&phone={{whatsapp}}",
-        "method": "GET"
+        "title": "04 - Link/Cobrança PIX R$ 10.00",
+        "content": "Perfeito! Seu pedido de R$ 10,00 foi reservado!\n\nAcesse o link seguro abaixo para gerar o código PIX e liberar instantaneamente:\nhttps://oficialdezpila.lovable.app/shop/checkout",
+        "text": "Perfeito! Seu pedido de R$ 10,00 foi reservado!\n\nAcesse o link seguro abaixo para gerar o código PIX e liberar instantaneamente:\nhttps://oficialdezpila.lovable.app/shop/checkout",
+        "message": "Perfeito! Seu pedido de R$ 10,00 foi reservado!\n\nAcesse o link seguro abaixo para gerar o código PIX e liberar instantaneamente:\nhttps://oficialdezpila.lovable.app/shop/checkout",
+        "body": "Perfeito! Seu pedido de R$ 10,00 foi reservado!\n\nAcesse o link seguro abaixo para gerar o código PIX e liberar instantaneamente:\nhttps://oficialdezpila.lovable.app/shop/checkout",
+        "value": "Perfeito! Seu pedido de R$ 10,00 foi reservado!\n\nAcesse o link seguro abaixo para gerar o código PIX e liberar instantaneamente:\nhttps://oficialdezpila.lovable.app/shop/checkout"
       }
     },
     {
       "id": "5",
       "type": "message",
-      "position": { "x": 100, "y": 900 },
+      "position": { "x": 100, "y": 350 },
       "data": {
-        "title": "Envio do PIX",
-        "text": "Perfeito! Seu pedido foi reservado com sucesso! ⚡\n\nCopie o código PIX abaixo e faça o pagamento no aplicativo do seu banco:\n\n`{{pix_copia_e_cola}}`\n\n💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*"
+        "title": "05 - Instrucoes Pagamento",
+        "content": "💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*",
+        "text": "💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*",
+        "message": "💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*",
+        "body": "💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*",
+        "value": "💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*"
       }
     },
     {
       "id": "6",
-      "type": "delay",
-      "position": { "x": 100, "y": 1100 },
+      "type": "message",
+      "position": { "x": 400, "y": 350 },
       "data": {
-        "title": "Espera 5 Minutos",
-        "delayMinutes": 5
+        "title": "06 - Lembrete 5 Minutos (Empatia)",
+        "content": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍",
+        "text": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍",
+        "message": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍",
+        "body": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍",
+        "value": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍"
       }
     },
     {
       "id": "7",
       "type": "message",
-      "position": { "x": 100, "y": 1300 },
+      "position": { "x": 700, "y": 350 },
       "data": {
-        "title": "Lembrete Suporte",
-        "text": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍"
-      }
-    },
-    {
-      "id": "8",
-      "type": "delay",
-      "position": { "x": 100, "y": 1500 },
-      "data": {
-        "title": "Espera 10 Minutos",
-        "delayMinutes": 10
-      }
-    },
-    {
-      "id": "9",
-      "type": "message",
-      "position": { "x": 100, "y": 1700 },
-      "data": {
-        "title": "Lembrete Urgência",
-        "text": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nPara garantir o seu acesso antes do cancelamento automático, pague pelo código:\n\n`{{pix_copia_e_cola}}`"
+        "title": "07 - Lembrete Urgência (15 Min)",
+        "content": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nGaranta o seu acesso antes do cancelamento automático!",
+        "text": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nGaranta o seu acesso antes do cancelamento automático!",
+        "message": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nGaranta o seu acesso antes do cancelamento automático!",
+        "body": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nGaranta o seu acesso antes do cancelamento automático!",
+        "value": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nGaranta o seu acesso antes do cancelamento automático!"
       }
     }
   ],
   "edges": [
     { "id": "e1-2", "source": "1", "target": "2" },
     { "id": "e2-3", "source": "2", "target": "3" },
-    { "id": "e3-4m", "source": "3", "target": "4_mensal", "sourceHandle": "p_mensal" },
-    { "id": "e3-4t", "source": "3", "target": "4_trimestral", "sourceHandle": "p_trimestral" },
-    { "id": "e3-4s", "source": "3", "target": "4_semestral", "sourceHandle": "p_semestral" },
-    { "id": "e3-4a", "source": "3", "target": "4_anual", "sourceHandle": "p_anual" },
+    { "id": "e3-4m", "source": "3", "target": "4_mensal" },
     { "id": "e4m-5", "source": "4_mensal", "target": "5" },
-    { "id": "e4t-5", "source": "4_trimestral", "target": "5" },
-    { "id": "e4s-5", "source": "4_semestral", "target": "5" },
-    { "id": "e4a-5", "source": "4_anual", "target": "5" },
     { "id": "e5-6", "source": "5", "target": "6" },
-    { "id": "e6-7", "source": "6", "target": "7" },
-    { "id": "e7-8", "source": "7", "target": "8" },
-    { "id": "e8-9", "source": "8", "target": "9" }
+    { "id": "e6-7", "source": "6", "target": "7" }
   ]
 }
