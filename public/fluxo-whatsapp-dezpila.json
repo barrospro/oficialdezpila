@@ -1,0 +1,130 @@
+{
+  "name": "Funil Alta Conversao X1 - DezPila 4K",
+  "version": "2.0.0",
+  "description": "Funil de Vendas X1 totalmente persuasivo com gatilhos psicologicos, escolha de planos e geracao automatica de PIX Nitro",
+  "nodes": [
+    {
+      "id": "node_01_boas_vindas",
+      "type": "message_with_buttons",
+      "title": "01 - Boas Vindas e Qualificacao",
+      "delay_seconds": 1,
+      "text": "Opa, tudo bem? 👋\n\nSou o Alex da equipe *DezPila Streaming*! 📺🚀\n\nAqui você assiste a *todos os canais fechados de futebol ao vivo, Premiere, Combate, HBO, Telecine + 60.000 Filmes e Séries da Netflix, Prime e Disney* em qualidade 4K sem travar!\n\nEm qual dispositivo você quer assistir hoje?",
+      "buttons": [
+        { "id": "btn_tv", "text": "📺 Smart TV / TV Box" },
+        { "id": "btn_celular", "text": "📱 Celular / Tablet" },
+        { "id": "btn_pc", "text": "💻 Computador / Notebook" }
+      ],
+      "next_node": "node_02_prova_social"
+    },
+    {
+      "id": "node_02_prova_social",
+      "type": "message",
+      "title": "02 - Prova Social e Comparacao de Ancoragem",
+      "delay_seconds": 2,
+      "text": "Show de bola! Funciona perfeitamente em 100% dos aparelhos e instala em menos de 2 minutos! ⏱️\n\nHoje uma TV a cabo tradicional custa mais de R$ 250,00 por mês... E assinando todos os streamings juntos você gastaria mais de R$ 180,00.\n\nNo *DezPila*, você tem TUDO liberado com sinal 4K Anti-Trava por um valor simbólico a partir de *R$ 10,00 por mês* sem fidelidade e sem contrato de carência! 🔥\n\nJá são mais de 15.000 famílias assistindo agora sem travamentos.",
+      "next_node": "node_03_escolha_plano"
+    },
+    {
+      "id": "node_03_escolha_plano",
+      "type": "message_with_buttons",
+      "title": "03 - Apresentacao de Planos (Gatilho de Opcoes)",
+      "delay_seconds": 2,
+      "text": "Escolha o melhor plano para o seu perfil e garanta a sua vaga promocional de hoje:\n\n1️⃣ *Plano Mensal (1 Tela)* ➔ R$ 10,00 /mês\n2️⃣ *Plano Trimestral (2 Telas)* ➔ R$ 24,90 (Economize +20%)\n3️⃣ *Plano Semestral (3 Telas)* ➔ R$ 47,90 🔥 *MAIS VENDIDO*\n4️⃣ *Plano Anual (4 Telas)* ➔ R$ 73,90 🏆 *CAMPEAO DE ECONOMIA*\n\nQual plano você prefere ativar agora?",
+      "buttons": [
+        { "id": "plan_mensal", "text": "1️⃣ Mensal (R$ 10,00)" },
+        { "id": "plan_trimestral", "text": "2️⃣ Trimestral (R$ 24,90)" },
+        { "id": "plan_semestral", "text": "3️⃣ Semestral (R$ 47,90)" },
+        { "id": "plan_anual", "text": "4️⃣ Anual (R$ 73,90)" }
+      ],
+      "routes": {
+        "plan_mensal": "node_04_gerar_pix_mensal",
+        "plan_trimestral": "node_04_gerar_pix_trimestral",
+        "plan_semestral": "node_04_gerar_pix_semestral",
+        "plan_anual": "node_04_gerar_pix_anual"
+      }
+    },
+    {
+      "id": "node_04_gerar_pix_mensal",
+      "type": "webhook_pix",
+      "title": "04A - Gerar PIX Mensal R$ 10.00",
+      "url": "https://oficialdezpila.lovable.app/api/pix?amount=10.00&name={{name}}&phone={{whatsapp}}",
+      "method": "GET",
+      "response_mapping": {
+        "pix_copia_e_cola": "pix_code",
+        "qr_code_base64": "qr_code"
+      },
+      "next_node": "node_05_envio_pix"
+    },
+    {
+      "id": "node_04_gerar_pix_trimestral",
+      "type": "webhook_pix",
+      "title": "04B - Gerar PIX Trimestral R$ 24.90",
+      "url": "https://oficialdezpila.lovable.app/api/pix?amount=24.90&name={{name}}&phone={{whatsapp}}",
+      "method": "GET",
+      "response_mapping": {
+        "pix_copia_e_cola": "pix_code",
+        "qr_code_base64": "qr_code"
+      },
+      "next_node": "node_05_envio_pix"
+    },
+    {
+      "id": "node_04_gerar_pix_semestral",
+      "type": "webhook_pix",
+      "title": "04C - Gerar PIX Semestral R$ 47.90",
+      "url": "https://oficialdezpila.lovable.app/api/pix?amount=47.90&name={{name}}&phone={{whatsapp}}",
+      "method": "GET",
+      "response_mapping": {
+        "pix_copia_e_cola": "pix_code",
+        "qr_code_base64": "qr_code"
+      },
+      "next_node": "node_05_envio_pix"
+    },
+    {
+      "id": "node_04_gerar_pix_anual",
+      "type": "webhook_pix",
+      "title": "04D - Gerar PIX Anual R$ 73.90",
+      "url": "https://oficialdezpila.lovable.app/api/pix?amount=73.90&name={{name}}&phone={{whatsapp}}",
+      "method": "GET",
+      "response_mapping": {
+        "pix_copia_e_cola": "pix_code",
+        "qr_code_base64": "qr_code"
+      },
+      "next_node": "node_05_envio_pix"
+    },
+    {
+      "id": "node_05_envio_pix",
+      "type": "message",
+      "title": "05 - Envio da Chave PIX e Instrucoes",
+      "delay_seconds": 1,
+      "text": "Perfeito! Seu pedido foi reservado com sucesso! ⚡\n\nCopie o código PIX abaixo e faça o pagamento no aplicativo do seu banco:\n\n`{{pix_copia_e_cola}}`\n\n💡 *Assim que você concluir o pagamento no PIX, nosso servidor identifica automaticamente e te envia o aplicativo e os dados de login aqui mesmo no seu WhatsApp em menos de 1 minuto!*",
+      "next_node": "node_06_timer_recuperacao"
+    },
+    {
+      "id": "node_06_timer_recuperacao",
+      "type": "delay",
+      "delay_minutes": 5,
+      "condition": "payment_status != 'PAID'",
+      "next_node": "node_07_lembrete_5min"
+    },
+    {
+      "id": "node_07_lembrete_5min",
+      "type": "message",
+      "title": "07 - Lembrete 5 Minutos (Empatia)",
+      "text": "Psiu! ⏳ Vi que seu PIX ainda não foi concluído.\n\nVocê teve alguma dúvida na hora de copiar o código PIX ou sobre como instalar no seu aparelho?\n\nSe precisar de ajuda para configurar, me avisa aqui! O sinal já está pronto para ser liberado assim que concluir. 👍",
+      "next_node": "node_08_timer_urgencia"
+    },
+    {
+      "id": "node_08_timer_urgencia",
+      "type": "delay",
+      "delay_minutes": 10,
+      "condition": "payment_status != 'PAID'",
+      "next_node": "node_09_lembrete_urgencia_final"
+    },
+    {
+      "id": "node_09_lembrete_urgencia_final",
+      "type": "message",
+      "title": "09 - Lembrete Final 15 Min (Escassez)",
+      "text": "🚨 *ATENÇÃO: A sua vaga promocional expira em 3 minutos!*\n\nComo a demanda está alta hoje, a reserva do seu servidor 4K será liberada para outro cliente se o PIX não for efetuado.\n\nPara garantir o seu acesso antes do cancelamento automático, pague pelo código:\n\n`{{pix_copia_e_cola}}`"
+    }
+  ]
+}
