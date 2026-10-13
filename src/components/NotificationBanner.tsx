@@ -24,25 +24,9 @@ export function NotificationBanner() {
     if (typeof window === "undefined" || !("Notification" in window)) return;
 
     try {
-      const permission = await Notification.requestPermission();
+      const { pedirPermissaoNotificacoes } = await import("@/lib/push-recovery");
+      const permission = await pedirPermissaoNotificacoes();
       setStatus(permission);
-
-      if (permission === "granted") {
-        console.log("[PushRecovery] Permissão concedida pelo usuário via banner!");
-        // Importa e agenda recuperação
-        const { agendarNotificacaoAbandonoSemPlano } = await import("@/lib/push-recovery");
-        agendarNotificacaoAbandonoSemPlano();
-        
-        // Exibe notificação de confirmação de teste imediata
-        try {
-          new Notification("🔔 Notificações Ativadas!", {
-            body: "Você receberá atualizações sobre seus pedidos e ofertas exclusivas DezPila.",
-            icon: "/favicon.svg",
-          });
-        } catch {
-          // Ignora se bloqueado no OS
-        }
-      }
     } catch (err) {
       console.error("[PushRecovery] Erro ao pedir permissão:", err);
     } finally {

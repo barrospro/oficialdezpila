@@ -170,6 +170,12 @@ function CheckoutPage() {
       });
 
       import("@/lib/push-recovery").then((m) => {
+        m.dispararNotificacao("⚡ PIX Gerado com Sucesso!", {
+          body: `Pedido #${res.orderId?.slice(0, 8)} gerado. Copie o código PIX para confirmar sua compra!`,
+          icon: "/brand/favicon_512.png",
+          badge: "/favicon.svg",
+          tag: `shop_pix_${res.orderId}`,
+        });
         m.agendarLembretePixPendente(res.orderId!, res.total || finalTotal);
       });
     } catch (err: unknown) {
@@ -185,6 +191,14 @@ function CheckoutPage() {
     navigator.clipboard.writeText(pixData.qrCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
+    import("@/lib/push-recovery").then((m) => {
+      m.dispararNotificacao("📋 Código PIX Copiado!", {
+        body: "Abra o aplicativo do seu banco para colar e pagar via PIX.",
+        icon: "/brand/favicon_512.png",
+        badge: "/favicon.svg",
+        tag: "shop_pix_copiado",
+      });
+    });
   };
 
   const formatTimer = (secs: number) => {

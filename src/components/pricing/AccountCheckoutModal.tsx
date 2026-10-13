@@ -30,6 +30,11 @@ import {
 } from "@/lib/nitro.functions";
 import { CouponSection } from "./CouponSection";
 import { Coupon, validateAndApplyCoupon } from "@/lib/coupons";
+import {
+  dispararNotificacao,
+  agendarLembretePixPendente,
+  marcarComoPago,
+} from "@/lib/push-recovery";
 
 export interface PlanoData {
   id: string;
@@ -175,6 +180,14 @@ export function AccountCheckoutModal({
         });
         if (res.ok && res.paid) {
           setStep("SUCESSO");
+          marcarComoPago(caktoOrderId);
+          dispararNotificacao("🎉 Pagamento Aprovado!", {
+            body: `Seu plano ${plano.nome} foi aprovado! Seu acesso VIP aos +60.000 conteúdos está liberado.`,
+            icon: "/brand/favicon_512.png",
+            badge: "/favicon.svg",
+            tag: `pix_pago_${caktoOrderId}`,
+            url: window.location.href,
+          });
         }
       } catch {
         // Ignora erros temporários de rede no polling
@@ -327,6 +340,18 @@ export function AccountCheckoutModal({
         setPixQrBase64(res.qrCodeBase64 || null);
         setCaktoOrderId(res.id);
         setStep("PAGAMENTO");
+
+        // Dispara notificação imediata de PIX gerado
+        dispararNotificacao("⚡ PIX Gerado com Sucesso!", {
+          body: `Pedido de R$ ${totalPriceStr} gerado. Copie o código PIX para liberar seu acesso VIP 4K!`,
+          icon: "/brand/favicon_512.png",
+          badge: "/favicon.svg",
+          tag: `pix_${res.id}`,
+          url: window.location.href,
+        });
+
+        // Agenda lembrete de expiração e recuperação
+        agendarLembretePixPendente(res.id, totalPriceNum, plano.nome);
       } else {
         const errorMsg = res.error || "Não foi possível gerar a cobrança PIX.";
         setApiError(errorMsg);
@@ -347,6 +372,14 @@ export function AccountCheckoutModal({
       await navigator.clipboard.writeText(pixPayload);
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
+
+      dispararNotificacao("📋 Código PIX Copiado!", {
+        body: "Abra o aplicativo do seu banco e escolha 'PIX Copia e Cola' para efetuar o pagamento.",
+        icon: "/brand/favicon_512.png",
+        badge: "/favicon.svg",
+        tag: "pix_copiado",
+        url: window.location.href,
+      });
     } catch {
       // Fallback
     }

@@ -22,6 +22,31 @@ self.addEventListener("message", (event) => {
   }
 });
 
+// Manipulador de push remoto do servidor (Web Push Protocol / VAPID)
+self.addEventListener("push", (event) => {
+  let data = {};
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch {
+      data = { title: "DezPila Streaming", body: event.data.text() };
+    }
+  }
+
+  const title = data.title || "DezPila Streaming";
+  const options = {
+    body: data.body || "Atualização sobre o seu acesso ou pedido DezPila.",
+    icon: data.icon || "/brand/favicon_512.png",
+    badge: data.badge || "/favicon.svg",
+    vibrate: [200, 100, 200],
+    data: {
+      url: data.url || "/",
+    },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
 // Ação de clique na notificação: abre ou foca no site
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
