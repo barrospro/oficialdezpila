@@ -26,7 +26,7 @@ export const APIRoute = createAPIFileRoute("/api/pix")({
           phone,
           document,
         },
-        sourceUrl: "https://oficialdezpila.lovable.app/whatsapp",
+        sourceUrl: "https://oficialdezpila.vercel.app/whatsapp",
       });
 
       return new Response(
@@ -85,7 +85,7 @@ export const APIRoute = createAPIFileRoute("/api/pix")({
           phone,
           document,
         },
-        sourceUrl: "https://oficialdezpila.lovable.app/whatsapp",
+        sourceUrl: "https://oficialdezpila.vercel.app/whatsapp",
       });
 
       return new Response(

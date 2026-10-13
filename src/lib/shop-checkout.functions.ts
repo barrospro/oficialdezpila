@@ -63,7 +63,7 @@ export const createShopOrderFn = createServerFn({ method: "POST" })
           phone: cleanPhone,
           document: "00000000000",
         },
-        sourceUrl: "https://oficialdezpila.lovable.app/shop/checkout",
+        sourceUrl: "https://oficialdezpila.vercel.app/shop/checkout",
       });
 
       const orderData = {

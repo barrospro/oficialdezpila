@@ -36,7 +36,7 @@ export const Route = createRootRoute({
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "DezPila",
-      url: "https://oficialdezpila.lovable.app/",
+      url: "https://oficialdezpila.vercel.app/",
       description:
         "Streaming Ilimitado por R$10/mês com +2.000 canais ao vivo e mais de 60.000 conteúdos em 4K Ultra HD.",
       inLanguage: "pt-BR",
@@ -46,8 +46,8 @@ export const Route = createRootRoute({
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "DezPila",
-      url: "https://oficialdezpila.lovable.app/",
-      logo: "https://oficialdezpila.lovable.app/brand/logo_dezpila_official.png",
+      url: "https://oficialdezpila.vercel.app/",
+      logo: "https://oficialdezpila.vercel.app/brand/logo_dezpila_official.png",
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "Customer Support",
@@ -81,7 +81,7 @@ export const Route = createRootRoute({
             price: "10.00",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
-            url: "https://oficialdezpila.lovable.app/#planos",
+            url: "https://oficialdezpila.vercel.app/#planos",
           },
           {
             "@type": "Offer",
@@ -89,7 +89,7 @@ export const Route = createRootRoute({
             price: "24.90",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
-            url: "https://oficialdezpila.lovable.app/#planos",
+            url: "https://oficialdezpila.vercel.app/#planos",
           },
           {
             "@type": "Offer",
@@ -97,7 +97,7 @@ export const Route = createRootRoute({
             price: "47.90",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
-            url: "https://oficialdezpila.lovable.app/#planos",
+            url: "https://oficialdezpila.vercel.app/#planos",
           },
           {
             "@type": "Offer",
@@ -105,7 +105,7 @@ export const Route = createRootRoute({
             price: "73.90",
             priceCurrency: "BRL",
             availability: "https://schema.org/InStock",
-            url: "https://oficialdezpila.lovable.app/#planos",
+            url: "https://oficialdezpila.vercel.app/#planos",
           },
         ],
       },
@@ -144,7 +144,7 @@ export const Route = createRootRoute({
             "+2.000 canais ao vivo, filmes, séries e 60.000 conteúdos em 4K por apenas R$10/mês. Liberação imediata via PIX.",
         },
         { property: "og:type", content: "website" },
-        { property: "og:url", content: "https://oficialdezpila.lovable.app/" },
+        { property: "og:url", content: "https://oficialdezpila.vercel.app/" },
         { property: "og:locale", content: "pt_BR" },
         {
           property: "og:image",
@@ -169,7 +169,7 @@ export const Route = createRootRoute({
       ],
       links: [
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-        { rel: "canonical", href: "https://oficialdezpila.lovable.app/" },
+        { rel: "canonical", href: "https://oficialdezpila.vercel.app/" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {

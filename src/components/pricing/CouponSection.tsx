@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Tag, CheckCircle2, AlertCircle, X, Sparkles, ArrowRight } from "lucide-react";
+import { Tag, AlertCircle, X, Sparkles, ArrowRight } from "lucide-react";
 import { Coupon, validateAndApplyCoupon, formatBRL } from "@/lib/coupons";
 
 interface CouponSectionProps {
@@ -10,6 +10,8 @@ interface CouponSectionProps {
   onApply: (coupon: Coupon, discount: number) => void;
   onRemove: () => void;
   onSwitchToAnnual?: () => void;
+  inputCode?: string;
+  onInputChange?: (code: string) => void;
   compact?: boolean;
 }
 
@@ -21,9 +23,21 @@ export function CouponSection({
   onApply,
   onRemove,
   onSwitchToAnnual,
+  inputCode,
+  onInputChange,
   compact = false,
 }: CouponSectionProps) {
-  const [inputCode, setInputCode] = useState("");
+  const [internalCode, setInternalCode] = useState("");
+  const currentCode = inputCode !== undefined ? inputCode : internalCode;
+
+  const setCode = (val: string) => {
+    if (onInputChange) {
+      onInputChange(val);
+    } else {
+      setInternalCode(val);
+    }
+  };
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isRestricted, setIsRestricted] = useState(false);
 
@@ -42,21 +56,25 @@ export function CouponSection({
     }
   }, [planId, basePrice]);
 
-  const handleApply = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleApply = (e?: React.SyntheticEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setErrorMessage(null);
     setIsRestricted(false);
 
-    if (!inputCode.trim()) {
+    const trimmed = (currentCode || "").trim();
+    if (!trimmed) {
       setErrorMessage("Digite o código do cupom.");
       return;
     }
 
-    const res = validateAndApplyCoupon(inputCode, planId, basePrice);
+    const res = validateAndApplyCoupon(trimmed, planId, basePrice);
 
     if (res.valid && res.coupon) {
       onApply(res.coupon, res.discountAmount);
-      setInputCode("");
+      setCode("");
       setErrorMessage(null);
       setIsRestricted(false);
     } else {
@@ -65,7 +83,11 @@ export function CouponSection({
     }
   };
 
-  const handleRemove = () => {
+  const handleRemove = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     onRemove();
     setErrorMessage(null);
     setIsRestricted(false);
@@ -115,19 +137,26 @@ export function CouponSection({
 
   return (
     <div className="w-full my-2.5">
-      <form onSubmit={handleApply} className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center">
         <div className="relative flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
             <Tag className="h-3.5 w-3.5" />
           </div>
           <input
             type="text"
-            value={inputCode}
+            value={currentCode}
             onChange={(e) => {
-              setInputCode(e.target.value.toUpperCase());
+              setCode(e.target.value.toUpperCase());
               if (errorMessage) {
                 setErrorMessage(null);
                 setIsRestricted(false);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                handleApply(e);
               }
             }}
             placeholder="Possui cupom? Ex: ANUAL50"
@@ -135,12 +164,13 @@ export function CouponSection({
           />
         </div>
         <button
-          type="submit"
+          type="button"
+          onClick={handleApply}
           className="rounded-xl bg-slate-900 hover:bg-slate-800 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white transition-all cursor-pointer shadow-xs active:scale-95 shrink-0 font-heading"
         >
           Aplicar
         </button>
-      </form>
+      </div>
 
       {/* Alerta de Erro ou Restrição de Plano */}
       {errorMessage && (
@@ -153,7 +183,9 @@ export function CouponSection({
           {isRestricted && onSwitchToAnnual && planId.toUpperCase() !== "ANUAL" && (
             <button
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 setErrorMessage(null);
                 setIsRestricted(false);
                 onSwitchToAnnual();

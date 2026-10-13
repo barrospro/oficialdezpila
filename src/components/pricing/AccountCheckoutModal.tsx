@@ -29,7 +29,7 @@ import {
   checkNitroPixStatus,
 } from "@/lib/nitro.functions";
 import { CouponSection } from "./CouponSection";
-import { Coupon } from "@/lib/coupons";
+import { Coupon, validateAndApplyCoupon } from "@/lib/coupons";
 
 export interface PlanoData {
   id: string;
@@ -70,6 +70,7 @@ export function AccountCheckoutModal({
 
   // Cupom de Desconto State
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [couponInput, setCouponInput] = useState("");
 
   // OrderBump State
   // 1. Tela Extra Adicional (+1 Conexão Simultânea) - R$ 5,90 por tela
@@ -139,6 +140,7 @@ export function AccountCheckoutModal({
       setPacoteAdulto(false);
       setPacoteCristoFlix(false);
       setAppliedCoupon(null);
+      setCouponInput("");
       setTimerSeconds(900);
       setLoadingPix(false);
       setPixPayload("");
@@ -231,6 +233,19 @@ export function AccountCheckoutModal({
     e.preventDefault();
     if (!nome || !cpf || !email || !senha || !whatsapp) return;
 
+    // Se o usuário digitou um cupom no campo mas não clicou em "Aplicar", valida e aplica agora
+    let finalCoupon = appliedCoupon;
+    let finalDiscount = discountAmount;
+    if (!finalCoupon && couponInput.trim()) {
+      const res = validateAndApplyCoupon(couponInput.trim(), plano.id, basePrice);
+      if (res.valid && res.coupon) {
+        finalCoupon = res.coupon;
+        finalDiscount = res.discountAmount;
+        setAppliedCoupon(res.coupon);
+        setCouponInput("");
+      }
+    }
+
     // Salva tudo no LocalStorage
     const userData = {
       nome,
@@ -241,10 +256,10 @@ export function AccountCheckoutModal({
       planoId: plano.id,
       planoNome: plano.nome,
       planoPreco: plano.preco,
-      cupom: appliedCoupon
+      cupom: finalCoupon
         ? {
-            code: appliedCoupon.code,
-            desconto: formatPrice(discountAmount),
+            code: finalCoupon.code,
+            desconto: formatPrice(finalDiscount),
           }
         : null,
       updatedAt: new Date().toISOString(),
@@ -550,8 +565,13 @@ export function AccountCheckoutModal({
                   appliedCoupon={appliedCoupon}
                   discountAmount={discountAmount}
                   onApply={(cupom) => setAppliedCoupon(cupom)}
-                  onRemove={() => setAppliedCoupon(null)}
+                  onRemove={() => {
+                    setAppliedCoupon(null);
+                    setCouponInput("");
+                  }}
                   onSwitchToAnnual={handleSwitchToAnnual}
+                  inputCode={couponInput}
+                  onInputChange={(v) => setCouponInput(v)}
                 />
 
                 {appliedCoupon && (
@@ -629,8 +649,13 @@ export function AccountCheckoutModal({
                 appliedCoupon={appliedCoupon}
                 discountAmount={discountAmount}
                 onApply={(cupom) => setAppliedCoupon(cupom)}
-                onRemove={() => setAppliedCoupon(null)}
+                onRemove={() => {
+                  setAppliedCoupon(null);
+                  setCouponInput("");
+                }}
                 onSwitchToAnnual={handleSwitchToAnnual}
+                inputCode={couponInput}
+                onInputChange={(v) => setCouponInput(v)}
               />
 
               <div className="mb-2">

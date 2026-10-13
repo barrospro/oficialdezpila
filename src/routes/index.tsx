@@ -100,10 +100,10 @@ export const Route = createFileRoute("/")({
           content: "+2.000 canais e 60.000 conteúdos em 4K por apenas R$10/mês. Sem fidelidade.",
         },
         { property: "og:type", content: "website" },
-        { property: "og:url", content: "https://oficialdezpila.lovable.app/" },
+        { property: "og:url", content: "https://oficialdezpila.vercel.app/" },
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: "https://oficialdezpila.lovable.app/" }],
+      links: [{ rel: "canonical", href: "https://oficialdezpila.vercel.app/" }],
       scripts: [
         {
           type: "application/ld+json",
