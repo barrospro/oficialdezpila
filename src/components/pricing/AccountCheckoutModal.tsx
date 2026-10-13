@@ -28,6 +28,8 @@ import {
   createNitroPix,
   checkNitroPixStatus,
 } from "@/lib/nitro.functions";
+import { CouponSection } from "./CouponSection";
+import { Coupon } from "@/lib/coupons";
 
 export interface PlanoData {
   id: string;
@@ -42,6 +44,8 @@ interface AccountCheckoutModalProps {
   open: boolean;
   plano: PlanoData | null;
   onClose: () => void;
+  onSelectPlan?: (plano: PlanoData) => void;
+  allPlans?: PlanoData[];
 }
 
 type Step = "CADASTRO" | "CONFIRMACAO" | "PAGAMENTO" | "EXPIRADO" | "SUCESSO";
@@ -50,6 +54,8 @@ export function AccountCheckoutModal({
   open,
   plano,
   onClose,
+  onSelectPlan,
+  allPlans,
 }: AccountCheckoutModalProps) {
   const [step, setStep] = useState<Step>("CADASTRO");
 
@@ -61,6 +67,9 @@ export function AccountCheckoutModal({
   const [verSenha, setVerSenha] = useState(false);
   const [whatsapp, setWhatsapp] = useState("");
   const [lembrar, setLembrar] = useState(true);
+
+  // Cupom de Desconto State
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
   // OrderBump State
   // 1. Tela Extra Adicional (+1 Conexão Simultânea) - R$ 5,90 por tela
@@ -129,6 +138,7 @@ export function AccountCheckoutModal({
       setTelasExtras(0);
       setPacoteAdulto(false);
       setPacoteCristoFlix(false);
+      setAppliedCoupon(null);
       setTimerSeconds(900);
       setLoadingPix(false);
       setPixPayload("");
@@ -173,6 +183,15 @@ export function AccountCheckoutModal({
 
   if (!open || !plano || !mounted) return null;
 
+  const handleSwitchToAnnual = () => {
+    if (allPlans && onSelectPlan) {
+      const anualPlan = allPlans.find((p) => p.id === "ANUAL");
+      if (anualPlan) {
+        onSelectPlan(anualPlan);
+      }
+    }
+  };
+
   const maskCpf = (v: string) => {
     const d = v.replace(/\D/g, "").slice(0, 11);
     if (d.length <= 3) return d;
@@ -197,14 +216,16 @@ export function AccountCheckoutModal({
   };
 
   const basePrice = parsePrice(plano.preco);
+  const discountAmount = appliedCoupon
+    ? Math.round(((basePrice * appliedCoupon.discountValue) / 100) * 100) / 100
+    : 0;
+  const discountedBasePrice = Math.max(0, basePrice - discountAmount);
   const telasPriceTotal = telasExtras * telaExtraUnit;
   const adultoPriceTotal = pacoteAdulto ? pacoteAdultoPrice : 0;
   const cristoFlixPriceTotal = pacoteCristoFlix ? pacoteCristoFlixPrice : 0;
   const totalPriceNum =
-    basePrice + telasPriceTotal + adultoPriceTotal + cristoFlixPriceTotal;
+    discountedBasePrice + telasPriceTotal + adultoPriceTotal + cristoFlixPriceTotal;
   const totalPriceStr = formatPrice(totalPriceNum);
-
-
 
   const handleCadastroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,6 +241,12 @@ export function AccountCheckoutModal({
       planoId: plano.id,
       planoNome: plano.nome,
       planoPreco: plano.preco,
+      cupom: appliedCoupon
+        ? {
+            code: appliedCoupon.code,
+            desconto: formatPrice(discountAmount),
+          }
+        : null,
       updatedAt: new Date().toISOString(),
     };
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
@@ -242,6 +269,12 @@ export function AccountCheckoutModal({
       planoId: plano.id,
       planoNome: plano.nome,
       planoPreco: plano.preco,
+      cupom: appliedCoupon
+        ? {
+            code: appliedCoupon.code,
+            desconto: formatPrice(discountAmount),
+          }
+        : null,
       orderBumps: {
         telasExtras:
           telasExtras > 0
@@ -257,11 +290,14 @@ export function AccountCheckoutModal({
     localStorage.setItem("dezpila_user_account", JSON.stringify(userData));
 
     try {
+      const planDisplayName =
+        plano.nome + (appliedCoupon ? ` (Cupom ${appliedCoupon.code})` : "");
+
       // Dispara chamada real à Nova API PIX da Nitro Pagamentos (v2.0)
       const res = await createNitroPix({
         data: {
           amountNum: totalPriceNum,
-          planName: plano.nome,
+          planName: planDisplayName,
           planId: plano.id,
           name: nome,
           email,
@@ -489,20 +525,54 @@ export function AccountCheckoutModal({
                   <span className="text-xs font-bold text-slate-900 font-body">
                     Plano {plano.nome}
                   </span>
-                  <span className="text-xs font-bold text-slate-900 font-body">
-                    R$ {plano.preco}{plano.periodo}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {appliedCoupon && (
+                      <span className="text-[11px] text-slate-400 line-through font-body">
+                        R$ {plano.preco}
+                      </span>
+                    )}
+                    <span className="text-xs font-bold text-slate-900 font-body">
+                      R$ {appliedCoupon ? formatPrice(discountedBasePrice) : plano.preco}{plano.periodo}
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body leading-snug">
                   DezPila
                 </p>
-                <p className="text-[11px] text-slate-500 font-body leading-snug mb-3">
+                <p className="text-[11px] text-slate-500 font-body leading-snug mb-1">
                   Acesso +60.000 conteúdos, 4K HDR, Sem Anúncios
                 </p>
 
+                {/* Cupom de Desconto */}
+                <CouponSection
+                  planId={plano.id}
+                  basePrice={basePrice}
+                  appliedCoupon={appliedCoupon}
+                  discountAmount={discountAmount}
+                  onApply={(cupom) => setAppliedCoupon(cupom)}
+                  onRemove={() => setAppliedCoupon(null)}
+                  onSwitchToAnnual={handleSwitchToAnnual}
+                />
+
+                {appliedCoupon && (
+                  <div className="flex justify-between items-center text-xs font-semibold text-emerald-700 font-body py-1 border-t border-dashed border-slate-200">
+                    <span>Desconto ({appliedCoupon.code} - {appliedCoupon.discountValue}% OFF):</span>
+                    <span>- R$ {formatPrice(discountAmount)}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center text-xs font-extrabold text-slate-900 font-heading pt-2 border-t border-slate-200 mb-3.5">
                   <span className="uppercase tracking-wider">TOTAL A PAGAR:</span>
-                  <span>R$ {totalPriceStr}</span>
+                  <div className="flex items-center gap-2">
+                    {appliedCoupon && (
+                      <span className="text-xs text-slate-400 line-through font-body">
+                        R$ {formatPrice(basePrice)}
+                      </span>
+                    )}
+                    <span className={appliedCoupon ? "text-sm text-emerald-700 font-extrabold" : ""}>
+                      R$ {totalPriceStr}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -531,19 +601,37 @@ export function AccountCheckoutModal({
                 RESUMO DO PEDIDO
               </h3>
 
-              <div className="w-full rounded-2xl bg-slate-50 border border-slate-200/90 p-3 mb-3 text-left">
+              <div className="w-full rounded-2xl bg-slate-50 border border-slate-200/90 p-3 mb-2 text-left">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-xs font-bold text-slate-900 font-body">
                     Plano {plano.nome}
                   </span>
-                  <span className="text-xs font-bold text-[#009EE3] font-code">
-                    R$ {plano.preco} {plano.periodo}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {appliedCoupon && (
+                      <span className="text-[11px] text-slate-400 line-through font-code">
+                        R$ {plano.preco}
+                      </span>
+                    )}
+                    <span className="text-xs font-bold text-[#009EE3] font-code">
+                      R$ {appliedCoupon ? formatPrice(discountedBasePrice) : plano.preco} {plano.periodo}
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body">
                   {plano.desc}
                 </p>
               </div>
+
+              {/* Cupom de Desconto na Confirmação */}
+              <CouponSection
+                planId={plano.id}
+                basePrice={basePrice}
+                appliedCoupon={appliedCoupon}
+                discountAmount={discountAmount}
+                onApply={(cupom) => setAppliedCoupon(cupom)}
+                onRemove={() => setAppliedCoupon(null)}
+                onSwitchToAnnual={handleSwitchToAnnual}
+              />
 
               <div className="mb-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-heading">
@@ -686,9 +774,23 @@ export function AccountCheckoutModal({
               </div>
 
               {/* TOTAL */}
+              {appliedCoupon && (
+                <div className="flex justify-between items-center text-xs font-semibold text-emerald-700 font-body py-1 border-t border-dashed border-slate-200">
+                  <span>Desconto ({appliedCoupon.code} - {appliedCoupon.discountValue}% OFF):</span>
+                  <span>- R$ {formatPrice(discountAmount)}</span>
+                </div>
+              )}
+
               <div className="flex justify-between items-center text-xs font-extrabold text-slate-900 font-heading pt-2 border-t border-slate-200 mb-3.5">
                 <span className="uppercase tracking-wider">TOTAL A PAGAR:</span>
-                <span className="text-base text-[#009EE3]">R$ {totalPriceStr}</span>
+                <div className="flex items-center gap-2">
+                  {appliedCoupon && (
+                    <span className="text-xs text-slate-400 line-through font-code">
+                      R$ {formatPrice(basePrice + telasPriceTotal + adultoPriceTotal + cristoFlixPriceTotal)}
+                    </span>
+                  )}
+                  <span className="text-base text-[#009EE3]">R$ {totalPriceStr}</span>
+                </div>
               </div>
 
               <button
@@ -724,9 +826,16 @@ export function AccountCheckoutModal({
             <div className="flex flex-col items-center text-center">
               <div className="w-full rounded-2xl bg-slate-50 border border-slate-200 p-3 mb-3 text-left">
                 <div className="flex justify-between items-center mb-1 pb-1 border-b border-slate-200">
-                  <span className="text-xs font-bold text-slate-900 font-heading">
-                    Plano {plano.nome}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-900 font-heading">
+                      Plano {plano.nome}
+                    </span>
+                    {appliedCoupon && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        {appliedCoupon.code} (-{appliedCoupon.discountValue}%)
+                      </span>
+                    )}
+                  </div>
                   <span className="text-xs font-bold text-[#009EE3] font-code">
                     R$ {totalPriceStr}
                   </span>

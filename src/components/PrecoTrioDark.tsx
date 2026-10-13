@@ -218,6 +218,13 @@ export function PrecoTrioDark() {
                 <span>{planoDailyAnchor[p.id]}</span>
               </div>
 
+              {p.id === "ANUAL" && (
+                <div className="mb-2 flex items-center gap-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 text-[11px] font-code text-emerald-400 font-bold animate-pulse">
+                  <span>🎟️</span>
+                  <span>Cupom <strong className="text-white underline">ANUAL50</strong>: 50% OFF</span>
+                </div>
+              )}
+
               <ul className="my-4 flex-1 list-none border-t border-white/10 pt-4 flex flex-col gap-2.5">
                 {recursos.map((r) => (
                   <li
@@ -265,6 +272,8 @@ export function PrecoTrioDark() {
         open={!!selectedPlan}
         plano={selectedPlan}
         onClose={() => setSelectedPlan(null)}
+        onSelectPlan={(p) => setSelectedPlan(p)}
+        allPlans={planos}
       />
     </section>
   );

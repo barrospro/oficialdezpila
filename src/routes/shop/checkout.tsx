@@ -6,7 +6,8 @@ import { useCart } from "@/lib/cart.store";
 import { formatCurrency } from "@/lib/shipping";
 import { createShopOrderFn, getShopOrderStatusFn } from "@/lib/shop-checkout.functions";
 import { QRCodeSVG } from "qrcode.react";
-import { ShieldCheck, Truck, Lock, ArrowLeft, Copy, Check, Clock, Loader2, Sparkles } from "lucide-react";
+import { ShieldCheck, Truck, Lock, ArrowLeft, Copy, Check, Clock, Loader2, Sparkles, Tag, X } from "lucide-react";
+import { validateAndApplyCoupon, Coupon } from "@/lib/coupons";
 
 export const Route = createFileRoute("/shop/checkout")({
   component: CheckoutPage,
@@ -29,6 +30,13 @@ function CheckoutPage() {
   const [cidade, setCidade] = useState("");
   const [uf, setUf] = useState("SP");
   const [cep, setCep] = useState("");
+
+  // Coupon State
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [isRestrictedToAnnual, setIsRestrictedToAnnual] = useState(false);
 
   // Payment State
   const [loading, setLoading] = useState(false);
@@ -84,6 +92,36 @@ function CheckoutPage() {
     return () => clearInterval(pollInterval);
   }, [pixData, paymentStatus, navigate, clearCart]);
 
+  const finalTotal = Math.max(0, summary.total - couponDiscount);
+
+  const handleApplyCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCouponError(null);
+    setIsRestrictedToAnnual(false);
+
+    if (!couponCode.trim()) {
+      setCouponError("Digite um código de cupom.");
+      return;
+    }
+
+    const res = validateAndApplyCoupon(couponCode, "SHOP_PRODUCTS", summary.subtotal);
+    if (res.valid && res.coupon) {
+      setAppliedCoupon(res.coupon);
+      setCouponDiscount(res.discountAmount);
+      setCouponCode("");
+    } else {
+      setCouponError(res.error || "Cupom inválido.");
+      setIsRestrictedToAnnual(Boolean(res.isPlanRestricted));
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponDiscount(0);
+    setCouponError(null);
+    setIsRestrictedToAnnual(false);
+  };
+
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
@@ -109,7 +147,7 @@ function CheckoutPage() {
           enderecoCep: cep,
           subtotal: summary.subtotal,
           frete: summary.frete,
-          total: summary.total,
+          total: finalTotal,
           items: items.map((it) => ({
             productId: it.product.id,
             nome: it.product.nome,
@@ -128,11 +166,11 @@ function CheckoutPage() {
         pixId: res.pixId,
         qrCode: res.qrCode,
         qrCodeBase64: res.qrCodeBase64,
-        total: res.total || summary.total,
+        total: res.total || finalTotal,
       });
 
       import("@/lib/push-recovery").then((m) => {
-        m.agendarLembretePixPendente(res.orderId!, res.total || summary.total);
+        m.agendarLembretePixPendente(res.orderId!, res.total || finalTotal);
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro ao processar pedido.";
@@ -351,7 +389,7 @@ function CheckoutPage() {
                     ) : (
                       <>
                         <Sparkles className="h-5 w-5 text-amber-400" />
-                        <span>Gerar Pix de {formatCurrency(summary.total)}</span>
+                        <span>Gerar Pix de {formatCurrency(finalTotal)}</span>
                       </>
                     )}
                   </button>
@@ -454,10 +492,89 @@ function CheckoutPage() {
                     <span>{formatCurrency(summary.frete)}</span>
                   )}
                 </div>
+
+                {appliedCoupon && (
+                  <div className="flex items-center justify-between text-emerald-400 font-bold">
+                    <span>Desconto ({appliedCoupon.code} - {appliedCoupon.discountValue}% OFF)</span>
+                    <span>- {formatCurrency(couponDiscount)}</span>
+                  </div>
+                )}
+
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between text-base font-bold text-white">
                   <span>Total</span>
-                  <span className="text-xl font-extrabold text-white">{formatCurrency(summary.total)}</span>
+                  <div className="flex items-center gap-2">
+                    {appliedCoupon && (
+                      <span className="text-xs text-slate-500 line-through">
+                        {formatCurrency(summary.total)}
+                      </span>
+                    )}
+                    <span className="text-xl font-extrabold text-white">{formatCurrency(finalTotal)}</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Cupom de Desconto */}
+              <div className="pt-2 border-t border-white/10 flex flex-col gap-2">
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-code">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" />
+                      <div>
+                        <span className="font-bold">{appliedCoupon.code}</span>
+                        <span className="text-[10px] text-emerald-300 ml-1.5">({appliedCoupon.discountValue}% OFF)</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">- {formatCurrency(couponDiscount)}</span>
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className="text-slate-400 hover:text-white p-0.5 cursor-pointer"
+                        title="Remover cupom"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value.toUpperCase());
+                          if (couponError) setCouponError(null);
+                        }}
+                        placeholder="Cupom (ex: ANUAL50)"
+                        className="w-full bg-black/60 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs font-code text-white uppercase placeholder:normal-case focus:outline-none focus:border-brand"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-code text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      Aplicar
+                    </button>
+                  </form>
+                )}
+
+                {couponError && (
+                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-code flex flex-col gap-1.5">
+                    <span>{couponError}</span>
+                    {isRestrictedToAnnual && (
+                      <Link
+                        to="/"
+                        hash="planos"
+                        className="inline-flex items-center gap-1 text-emerald-400 hover:underline font-bold text-[10px]"
+                      >
+                        <span>Conhecer o Plano VIP Anual com 50% de desconto</span>
+                        <ArrowLeft className="h-3 w-3 rotate-180" />
+                      </Link>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-2 text-[11px] font-code text-slate-400">
