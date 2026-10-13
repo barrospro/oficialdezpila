@@ -40,7 +40,7 @@ self.addEventListener("push", (event) => {
     badge: data.badge || "/favicon.svg",
     vibrate: [200, 100, 200],
     data: {
-      url: data.url || "/",
+      url: data.url || "/#planos",
     },
   };
 
@@ -50,12 +50,15 @@ self.addEventListener("push", (event) => {
 // Ação de clique na notificação: abre ou foca no site
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const urlToOpen = event.notification.data?.url || "/";
+  const urlToOpen = event.notification.data?.url || "/#planos";
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
       for (const client of windowClients) {
-        if (client.url.includes(urlToOpen) && "focus" in client) {
+        if ("focus" in client) {
+          if (client.navigate) {
+            client.navigate(urlToOpen);
+          }
           return client.focus();
         }
       }

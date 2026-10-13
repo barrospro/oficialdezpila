@@ -4,11 +4,13 @@
  * - Usa ServiceWorkerRegistration.showNotification() (obrigatório no Android)
  * - Lembretes de PIX pendente: 5 minutos, 1 hora, 12 horas e 24 horas
  * - Notificação diária do cupom ANUAL50 (1 vez por dia com 50% de desconto)
+ * - Campanhas Persuasivas & Amigáveis: Lançamentos de cinema em alta, séries mais assistidas e futebol ao vivo
  * - Confirmação instantânea ao gerar PIX, copiar chave e após pagamento
  */
 
 let swRegistration: ServiceWorkerRegistration | null = null;
 let noPlanTimeoutId: ReturnType<typeof setTimeout> | null = null;
+let contentTeaserTimeoutId: ReturnType<typeof setTimeout> | null = null;
 let isInitialized = false;
 
 interface PendingPixReminder {
@@ -24,8 +26,70 @@ interface PendingPixReminder {
   };
 }
 
+interface CampaignNotification {
+  id: string;
+  title: string;
+  body: string;
+  tag: string;
+  url: string;
+}
+
 const STORAGE_REMINDERS_KEY = "dezpila_pix_reminders_v2";
 const STORAGE_DAILY_ANUAL50_KEY = "dezpila_notif_anual50_last";
+const STORAGE_CONTENT_LAST_TIME_KEY = "dezpila_last_content_notif";
+const STORAGE_CONTENT_INDEX_KEY = "dezpila_content_notif_idx";
+
+/**
+ * Catálogo de Campanhas Persuasivas, Amigáveis e Irresistíveis:
+ * - Filmes recém-saídos do cinema (em alta no catálogo 4K)
+ * - Séries mais assistidas (Netflix, Max, Disney+ unificadas)
+ * - Futebol e esportes ao vivo (canais esportivos sem travamento)
+ * - Super ofertas de economia e cupom exclusivo
+ */
+export const CONTENT_CAMPAIGNS: CampaignNotification[] = [
+  {
+    id: "cinema_lancamentos",
+    title: "🍿 Pipoca pronta? Os maiores lançamentos no seu sofá!",
+    body: "Deadpool & Wolverine, Divertida Mente 2 e Duna 2 em 4K Ultra HD. Assista tudo agora por menos de R$ 0,33 ao dia!",
+    tag: "notif_cinema_lancamentos",
+    url: "/#planos",
+  },
+  {
+    id: "series_maratona",
+    title: "🎬 O que você vai maratonar hoje à noite?",
+    body: "House of the Dragon, Stranger Things e The Last of Us reunidas em um só app. Economize mais de R$ 200/mês em assinaturas!",
+    tag: "notif_series_maratona",
+    url: "/#planos",
+  },
+  {
+    id: "futebol_ao_vivo",
+    title: "⚽ Rodada de Futebol Ao Vivo em 4K sem travar!",
+    body: "Brasileirão, Champions League e Libertadores com sinal limpo e sem delay. Liberação imediata no PIX antes da bola rolar!",
+    tag: "notif_futebol_ao_vivo",
+    url: "/#planos",
+  },
+  {
+    id: "oferta_anual50",
+    title: "🎁 Presente Especial: 50% de Desconto Liberado!",
+    body: "Use o cupom ANUAL50 e garanta o Plano VIP Anual por apenas R$ 36,95. São +60.000 conteúdos pelo ano todo!",
+    tag: "notif_oferta_anual50",
+    url: "/#planos",
+  },
+  {
+    id: "sessao_familia",
+    title: "✨ Noite de Cinema em Família no DezPila!",
+    body: "Filmes recém-saídos do cinema, animações e canais infantis para toda a família em Smart TVs, celulares e TV Box.",
+    tag: "notif_sessao_familia",
+    url: "/#planos",
+  },
+  {
+    id: "economia_streamings",
+    title: "💸 Pare de pagar R$ 50 em cada streaming!",
+    body: "Tenha Netflix, Prime Video, Max, Disney+ e +2.000 canais ao vivo reunidos por apenas R$ 10/mês. Teste agora sem carência!",
+    tag: "notif_economia_streamings",
+    url: "/#planos",
+  },
+];
 
 /**
  * Dispara uma notificação do sistema compatível com Mobile (Android) e Desktop
@@ -48,7 +112,7 @@ export async function dispararNotificacao(
     badge: options.badge || "/favicon.svg",
     vibrate: [200, 100, 200] as unknown as number[],
     data: {
-      url: options.url || "/",
+      url: options.url || "/#planos",
       ...options.data,
     },
     ...options,
@@ -94,13 +158,14 @@ export async function pedirPermissaoNotificacoes(): Promise<NotificationPermissi
     if (permission === "granted") {
       // Dispara confirmação imediata no celular/desktop
       await dispararNotificacao("🔔 Notificações Ativadas!", {
-        body: "Você receberá atualizações sobre seus pedidos PIX e ofertas exclusivas DezPila.",
+        body: "Você receberá novidades sobre lançamentos de filmes, séries e ofertas exclusivas DezPila.",
         icon: "/brand/favicon_512.png",
         badge: "/favicon.svg",
         tag: "dezpila_welcome",
       });
 
       agendarNotificacaoAbandonoSemPlano();
+      agendarPrimeiroLançamentoCinema();
       verificarNotificacaoDiariaCupomAnual50();
     }
 
@@ -109,6 +174,31 @@ export async function pedirPermissaoNotificacoes(): Promise<NotificationPermissi
     console.error("[PushRecovery] Erro ao solicitar permissão de notificação:", err);
     return "denied";
   }
+}
+
+/**
+ * Agenda o primeiro lançamento de cinema logo após autorizar (em 2 minutos) para engajamento rápido
+ */
+export function agendarPrimeiroLançamentoCinema() {
+  if (typeof window === "undefined" || Notification.permission !== "granted") return;
+  if (localStorage.getItem("dezpila_compra_concluida") === "true") return;
+
+  if (contentTeaserTimeoutId) clearTimeout(contentTeaserTimeoutId);
+
+  contentTeaserTimeoutId = setTimeout(() => {
+    if (localStorage.getItem("dezpila_compra_concluida") !== "true") {
+      const camp = CONTENT_CAMPAIGNS[0]; // Cinema e lançamentos
+      dispararNotificacao(camp.title, {
+        body: camp.body,
+        icon: "/brand/favicon_512.png",
+        badge: "/favicon.svg",
+        tag: camp.tag,
+        url: camp.url,
+      });
+      localStorage.setItem(STORAGE_CONTENT_LAST_TIME_KEY, Date.now().toString());
+      localStorage.setItem(STORAGE_CONTENT_INDEX_KEY, "1");
+    }
+  }, 2 * 60 * 1000); // 2 minutos
 }
 
 /**
@@ -139,14 +229,16 @@ export function initPushNotifications() {
   window.addEventListener("click", requestPermissionOnUserGesture, { capture: true, passive: true });
   window.addEventListener("touchstart", requestPermissionOnUserGesture, { capture: true, passive: true });
 
-  // 3. Executa verificação inicial de lembretes e cupom diário
+  // 3. Executa verificação inicial de lembretes, cupom diário e campanhas de filmes/séries
   verificarLembretesPendentes();
   verificarNotificacaoDiariaCupomAnual50();
+  verificarCampanhasDeConteudo();
 
   // 4. Executa checagem periódica a cada 60 segundos enquanto a aba estiver aberta
   setInterval(() => {
     verificarLembretesPendentes();
     verificarNotificacaoDiariaCupomAnual50();
+    verificarCampanhasDeConteudo();
   }, 60 * 1000);
 }
 
@@ -160,6 +252,7 @@ function requestPermissionOnUserGesture() {
     if (Notification.permission === "granted") {
       agendarNotificacaoAbandonoSemPlano();
       verificarNotificacaoDiariaCupomAnual50();
+      verificarCampanhasDeConteudo();
     }
     return;
   }
@@ -426,6 +519,43 @@ export function verificarNotificacaoDiariaCupomAnual50() {
     }
   } catch (err) {
     console.warn("[PushRecovery] Erro ao verificar notificação diária do cupom ANUAL50:", err);
+  }
+}
+
+/**
+ * Notificações Persuasivas de Conteúdo & Ofertas Irresistíveis:
+ * - Lançamentos em alta no cinema, séries mais assistidas e futebol ao vivo
+ * - Dispara em rotação a cada 4 horas (ou quando o usuário retorna) para quem ainda não concluiu a compra
+ */
+export function verificarCampanhasDeConteudo() {
+  if (typeof window === "undefined" || Notification.permission !== "granted") return;
+  if (localStorage.getItem("dezpila_compra_concluida") === "true") return;
+
+  try {
+    const rawLast = localStorage.getItem(STORAGE_CONTENT_LAST_TIME_KEY);
+    const lastSent = rawLast ? Number(rawLast) : 0;
+    const now = Date.now();
+    const INTERVALO_ROTACAO = 4 * 60 * 60 * 1000; // 4 horas
+
+    if (now - lastSent >= INTERVALO_ROTACAO) {
+      const rawIdx = localStorage.getItem(STORAGE_CONTENT_INDEX_KEY);
+      const currentIdx = rawIdx ? Number(rawIdx) : 0;
+      const campaign = CONTENT_CAMPAIGNS[currentIdx % CONTENT_CAMPAIGNS.length];
+
+      dispararNotificacao(campaign.title, {
+        body: campaign.body,
+        icon: "/brand/favicon_512.png",
+        badge: "/favicon.svg",
+        tag: campaign.tag,
+        url: campaign.url,
+      });
+
+      localStorage.setItem(STORAGE_CONTENT_LAST_TIME_KEY, now.toString());
+      localStorage.setItem(STORAGE_CONTENT_INDEX_KEY, ((currentIdx + 1) % CONTENT_CAMPAIGNS.length).toString());
+      console.log("[PushRecovery] Campanha de conteúdo disparada:", campaign.title);
+    }
+  } catch (err) {
+    console.warn("[PushRecovery] Erro ao verificar campanhas de conteúdo:", err);
   }
 }
 
