@@ -9,24 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as MockupsRouteImport } from './routes/mockups'
-import { Route as DesignSystemRouteImport } from './routes/design-system'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as DesignSystemRouteImport } from './routes/design-system'
+import { Route as MockupsRouteImport } from './routes/mockups'
 import { Route as ShopIndexRouteImport } from './routes/shop/index'
-import { Route as ShopCheckoutRouteImport } from './routes/shop/checkout'
-import { Route as ShopCarrinhoRouteImport } from './routes/shop/carrinho'
 import { Route as ShopProductIdRouteImport } from './routes/shop/$productId'
+import { Route as ShopCarrinhoRouteImport } from './routes/shop/carrinho'
+import { Route as ShopCheckoutRouteImport } from './routes/shop/checkout'
 import { Route as ShopPedidoOrderIdRouteImport } from './routes/shop/pedido.$orderId'
 
-const MockupsRoute = MockupsRouteImport.update({
-  id: '/mockups',
-  path: '/mockups',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DesignSystemRoute = DesignSystemRouteImport.update({
-  id: '/design-system',
-  path: '/design-system',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -34,9 +29,14 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DesignSystemRoute = DesignSystemRouteImport.update({
+  id: '/design-system',
+  path: '/design-system',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MockupsRoute = MockupsRouteImport.update({
+  id: '/mockups',
+  path: '/mockups',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopIndexRoute = ShopIndexRouteImport.update({
@@ -44,9 +44,9 @@ const ShopIndexRoute = ShopIndexRouteImport.update({
   path: '/shop/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopCheckoutRoute = ShopCheckoutRouteImport.update({
-  id: '/shop/checkout',
-  path: '/shop/checkout',
+const ShopProductIdRoute = ShopProductIdRouteImport.update({
+  id: '/shop/$productId',
+  path: '/shop/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopCarrinhoRoute = ShopCarrinhoRouteImport.update({
@@ -54,9 +54,9 @@ const ShopCarrinhoRoute = ShopCarrinhoRouteImport.update({
   path: '/shop/carrinho',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopProductIdRoute = ShopProductIdRouteImport.update({
-  id: '/shop/$productId',
-  path: '/shop/$productId',
+const ShopCheckoutRoute = ShopCheckoutRouteImport.update({
+  id: '/shop/checkout',
+  path: '/shop/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopPedidoOrderIdRoute = ShopPedidoOrderIdRouteImport.update({
@@ -149,18 +149,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/mockups': {
-      id: '/mockups'
-      path: '/mockups'
-      fullPath: '/mockups'
-      preLoaderRoute: typeof MockupsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/design-system': {
-      id: '/design-system'
-      path: '/design-system'
-      fullPath: '/design-system'
-      preLoaderRoute: typeof DesignSystemRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -170,11 +163,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/design-system': {
+      id: '/design-system'
+      path: '/design-system'
+      fullPath: '/design-system'
+      preLoaderRoute: typeof DesignSystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockups': {
+      id: '/mockups'
+      path: '/mockups'
+      fullPath: '/mockups'
+      preLoaderRoute: typeof MockupsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/': {
@@ -184,11 +184,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shop/checkout': {
-      id: '/shop/checkout'
-      path: '/shop/checkout'
-      fullPath: '/shop/checkout'
-      preLoaderRoute: typeof ShopCheckoutRouteImport
+    '/shop/$productId': {
+      id: '/shop/$productId'
+      path: '/shop/$productId'
+      fullPath: '/shop/$productId'
+      preLoaderRoute: typeof ShopProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/carrinho': {
@@ -198,11 +198,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopCarrinhoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shop/$productId': {
-      id: '/shop/$productId'
-      path: '/shop/$productId'
-      fullPath: '/shop/$productId'
-      preLoaderRoute: typeof ShopProductIdRouteImport
+    '/shop/checkout': {
+      id: '/shop/checkout'
+      path: '/shop/checkout'
+      fullPath: '/shop/checkout'
+      preLoaderRoute: typeof ShopCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/pedido/$orderId': {
