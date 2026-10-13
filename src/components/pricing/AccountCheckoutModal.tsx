@@ -125,21 +125,14 @@ export function AccountCheckoutModal({
     };
   }, [open]);
 
-  // Restaura do localStorage se existir
+  // Reseta os campos para iniciarem vazios sempre que o modal for aberto
   useEffect(() => {
     if (open) {
-      const savedUser = localStorage.getItem("dezpila_user_account");
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          if (parsed.nome) setNome(parsed.nome);
-          if (parsed.cpf) setCpf(parsed.cpf);
-          if (parsed.email) setEmail(parsed.email);
-          if (parsed.whatsapp) setWhatsapp(parsed.whatsapp);
-        } catch {
-          // Ignore parse errors
-        }
-      }
+      setNome("");
+      setCpf("");
+      setEmail("");
+      setSenha("");
+      setWhatsapp("");
       setStep("CADASTRO");
       setTelasExtras(0);
       setPacoteAdulto(false);
@@ -484,7 +477,7 @@ export function AccountCheckoutModal({
                   required
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  placeholder="John Doe"
+                  placeholder="Ex: Maria Silva"
                   className="w-full rounded-xl border border-[#D0D5DD] bg-[#F2F4F7] py-2.5 px-3.5 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/25 transition-all"
                 />
               </div>
@@ -499,7 +492,7 @@ export function AccountCheckoutModal({
                   required
                   value={cpf}
                   onChange={(e) => setCpf(maskCpf(e.target.value))}
-                  placeholder="000.000.000-00"
+                  placeholder="Ex: 000.000.000-00"
                   className="w-full rounded-xl border border-[#D0D5DD] bg-[#F2F4F7] py-2.5 px-3.5 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/25 transition-all"
                 />
               </div>
@@ -514,7 +507,7 @@ export function AccountCheckoutModal({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="johndoe@email.com"
+                  placeholder="Ex: seuemail@gmail.com"
                   className="w-full rounded-xl border border-[#D0D5DD] bg-[#F2F4F7] py-2.5 px-3.5 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/25 transition-all"
                 />
               </div>
@@ -558,7 +551,7 @@ export function AccountCheckoutModal({
                   required
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(maskWhatsapp(e.target.value))}
-                  placeholder="11 98765-4321"
+                  placeholder="Ex: (11) 98765-4321"
                   className="w-full rounded-xl border border-[#D0D5DD] bg-[#F2F4F7] py-2.5 px-3.5 text-xs font-body text-slate-900 placeholder:text-slate-400 outline-none focus:bg-white focus:border-[#009EE3] focus:ring-2 focus:ring-[#009EE3]/25 transition-all"
                 />
               </div>
