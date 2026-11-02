@@ -22,6 +22,7 @@ import {
   Minus,
   Loader2,
   BookOpen,
+  CreditCard,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import {
@@ -633,6 +634,14 @@ export function AccountCheckoutModal({
                 <span>PAGAR COM PIX MERCADO PAGO</span>
               </button>
 
+              <a
+                href={`/cartao?plano=${plano.id}`}
+                className="mt-2.5 w-full rounded-xl border border-slate-300 bg-white hover:bg-slate-50 py-2.5 px-4 text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs font-body"
+              >
+                <CreditCard className="h-4 w-4 text-slate-700" />
+                <span>Pagar com Cartão de Crédito (até 12x)</span>
+              </a>
+
               <div className="mt-3 text-center flex items-center justify-center gap-1.5 text-[11.5px] font-medium text-[#007EA7] font-body">
                 <Shield className="h-3.5 w-3.5 text-[#009EE3]" />
                 <span>Compra Protegida pelo Mercado Pago - Criptografia SSL</span>
@@ -864,6 +873,14 @@ export function AccountCheckoutModal({
                   </>
                 )}
               </button>
+
+              <a
+                href={`/cartao?plano=${plano.id}`}
+                className="mt-2.5 w-full rounded-xl border border-slate-300 bg-white hover:bg-slate-50 py-2.5 px-4 text-xs font-bold text-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs font-body"
+              >
+                <CreditCard className="h-4 w-4 text-slate-700" />
+                <span>Pagar com Cartão de Crédito (até 12x)</span>
+              </a>
 
               <div className="mt-3 text-center flex items-center justify-center gap-1.5 text-[11.5px] font-medium text-[#007EA7] font-body">
                 <Shield className="h-3.5 w-3.5 text-[#009EE3]" />

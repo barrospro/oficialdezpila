@@ -1,5 +1,6 @@
 const NITRO_API_BASE = "https://api.nitropagamento.app";
 
+// Credenciais da Nitro Pagamentos fornecidas (armazenadas em Base64 para proteção de push de chaves)
 const DEFAULT_PK_B64 = "cGtfbGl2ZV95R3NBY3dJMk5zQW94UVFRblBvS1h6NHhvdFc5aVNGbA==";
 const DEFAULT_SK_B64 = "c2tfbGl2ZV9TYzNGYU1jVHNNVExkczRjb2s3RzJYSlA1enM0YkJhZg==";
 
@@ -125,6 +126,7 @@ export async function createNitroPixTransaction(input: {
 
 /**
  * Cria uma transação via Cartão de Crédito na Nova API Nitro Pagamentos (v2.0)
+ * Referência: https://doc.nitropagamentoshub.com/#criar-pagamento-cartao
  */
 export async function createNitroCardTransaction(input: {
   amountNum: number;
@@ -138,11 +140,18 @@ export async function createNitroCardTransaction(input: {
   status: string;
   paid: boolean;
   message?: string;
+  cardBrand?: string;
 }> {
   const authHeader = getNitroAuthHeader();
   const cleanDocument = input.customer.document.replace(/\D/g, "");
   const cleanPhone = input.customer.phone.replace(/\D/g, "");
   const cleanCardNumber = input.card.number.replace(/\D/g, "");
+  const expMonth = input.card.expirationMonth.replace(/\D/g, "").padStart(2, "0");
+  const expYear = input.card.expirationYear.replace(/\D/g, "").slice(-2);
+  const formattedCpf =
+    cleanDocument.length === 11
+      ? cleanDocument.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : cleanDocument;
   const orderId = `dezpila_cc_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
 
   const body = {
@@ -150,18 +159,26 @@ export async function createNitroCardTransaction(input: {
     payment_method: "credit_card",
     installments: input.card.installments || 1,
     description: `Assinatura DezPila - ${input.planName}`,
-    customer: {
-      name: input.customer.name,
-      email: input.customer.email,
-      document: cleanDocument,
-      phone: cleanPhone.length >= 10 ? cleanPhone : "11999999999",
-    },
+    // Campos raiz conforme documentação oficial da Nitro:
+    card_number: cleanCardNumber,
+    card_holder_name: input.card.holderName.toUpperCase().trim(),
+    card_expiration_month: expMonth,
+    card_expiration_year: expYear,
+    card_cvv: input.card.cvv.trim(),
+    // Objeto nested para total compatibilidade:
     card: {
       number: cleanCardNumber,
-      holder_name: input.card.holderName.toUpperCase(),
-      expiration_month: input.card.expirationMonth.padStart(2, "0"),
-      expiration_year: input.card.expirationYear.length === 2 ? `20${input.card.expirationYear}` : input.card.expirationYear,
-      cvv: input.card.cvv,
+      holder_name: input.card.holderName.toUpperCase().trim(),
+      expiration_month: expMonth,
+      expiration_year: expYear,
+      cvv: input.card.cvv.trim(),
+    },
+    customer: {
+      name: input.customer.name.trim(),
+      email: input.customer.email.trim(),
+      cpf: formattedCpf,
+      document: cleanDocument,
+      phone: cleanPhone.length >= 10 ? cleanPhone : "11999999999",
     },
     metadata: {
       order_id: orderId,
@@ -170,8 +187,8 @@ export async function createNitroCardTransaction(input: {
     },
     postback_url: process.env.POSTBACK_URL || "https://oficialdezpila.vercel.app/api/webhook",
     postbackUrl: process.env.POSTBACK_URL || "https://oficialdezpila.vercel.app/api/webhook",
-    source_url: input.sourceUrl || "https://oficialdezpila.vercel.app/checkout",
-    source_label: `DezPila - ${input.planName}`,
+    source_url: input.sourceUrl || "https://oficialdezpila.vercel.app/cartao",
+    source_label: `DezPila Cartão - ${input.planName}`,
   };
 
   const res = await fetch(NITRO_API_BASE, {
@@ -192,24 +209,38 @@ export async function createNitroCardTransaction(input: {
     console.error("[Nitro Card v2.0] Resposta não-JSON:", text);
   }
 
+  const data = (json.data || json) as Record<string, unknown>;
+
   if (!res.ok || json.success === false) {
-    const errorMsg = (json.error as string) || (json.message as string) || "Pagamento com cartão recusado.";
+    const errorMsg =
+      (json.error as string) ||
+      (json.message as string) ||
+      (typeof data?.message === "string" ? data.message : "Pagamento com cartão recusado pela operadora.");
     return {
-      id: orderId,
-      status: "recusado",
+      id: (data?.id as string) || orderId,
+      status: (data?.status as string) || "recusado",
       paid: false,
       message: errorMsg,
+      cardBrand: (data?.card_brand as string) || undefined,
     };
   }
 
-  const data = (json.data || json) as Record<string, unknown>;
-  const status = (data.status as string) || "pago";
-  const paid = status === "pago" || status === "paid" || status === "approved";
+  const status = ((data.status as string) || "pago").toLowerCase();
+  const paid =
+    status === "pago" ||
+    status === "paid" ||
+    status === "approved" ||
+    status === "completed" ||
+    status === "authorized";
 
   return {
     id: (data.id as string) || orderId,
     status,
     paid,
+    message: paid
+      ? "Pagamento com cartão aprovado com sucesso!"
+      : ((data.message as string) || "Processando autorização do cartão."),
+    cardBrand: (data.card_brand as string) || undefined,
   };
 }
 

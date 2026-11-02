@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CartaoRouteImport } from './routes/cartao'
+import { Route as CartChar227oRouteImport } from './routes/cartão'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as MockupsRouteImport } from './routes/mockups'
 import { Route as ShopIndexRouteImport } from './routes/shop/index'
@@ -27,6 +29,16 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartaoRoute = CartaoRouteImport.update({
+  id: '/cartao',
+  path: '/cartao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartChar227oRoute = CartChar227oRouteImport.update({
+  id: '/cartão',
+  path: '/cartão',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DesignSystemRoute = DesignSystemRouteImport.update({
@@ -68,6 +80,8 @@ const ShopPedidoOrderIdRoute = ShopPedidoOrderIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/cartao': typeof CartaoRoute
+  '/cartão': typeof CartChar227oRoute
   '/design-system': typeof DesignSystemRoute
   '/mockups': typeof MockupsRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -79,6 +93,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/cartao': typeof CartaoRoute
+  '/cartão': typeof CartChar227oRoute
   '/design-system': typeof DesignSystemRoute
   '/mockups': typeof MockupsRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -91,6 +107,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/cartao': typeof CartaoRoute
+  '/cartão': typeof CartChar227oRoute
   '/design-system': typeof DesignSystemRoute
   '/mockups': typeof MockupsRoute
   '/shop/$productId': typeof ShopProductIdRoute
@@ -104,6 +122,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/cartao'
+    | '/cartão'
     | '/design-system'
     | '/mockups'
     | '/shop/$productId'
@@ -115,6 +135,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/cartao'
+    | '/cartão'
     | '/design-system'
     | '/mockups'
     | '/shop/$productId'
@@ -126,6 +148,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/cartao'
+    | '/cartão'
     | '/design-system'
     | '/mockups'
     | '/shop/$productId'
@@ -138,6 +162,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  CartaoRoute: typeof CartaoRoute
+  CartChar227oRoute: typeof CartChar227oRoute
   DesignSystemRoute: typeof DesignSystemRoute
   MockupsRoute: typeof MockupsRoute
   ShopProductIdRoute: typeof ShopProductIdRoute
@@ -161,6 +187,20 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cartao': {
+      id: '/cartao'
+      path: '/cartao'
+      fullPath: '/cartao'
+      preLoaderRoute: typeof CartaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cartão': {
+      id: '/cartão'
+      path: '/cartão'
+      fullPath: '/cartão'
+      preLoaderRoute: typeof CartChar227oRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/design-system': {
@@ -218,6 +258,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  CartaoRoute: CartaoRoute,
+  CartChar227oRoute: CartChar227oRoute,
   DesignSystemRoute: DesignSystemRoute,
   MockupsRoute: MockupsRoute,
   ShopProductIdRoute: ShopProductIdRoute,
