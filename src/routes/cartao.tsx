@@ -132,9 +132,13 @@ function formatPhone(val: string): string {
 }
 
 function formatExpiry(val: string): string {
-  const clean = val.replace(/\D/g, "").slice(0, 4);
-  if (clean.length >= 3) {
-    return `${clean.slice(0, 2)}/${clean.slice(2, 4)}`;
+  // Mantém apenas dígitos (2 para mês + até 4 para ano completo: MM/AAAA)
+  const clean = val.replace(/\D/g, "").slice(0, 6);
+  if (clean.length > 2) {
+    return `${clean.slice(0, 2)}/${clean.slice(2, 6)}`;
+  }
+  if (clean.length === 2 && val.includes("/")) {
+    return `${clean}/`;
   }
   return clean;
 }
@@ -294,7 +298,7 @@ function CartaoCheckoutPage() {
 
     const [month, year] = expiry.split("/");
     if (!month || !year) {
-      setErrorMessage("Por favor, informe a validade do cartão no formato MM/AA.");
+      setErrorMessage("Por favor, informe a validade completa do cartão no formato MM/AAAA (ex: 01/2026).");
       return;
     }
 
@@ -302,8 +306,6 @@ function CartaoCheckoutPage() {
     const rawYear = year.replace(/\D/g, "");
     const cleanYear = rawYear.length === 2 ? `20${rawYear}` : rawYear;
 
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1;
     const expYearNum = parseInt(cleanYear, 10);
     const expMonthNum = parseInt(cleanMonth, 10);
 
@@ -312,8 +314,8 @@ function CartaoCheckoutPage() {
       return;
     }
 
-    if (expYearNum < currentYear || (expYearNum === currentYear && expMonthNum < currentMonth)) {
-      setErrorMessage("Este cartão está expirado. Por favor, verifique a data de validade.");
+    if (cleanYear.length !== 4 || isNaN(expYearNum) || expYearNum < 2024 || expYearNum > 2099) {
+      setErrorMessage("Ano de validade inválido. Informe o ano com 4 dígitos (ex: 01/2026).");
       return;
     }
 
@@ -718,7 +720,7 @@ function CartaoCheckoutPage() {
                       <span className="text-[9px] uppercase tracking-wider text-muted-foreground block">
                         Validade
                       </span>
-                      <span className="font-bold text-slate-200">{expiry || "MM/AA"}</span>
+                      <span className="font-bold text-slate-200">{expiry || "01/2026"}</span>
                     </div>
                   </div>
                 </div>
@@ -865,15 +867,17 @@ function CartaoCheckoutPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">Validade *</label>
+                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        Validade (Mês/Ano) *
+                      </label>
                       <input
                         type="text"
                         required
-                        maxLength={5}
-                        placeholder="MM/AA"
+                        maxLength={7}
+                        placeholder="01/2026"
                         value={expiry}
                         onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                        className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm font-code text-white placeholder:text-muted-foreground focus:border-brand focus:outline-none transition-colors text-center"
+                        className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm font-code text-white placeholder:text-muted-foreground focus:border-brand focus:outline-none transition-colors text-center font-bold tracking-wider"
                       />
                     </div>
 
