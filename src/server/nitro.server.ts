@@ -147,7 +147,9 @@ export async function createNitroCardTransaction(input: {
   const cleanPhone = input.customer.phone.replace(/\D/g, "");
   const cleanCardNumber = input.card.number.replace(/\D/g, "");
   const expMonth = input.card.expirationMonth.replace(/\D/g, "").padStart(2, "0");
-  const expYear = input.card.expirationYear.replace(/\D/g, "").slice(-2);
+  const rawYear = input.card.expirationYear.replace(/\D/g, "");
+  // Nitro exige o ano com 4 dígitos YYYY (ex: 2028)
+  const expYear = rawYear.length === 2 ? `20${rawYear}` : rawYear;
   const formattedCpf =
     cleanDocument.length === 11
       ? cleanDocument.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")

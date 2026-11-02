@@ -292,8 +292,27 @@ function CartaoCheckoutPage() {
     }
 
     const [month, year] = expiry.split("/");
-    if (!month || !year || month.length !== 2 || year.length !== 2) {
+    if (!month || !year) {
       setErrorMessage("Por favor, informe a validade do cartão no formato MM/AA.");
+      return;
+    }
+
+    const cleanMonth = month.replace(/\D/g, "").padStart(2, "0");
+    const rawYear = year.replace(/\D/g, "");
+    const cleanYear = rawYear.length === 2 ? `20${rawYear}` : rawYear;
+
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const expYearNum = parseInt(cleanYear, 10);
+    const expMonthNum = parseInt(cleanMonth, 10);
+
+    if (expMonthNum < 1 || expMonthNum > 12) {
+      setErrorMessage("Mês de validade inválido (deve ser entre 01 e 12).");
+      return;
+    }
+
+    if (expYearNum < currentYear || (expYearNum === currentYear && expMonthNum < currentMonth)) {
+      setErrorMessage("Este cartão está expirado. Por favor, verifique a data de validade.");
       return;
     }
 
@@ -317,8 +336,8 @@ function CartaoCheckoutPage() {
           document: cleanCpf,
           cardNumber: cleanCard,
           holderName: holderName.trim().toUpperCase(),
-          expirationMonth: month,
-          expirationYear: year,
+          expirationMonth: cleanMonth,
+          expirationYear: cleanYear,
           cvv: cleanCvv,
           installments,
           sourceUrl: "https://oficialdezpila.vercel.app/cartao",
