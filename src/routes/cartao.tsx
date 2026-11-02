@@ -24,6 +24,7 @@ import {
   Plus,
   Minus,
   Calendar,
+  ChevronDown,
 } from "lucide-react";
 
 interface PlanOption {
@@ -862,7 +863,7 @@ function CartaoCheckoutPage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-medium text-slate-300 mb-1.5">Validade *</label>
                       <input
@@ -888,20 +889,25 @@ function CartaoCheckoutPage() {
                         className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm font-code text-white placeholder:text-muted-foreground focus:border-brand focus:outline-none transition-colors text-center"
                       />
                     </div>
+                  </div>
 
-                    <div className="col-span-2 sm:col-span-1">
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">Parcelamento *</label>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-300 mb-1.5">Opção de Parcelamento *</label>
+                    <div className="relative">
                       <select
                         value={installments}
                         onChange={(e) => setInstallments(Number(e.target.value))}
-                        className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-xs font-code text-white focus:border-brand focus:outline-none transition-colors"
+                        className="w-full rounded-xl border border-white/10 bg-black/50 pl-4 pr-10 py-3 text-sm font-code text-white focus:border-brand focus:outline-none transition-colors appearance-none cursor-pointer"
                       >
                         {installmentOptions.map((opt) => (
-                          <option key={opt.num} value={opt.num} className="bg-black text-white">
+                          <option key={opt.num} value={opt.num} className="bg-[#121217] text-white py-1">
                             {opt.label}
                           </option>
                         ))}
                       </select>
+                      <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                        <ChevronDown className="size-4" />
+                      </div>
                     </div>
                   </div>
                 </div>
