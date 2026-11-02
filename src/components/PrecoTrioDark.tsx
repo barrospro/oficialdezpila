@@ -109,6 +109,19 @@ export function PrecoTrioDark() {
         <p className="text-muted-foreground mt-3 font-code text-xs uppercase tracking-wider">
           Sem contrato, sem fidelidade e com ativação instantânea em 2 minutos via Pix.
         </p>
+
+        <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-4 py-1.5 backdrop-blur-md">
+          <span className="flex size-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-code text-slate-300">
+            Prefere pagar por dia? <strong className="text-emerald-400">R$ 1,00 por dia</strong> (escolha quantos dias quiser no cartão)
+          </span>
+          <a
+            href="/cartao?plano=DIARIO"
+            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 underline font-code"
+          >
+            Escolher Dias no Cartão →
+          </a>
+        </div>
       </div>
 
       <div className="relative flex flex-wrap lg:flex-nowrap items-stretch gap-[16px] w-full max-w-6xl justify-center pt-3">

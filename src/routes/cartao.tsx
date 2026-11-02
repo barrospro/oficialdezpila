@@ -21,6 +21,9 @@ import {
   Tag,
   Clock,
   Send,
+  Plus,
+  Minus,
+  Calendar,
 } from "lucide-react";
 
 interface PlanOption {
@@ -31,10 +34,22 @@ interface PlanOption {
   telas: string;
   destaque?: boolean;
   popular?: boolean;
+  badge?: string;
+  badgeColor?: string;
   economia?: string;
 }
 
 const PLANOS_DISPONIVEIS: PlanOption[] = [
+  {
+    id: "DIARIO",
+    nome: "Acesso por Dia",
+    precoNum: 1.0,
+    periodo: "/dia",
+    telas: "1 Conexão Simultânea",
+    badge: "⚡ 1 REAL POR DIA",
+    badgeColor: "bg-emerald-500 text-black shadow-[0_0_12px_rgba(16,185,129,0.5)]",
+    economia: "Escolha quantos dias quiser assistir",
+  },
   {
     id: "MENSAL",
     nome: "Starter Mensal",
@@ -124,7 +139,8 @@ function formatExpiry(val: string): string {
 }
 
 function CartaoCheckoutPage() {
-  const [selectedPlanId, setSelectedPlanId] = useState<string>("MENSAL");
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("DIARIO");
+  const [diarioDias, setDiarioDias] = useState<number>(3); // 3 dias por padrão (R$ 3,00)
 
   // Form Fields
   const [name, setName] = useState("");
@@ -154,7 +170,7 @@ function CartaoCheckoutPage() {
     installments: number;
   } | null>(null);
 
-  // Detecta parâmetros de URL na inicialização (ex: ?plano=ANUAL)
+  // Detecta parâmetros de URL na inicialização (ex: ?plano=DIARIO&dias=7)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -164,6 +180,14 @@ function CartaoCheckoutPage() {
           (p) => p.id.toUpperCase() === planParam.toUpperCase()
         );
         if (found) setSelectedPlanId(found.id);
+      }
+      const diasParam = params.get("dias") || params.get("days");
+      if (diasParam) {
+        const d = parseInt(diasParam, 10);
+        if (!isNaN(d) && d >= 1) {
+          setDiarioDias(Math.min(365, d));
+          setSelectedPlanId("DIARIO");
+        }
       }
       const cupomParam = params.get("cupom") || params.get("coupon");
       if (cupomParam) {
@@ -176,27 +200,41 @@ function CartaoCheckoutPage() {
     return PLANOS_DISPONIVEIS.find((p) => p.id === selectedPlanId) || PLANOS_DISPONIVEIS[0];
   }, [selectedPlanId]);
 
+  const rawBasePrice = useMemo(() => {
+    if (selectedPlanId === "DIARIO") {
+      return Math.max(1, Math.floor(diarioDias)) * 1.0;
+    }
+    return activePlan.precoNum;
+  }, [selectedPlanId, diarioDias, activePlan]);
+
+  const planDisplayName = useMemo(() => {
+    if (selectedPlanId === "DIARIO") {
+      return `Acesso Diário (${diarioDias} ${diarioDias === 1 ? "dia" : "dias"})`;
+    }
+    return activePlan.nome;
+  }, [selectedPlanId, diarioDias, activePlan]);
+
   // Aplicação do Cupom
   const priceCalculation = useMemo(() => {
     if (!appliedCoupon) {
       return {
-        basePrice: activePlan.precoNum,
-        finalPrice: activePlan.precoNum,
+        basePrice: rawBasePrice,
+        finalPrice: rawBasePrice,
         discount: 0,
       };
     }
-    const val = validateAndApplyCoupon(appliedCoupon.code, activePlan.id, activePlan.precoNum);
+    const val = validateAndApplyCoupon(appliedCoupon.code, activePlan.id, rawBasePrice);
     return {
-      basePrice: activePlan.precoNum,
-      finalPrice: val.valid ? val.finalPrice : activePlan.precoNum,
+      basePrice: rawBasePrice,
+      finalPrice: val.valid ? val.finalPrice : rawBasePrice,
       discount: val.valid ? val.discountAmount : 0,
     };
-  }, [activePlan, appliedCoupon]);
+  }, [rawBasePrice, activePlan, appliedCoupon]);
 
   const handleApplyCoupon = () => {
     setCouponFeedback(null);
     if (!couponCode.trim()) return;
-    const res = validateAndApplyCoupon(couponCode, activePlan.id, activePlan.precoNum);
+    const res = validateAndApplyCoupon(couponCode, activePlan.id, rawBasePrice);
     if (res.valid && res.coupon) {
       setAppliedCoupon(res.coupon);
       setCouponFeedback({ msg: `Cupom ${res.coupon.code} aplicado com sucesso!`, type: "ok" });
@@ -212,8 +250,15 @@ function CartaoCheckoutPage() {
   const installmentOptions = useMemo(() => {
     const list = [];
     const total = priceCalculation.finalPrice;
+    if (total < 15) {
+      return [
+        {
+          num: 1,
+          label: `1x de R$ ${total.toFixed(2).replace(".", ",")} (à vista)`,
+        },
+      ];
+    }
     for (let i = 1; i <= 12; i++) {
-      if (i > 1 && total < 15) break; // Não parcelar valores muito baixos
       const parcelValue = (total / i).toFixed(2).replace(".", ",");
       list.push({
         num: i,
@@ -222,6 +267,12 @@ function CartaoCheckoutPage() {
     }
     return list;
   }, [priceCalculation.finalPrice]);
+
+  useEffect(() => {
+    if (priceCalculation.finalPrice < 15 && installments > 1) {
+      setInstallments(1);
+    }
+  }, [priceCalculation.finalPrice, installments]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -258,7 +309,7 @@ function CartaoCheckoutPage() {
       const res = await createNitroCard({
         data: {
           amountNum: priceCalculation.finalPrice,
-          planName: activePlan.nome,
+          planName: planDisplayName,
           planId: activePlan.id,
           name: name.trim(),
           email: email.trim(),
@@ -278,7 +329,7 @@ function CartaoCheckoutPage() {
         setSuccessData({
           id: res.id,
           amount: priceCalculation.finalPrice,
-          planName: activePlan.nome,
+          planName: planDisplayName,
           cardBrand: res.cardBrand || cardBrand,
           installments,
         });
@@ -393,6 +444,8 @@ function CartaoCheckoutPage() {
                 <div className="space-y-3">
                   {PLANOS_DISPONIVEIS.map((plano) => {
                     const isSelected = plano.id === selectedPlanId;
+                    const isDiario = plano.id === "DIARIO";
+
                     return (
                       <div
                         key={plano.id}
@@ -403,12 +456,21 @@ function CartaoCheckoutPage() {
                             : "border-white/5 bg-black/40 hover:border-white/20 hover:bg-white/5"
                         }`}
                       >
-                        {plano.popular && (
+                        {plano.badge && (
+                          <span
+                            className={`absolute -top-2.5 right-4 rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${
+                              plano.badgeColor || "bg-brand text-white"
+                            }`}
+                          >
+                            {plano.badge}
+                          </span>
+                        )}
+                        {plano.popular && !plano.badge && (
                           <span className="absolute -top-2.5 right-4 rounded-full bg-brand px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white">
                             Mais Vendido
                           </span>
                         )}
-                        {plano.destaque && (
+                        {plano.destaque && !plano.badge && (
                           <span className="absolute -top-2.5 right-4 rounded-full bg-amber-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-black">
                             Maior Economia
                           </span>
@@ -416,13 +478,24 @@ function CartaoCheckoutPage() {
 
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-heading font-bold text-white text-base">{plano.nome}</p>
+                            <p className="font-heading font-bold text-white text-base">
+                              {isDiario
+                                ? isSelected
+                                  ? `Acesso Diário (${diarioDias} ${diarioDias === 1 ? "dia" : "dias"})`
+                                  : "Acesso por Dia (R$ 1/dia)"
+                                : plano.nome}
+                            </p>
                             <p className="text-xs text-muted-foreground">{plano.telas}</p>
                           </div>
                           <div className="text-right">
                             <p className="font-heading font-black text-white text-lg">
-                              R$ {plano.precoNum.toFixed(2).replace(".", ",")}
-                              <span className="text-xs font-normal text-muted-foreground">{plano.periodo}</span>
+                              R${" "}
+                              {isDiario
+                                ? (diarioDias * 1.0).toFixed(2).replace(".", ",")
+                                : plano.precoNum.toFixed(2).replace(".", ",")}
+                              <span className="text-xs font-normal text-muted-foreground">
+                                {isDiario ? ` (${diarioDias}d)` : plano.periodo}
+                              </span>
                             </p>
                             {plano.economia && (
                               <p className="text-[11px] font-semibold text-emerald-400 font-code">
@@ -431,6 +504,95 @@ function CartaoCheckoutPage() {
                             )}
                           </div>
                         </div>
+
+                        {/* CONTROLE INTERATIVO DE QUANTIDADE DE DIAS (R$ 1,00 POR DIA) */}
+                        {isDiario && isSelected && (
+                          <div
+                            className="mt-4 pt-3.5 border-t border-brand/30 space-y-3 animate-in fade-in duration-200"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5 font-code">
+                                <Calendar className="size-3.5 text-emerald-400" />
+                                Escolha quantos dias quiser:
+                              </span>
+                              <span className="text-xs font-black text-emerald-400 font-code bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-md">
+                                R$ 1,00 por dia
+                              </span>
+                            </div>
+
+                            {/* Stepper [-] [input] [+] */}
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center rounded-xl border border-white/20 bg-black/70 p-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setDiarioDias((prev) => Math.max(1, prev - 1))}
+                                  className="flex size-9 items-center justify-center rounded-lg bg-white/5 hover:bg-white/15 text-white transition-colors cursor-pointer"
+                                  title="Diminuir 1 dia"
+                                >
+                                  <Minus className="size-4" />
+                                </button>
+
+                                <div className="px-3 flex items-center justify-center">
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    max={365}
+                                    value={diarioDias}
+                                    onChange={(e) => {
+                                      const val = parseInt(e.target.value, 10);
+                                      if (!isNaN(val)) setDiarioDias(Math.max(1, Math.min(365, val)));
+                                    }}
+                                    className="w-12 bg-transparent text-center font-heading font-black text-base text-white outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  />
+                                  <span className="text-xs font-medium text-muted-foreground ml-1 font-body">
+                                    {diarioDias === 1 ? "dia" : "dias"}
+                                  </span>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => setDiarioDias((prev) => Math.min(365, prev + 1))}
+                                  className="flex size-9 items-center justify-center rounded-lg bg-white/5 hover:bg-white/15 text-white transition-colors cursor-pointer"
+                                  title="Aumentar 1 dia"
+                                >
+                                  <Plus className="size-4" />
+                                </button>
+                              </div>
+
+                              <div className="text-xs font-code text-slate-300">
+                                <span className="text-muted-foreground block text-[10px] uppercase tracking-wider">
+                                  Valor do Acesso:
+                                </span>
+                                <span className="text-emerald-400 font-heading font-black text-lg">
+                                  R$ {diarioDias.toFixed(2).replace(".", ",")}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Botões Rápidos de Seleção de Dias */}
+                            <div className="flex flex-wrap gap-1.5 pt-1">
+                              {[1, 2, 3, 5, 7, 15, 30].map((dias) => (
+                                <button
+                                  key={dias}
+                                  type="button"
+                                  onClick={() => setDiarioDias(dias)}
+                                  className={`rounded-lg px-2.5 py-1 text-xs font-code font-bold transition-all cursor-pointer ${
+                                    diarioDias === dias
+                                      ? "bg-emerald-500 text-black shadow-[0_0_12px_rgba(16,185,129,0.4)] font-black"
+                                      : "bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10"
+                                  }`}
+                                >
+                                  {dias === 1 ? "1 Dia (R$ 1)" : `${dias} Dias (R$ ${dias})`}
+                                </button>
+                              ))}
+                            </div>
+
+                            <p className="text-[11px] text-slate-400 leading-snug">
+                              ✨ Acesso 100% liberado por <strong>{diarioDias} {diarioDias === 1 ? "dia" : "dias"}</strong> corridos. Sem renovação automática obrigatória.
+                            </p>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -498,7 +660,9 @@ function CartaoCheckoutPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="size-3 bg-brand skew-x-[-15deg]" />
-                      <span className="font-heading font-black tracking-wider text-sm uppercase">DEZPILA VIP</span>
+                      <span className="font-heading font-black tracking-wider text-sm uppercase">
+                        {selectedPlanId === "DIARIO" ? `DEZPILA (${diarioDias} DIAS)` : "DEZPILA VIP"}
+                      </span>
                     </div>
                     <span className="font-code text-xs font-bold uppercase tracking-widest text-slate-300">
                       {cardBrand !== "default" ? cardBrand.toUpperCase() : "CARTÃO CRÉDITO"}
